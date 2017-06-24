@@ -1,0 +1,14 @@
+
+platform :ios,'8.0'
+
+target 'VirtualNum' do
+project 'VirtualNum'
+
+pod 'MJRefresh', '~> 3.1.0'
+pod 'SDWebImage', '~> 3.7.6'
+pod 'SVProgressHUD', '~> 2.0.3'
+pod 'AFNetworking', '~> 3.1.0'
+
+project  'VirtualNum/VirtualNum.xcodeproj'
+
+end

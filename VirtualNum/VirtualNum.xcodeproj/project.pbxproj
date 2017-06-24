@@ -13,9 +13,13 @@
 		8A86AE191EFD5DDF00C8533F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8A86AE171EFD5DDF00C8533F /* Main.storyboard */; };
 		8A86AE1B1EFD5DDF00C8533F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8A86AE1A1EFD5DDF00C8533F /* Assets.xcassets */; };
 		8A86AE1E1EFD5DDF00C8533F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8A86AE1C1EFD5DDF00C8533F /* LaunchScreen.storyboard */; };
+		A168D58146F3F5D1679B630E /* libPods-VirtualNum.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 49FABA1EA2210A0556BFAE0F /* libPods-VirtualNum.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1B6BBFA975533AC6516270A4 /* Pods-VirtualNum.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VirtualNum.release.xcconfig"; path = "../Pods/Target Support Files/Pods-VirtualNum/Pods-VirtualNum.release.xcconfig"; sourceTree = "<group>"; };
+		2475113AD1DACB079ADE9C8D /* Pods-VirtualNum.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VirtualNum.debug.xcconfig"; path = "../Pods/Target Support Files/Pods-VirtualNum/Pods-VirtualNum.debug.xcconfig"; sourceTree = "<group>"; };
+		49FABA1EA2210A0556BFAE0F /* libPods-VirtualNum.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-VirtualNum.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8A86AE0B1EFD5DDF00C8533F /* VirtualNum.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VirtualNum.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8A86AE0F1EFD5DDF00C8533F /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		8A86AE111EFD5DDF00C8533F /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -33,17 +37,28 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A168D58146F3F5D1679B630E /* libPods-VirtualNum.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5268C274C24B40A9228FBAA5 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				49FABA1EA2210A0556BFAE0F /* libPods-VirtualNum.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		8A86AE021EFD5DDF00C8533F = {
 			isa = PBXGroup;
 			children = (
 				8A86AE0D1EFD5DDF00C8533F /* VirtualNum */,
 				8A86AE0C1EFD5DDF00C8533F /* Products */,
+				D5DF24695592E90556557785 /* Pods */,
+				5268C274C24B40A9228FBAA5 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -79,6 +94,15 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		D5DF24695592E90556557785 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				2475113AD1DACB079ADE9C8D /* Pods-VirtualNum.debug.xcconfig */,
+				1B6BBFA975533AC6516270A4 /* Pods-VirtualNum.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -86,9 +110,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 8A86AE221EFD5DDF00C8533F /* Build configuration list for PBXNativeTarget "VirtualNum" */;
 			buildPhases = (
+				2ECE4670759D4E470047C74A /* [CP] Check Pods Manifest.lock */,
 				8A86AE071EFD5DDF00C8533F /* Sources */,
 				8A86AE081EFD5DDF00C8533F /* Frameworks */,
 				8A86AE091EFD5DDF00C8533F /* Resources */,
+				C24AAFEAEB54E4627A65EA06 /* [CP] Embed Pods Frameworks */,
+				92DE34A8FBF25D0A77A77AFD /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -144,6 +171,54 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		2ECE4670759D4E470047C74A /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		92DE34A8FBF25D0A77A77AFD /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/../Pods/Target Support Files/Pods-VirtualNum/Pods-VirtualNum-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		C24AAFEAEB54E4627A65EA06 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/../Pods/Target Support Files/Pods-VirtualNum/Pods-VirtualNum-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		8A86AE071EFD5DDF00C8533F /* Sources */ = {
@@ -270,9 +345,11 @@
 		};
 		8A86AE231EFD5DDF00C8533F /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2475113AD1DACB079ADE9C8D /* Pods-VirtualNum.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = VirtualNum/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.livecom.VirtualNum;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -281,9 +358,11 @@
 		};
 		8A86AE241EFD5DDF00C8533F /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1B6BBFA975533AC6516270A4 /* Pods-VirtualNum.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = VirtualNum/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.livecom.VirtualNum;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -309,6 +388,7 @@
 				8A86AE241EFD5DDF00C8533F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
