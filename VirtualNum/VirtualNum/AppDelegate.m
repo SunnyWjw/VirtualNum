@@ -16,6 +16,22 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    
+    //初始化window
+    [self initWindow];
+    
+    //广告页
+    //[AppManager appStart];
+    
+    //初始化app服务
+    [self initService];
+
+    //初始化用户系统
+    [self initUserManager];
+    
+    //网络监听
+    [self monitorNetworkStatus];
+    
     // Override point for customization after application launch.
     return YES;
 }
