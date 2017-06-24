@@ -1,9 +1,9 @@
 //
 //  AppDelegate+AppService.m
-//  MiAiApp
+//  VirtualNum
 //
-//  Created by 徐阳 on 2017/5/19.
-//  Copyright © 2017年 徐阳. All rights reserved.
+//  Created by SunnyWu on 2017/6/23.
+//  Copyright © 2017年 SunnyWu. All rights reserved.
 //
 
 #import "AppDelegate+AppService.h"
@@ -73,8 +73,8 @@
      */
     
     //没有登录过，展示登录页面
-    KPostNotification(KNotificationLoginStateChange, @NO)
-    [MBProgressHUD showErrorMessage:@"需要登录"];
+//    KPostNotification(KNotificationLoginStateChange, @NO)
+    KPostNotification(KNotificationAutoLoginSuccess, nil);
 }
 
 #pragma mark ————— 登录状态处理 —————

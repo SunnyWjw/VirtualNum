@@ -1,9 +1,9 @@
 //
 //  AppDelegate+PushService.h
-//  MiAiApp
+//  VirtualNum
 //
-//  Created by 徐阳 on 2017/5/25.
-//  Copyright © 2017年 徐阳. All rights reserved.
+//  Created by SunnyWu on 2017/6/23.
+//  Copyright © 2017年 SunnyWu. All rights reserved.
 //
 
 #import "AppDelegate.h"

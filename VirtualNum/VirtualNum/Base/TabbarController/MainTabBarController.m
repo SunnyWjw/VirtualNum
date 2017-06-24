@@ -53,9 +53,9 @@ PropertyNSMutableArray(VCS);//tabbar root VC
 }
 #pragma mark - ——————— 初始化VC ————————
 -(void)setUpAllChildViewController{
-    _VCS = @[].mutableCopy;
+   _VCS = @[].mutableCopy;
     HomeViewController *homeVC = [[HomeViewController alloc]init];
-    [self setupChildViewController:homeVC title:@"首页" imageName:@"home" seleceImageName:@"home"];
+    [self setupChildViewController:homeVC title:@"首页A" imageName:@"home" seleceImageName:@"home"];
     
     CallingViewController *callVC = [[CallingViewController alloc]init];
     [self setupChildViewController:callVC title:@"我的" imageName:@"icon_tabbar_discovery_selected.png" seleceImageName:@"phone"];
@@ -66,7 +66,7 @@ PropertyNSMutableArray(VCS);//tabbar root VC
     SettingViewController *setvc = [[SettingViewController alloc]init];
     [self setupChildViewController:setvc title:@"设置" imageName:@"setting" seleceImageName:@"setting"];
     
-    self.viewControllers = _VCS;
+     self.viewControllers = _VCS;
 }
 
 -(void)setupChildViewController:(UIViewController*)controller title:(NSString *)title imageName:(NSString *)imageName seleceImageName:(NSString *)selectImageName{
@@ -86,6 +86,7 @@ PropertyNSMutableArray(VCS);//tabbar root VC
 #pragma mark ————— 统一设置tabBarItem属性并添加到TabBar —————
 - (void)setViewControllers:(NSArray *)viewControllers {
     
+    NSLog(@"viewControllers.Count>>%lu",(unsigned long)viewControllers.count);
     self.TabBar.badgeTitleFont         = SYSTEMFONT(11.0f);
     self.TabBar.itemTitleFont          = SYSTEMFONT(10.0f);
     self.TabBar.itemImageRatio         = self.itemImageRatio == 0 ? 0.7 : self.itemImageRatio;
@@ -95,7 +96,7 @@ PropertyNSMutableArray(VCS);//tabbar root VC
     self.TabBar.tabBarItemCount = viewControllers.count;
     
     [viewControllers enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-        
+        NSLog(@"obj=%@   idx=%ld",obj,idx);
         UIViewController *VC = (UIViewController *)obj;
         
         UIImage *selectedImage = VC.tabBarItem.selectedImage;

@@ -38,7 +38,6 @@
     [self addSubview:tabBarItem];
     
     [self.tabBarItems addObject:tabBarItem];
-    
     if (self.tabBarItems.count == 1) {
         
         [self buttonClick:tabBarItem];

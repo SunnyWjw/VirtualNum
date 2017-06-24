@@ -31,6 +31,7 @@
 		8A86AE101EFD5DDF00C8533F /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A86AE0F1EFD5DDF00C8533F /* main.m */; };
 		8A86AE131EFD5DDF00C8533F /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A86AE121EFD5DDF00C8533F /* AppDelegate.m */; };
 		8A86AE1B1EFD5DDF00C8533F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8A86AE1A1EFD5DDF00C8533F /* Assets.xcassets */; };
+		8AEED1451EFEA30900FF9B3B /* AFNetAPIClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AEED1441EFEA30900FF9B3B /* AFNetAPIClient.m */; };
 		A168D58146F3F5D1679B630E /* libPods-VirtualNum.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 49FABA1EA2210A0556BFAE0F /* libPods-VirtualNum.a */; };
 /* End PBXBuildFile section */
 
@@ -92,6 +93,8 @@
 		8A86AE121EFD5DDF00C8533F /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = VirtualNum/AppDelegate.m; sourceTree = SOURCE_ROOT; };
 		8A86AE1A1EFD5DDF00C8533F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		8A86AE1F1EFD5DDF00C8533F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = ../Info.plist; sourceTree = "<group>"; };
+		8AEED1431EFEA30900FF9B3B /* AFNetAPIClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFNetAPIClient.h; sourceTree = "<group>"; };
+		8AEED1441EFEA30900FF9B3B /* AFNetAPIClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFNetAPIClient.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -188,6 +191,7 @@
 		8A408C081EFE83DE00C9081F /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				8AEED1421EFEA2F800FF9B3B /* Request */,
 				8A408C6A1EFE9A2300C9081F /* MBProgressHUD */,
 				8A408C5F1EFE92F100C9081F /* AdPage */,
 			);
@@ -479,13 +483,22 @@
 				8A408C001EFE83DE00C9081F /* Manager */,
 				8A408BFE1EFE83DE00C9081F /* Base */,
 				8A408C081EFE83DE00C9081F /* Utils */,
-				8A408BFF1EFE83DE00C9081F /* Define */,
 				8A408C061EFE83DE00C9081F /* Resorce */,
 				8A408C071EFE83DE00C9081F /* ThridParty */,
+				8A408BFF1EFE83DE00C9081F /* Define */,
 				8A86AE1A1EFD5DDF00C8533F /* Assets.xcassets */,
 				8A408C591EFE8CBF00C9081F /* Supporting Flies */,
 			);
 			path = VirtualNum;
+			sourceTree = "<group>";
+		};
+		8AEED1421EFEA2F800FF9B3B /* Request */ = {
+			isa = PBXGroup;
+			children = (
+				8AEED1431EFEA30900FF9B3B /* AFNetAPIClient.h */,
+				8AEED1441EFEA30900FF9B3B /* AFNetAPIClient.m */,
+			);
+			path = Request;
 			sourceTree = "<group>";
 		};
 		D5DF24695592E90556557785 /* Pods */ = {
@@ -619,6 +632,7 @@
 			files = (
 				8A408C4D1EFE891400C9081F /* AppDelegate+PushService.m in Sources */,
 				8A408C161EFE855F00C9081F /* TabBar.m in Sources */,
+				8AEED1451EFEA30900FF9B3B /* AFNetAPIClient.m in Sources */,
 				8A408C3A1EFE86E200C9081F /* RootWebViewController.m in Sources */,
 				8A408C391EFE86E200C9081F /* NJKWebViewProgressView.m in Sources */,
 				8A408C0E1EFE84AE00C9081F /* MainTabBarController.m in Sources */,
