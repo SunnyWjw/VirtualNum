@@ -12,5 +12,11 @@
 #define FontAndColorMacros_h
 
 #define CNavBgColor  [UIColor colorWithHexString:@"00AE68"]
+//灰色的边框线
+#define BorderColor  [[UIColor colorWithHexString:@"#919191"]CGColor]
+//列表详情色
+#define LIST_DETAIL_COLOR @"#5a5a5a"
+#define CELL_CONTENT_SIZE 13.0
+
 
 #endif /* FontAndColorMacros_h */

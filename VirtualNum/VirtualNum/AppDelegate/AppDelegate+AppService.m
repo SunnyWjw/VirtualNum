@@ -36,19 +36,18 @@
 //    [[UIButton appearance] setShowsTouchWhenHighlighted:YES];
  //   [UIActivityIndicatorView appearanceWhenContainedIn:[MBProgressHUD class], nil].color = KWhiteColor;
 
-    //为避免自动登录成功刷新tabbar
-    if (!self.mainTabBar || ![self.window.rootViewController isKindOfClass:[MainTabBarController class]]) {
-        self.mainTabBar = [MainTabBarController new];
-        self.window.rootViewController = self.mainTabBar;
-    }
+//    //为避免自动登录成功刷新tabbar
+//    if (!self.mainTabBar || ![self.window.rootViewController isKindOfClass:[MainTabBarController class]]) {
+//        self.mainTabBar = [MainTabBarController new];
+//        self.window.rootViewController = self.mainTabBar;
+//    }
 }
 
 
 #pragma mark ————— 初始化用户系统 —————
 -(void)initUserManager{
-    /*
-   // DLog(@"设备IMEI ：%@",[OpenUDID value]);
-    if([userManager loadUserInfo]){
+    
+    if([self loadUserDefaults]){
         
         //如果有本地数据，先展示TabBar 随后异步自动登录
         self.mainTabBar = [MainTabBarController new];
@@ -68,13 +67,26 @@
     }else{
         //没有登录过，展示登录页面
         KPostNotification(KNotificationLoginStateChange, @NO)
-        [MBProgressHUD showErrorMessage:@"需要登录"];
     }
-     */
-    
-    //没有登录过，展示登录页面
-//    KPostNotification(KNotificationLoginStateChange, @NO)
-    KPostNotification(KNotificationAutoLoginSuccess, nil);
+}
+
+
+-(BOOL)loadUserDefaults{
+    NSString * usernameStr = [[NSUserDefaults standardUserDefaults] objectForKey:@"USERNAME"];
+    NSString * pwdStr = [[NSUserDefaults standardUserDefaults] objectForKey:@"PASSWORD"];
+    NSString * checkBoxBool = [[NSUserDefaults standardUserDefaults] objectForKey:@"zidongdenglu"];
+     DLog(@"checkBoxBool>>>%@",checkBoxBool);
+    if ([checkBoxBool isEqual: @"1"]) {
+        DLog(@"YES>>>");
+    }else{
+        DLog(@"NO>>>>");
+    }
+   
+    if(usernameStr && pwdStr && [checkBoxBool isEqual: @"1"]){
+        return YES;
+    }else{
+        return NO;
+    }
 }
 
 #pragma mark ————— 登录状态处理 —————
@@ -98,7 +110,7 @@
         
     }
     //展示FPS
-  //  [AppManager showFPS];
+   //[AppManager showFPS];
 }
 
 

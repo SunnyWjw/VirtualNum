@@ -17,6 +17,9 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
+    //[[NSUserDefaults standardUserDefaults] removeObjectForKey:@"USERNAME"];
+   
+    
     //初始化window
     [self initWindow];
     
@@ -30,7 +33,7 @@
     [self initUserManager];
     
     //网络监听
-    [self monitorNetworkStatus];
+    //[self monitorNetworkStatus];
     
     // Override point for customization after application launch.
     return YES;

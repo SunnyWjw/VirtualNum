@@ -29,7 +29,7 @@
     [navBar setTitleTextAttributes:@{NSForegroundColorAttributeName :KWhiteColor, NSFontAttributeName : [UIFont systemFontOfSize:18]}];
     
     //导航栏左右文字主题
-    UIBarButtonItem *barButtonItem = [UIBarButtonItem appearance];
+//    UIBarButtonItem *barButtonItem = [UIBarButtonItem appearance];
     
     //    [barButtonItem setTitleTextAttributes:@{NSForegroundColorAttributeName : KWhiteColor, NSFontAttributeName : [UIFont systemFontOfSize:12]} forState:UIControlStateNormal];
     

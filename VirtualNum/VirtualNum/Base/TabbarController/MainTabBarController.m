@@ -55,16 +55,17 @@ PropertyNSMutableArray(VCS);//tabbar root VC
 -(void)setUpAllChildViewController{
    _VCS = @[].mutableCopy;
     HomeViewController *homeVC = [[HomeViewController alloc]init];
-    [self setupChildViewController:homeVC title:@"首页A" imageName:@"home" seleceImageName:@"home"];
+    [self setupChildViewController:homeVC title:@"首页" imageName:@"home"
+                   seleceImageName:@"home_sel"];
     
     CallingViewController *callVC = [[CallingViewController alloc]init];
-    [self setupChildViewController:callVC title:@"我的" imageName:@"icon_tabbar_discovery_selected.png" seleceImageName:@"phone"];
+    [self setupChildViewController:callVC title:@"通话" imageName:@"Calllog" seleceImageName:@"Calllog_sel"];
     
     MineViewController *mineVC = [[MineViewController alloc]init];
-    [self setupChildViewController:mineVC title:@"我的" imageName:@"icon_tabbar_discovery_selected.png" seleceImageName:@"mine"];
+    [self setupChildViewController:mineVC title:@"个人中心" imageName:@"center" seleceImageName:@"center_sel"];
     
     SettingViewController *setvc = [[SettingViewController alloc]init];
-    [self setupChildViewController:setvc title:@"设置" imageName:@"setting" seleceImageName:@"setting"];
+    [self setupChildViewController:setvc title:@"设置" imageName:@"setting" seleceImageName:@"setting_sel"];
     
      self.viewControllers = _VCS;
 }
@@ -80,31 +81,30 @@ PropertyNSMutableArray(VCS);//tabbar root VC
     RootNavigationController *nav = [[RootNavigationController alloc]initWithRootViewController:controller];
     controller.title = title;
     [_VCS addObject:nav];
-    
 }
 
 #pragma mark ————— 统一设置tabBarItem属性并添加到TabBar —————
 - (void)setViewControllers:(NSArray *)viewControllers {
     
-    NSLog(@"viewControllers.Count>>%lu",(unsigned long)viewControllers.count);
     self.TabBar.badgeTitleFont         = SYSTEMFONT(11.0f);
     self.TabBar.itemTitleFont          = SYSTEMFONT(10.0f);
     self.TabBar.itemImageRatio         = self.itemImageRatio == 0 ? 0.7 : self.itemImageRatio;
-    self.TabBar.itemTitleColor         = KBlackColor;
+    self.TabBar.itemTitleColor         = CNavBgColor;//KBlackColor;
     self.TabBar.selectedItemTitleColor = CNavBgColor;
     
     self.TabBar.tabBarItemCount = viewControllers.count;
     
     [viewControllers enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-        NSLog(@"obj=%@   idx=%ld",obj,idx);
+        //DLog(@"obj=%@   idx=%ld",obj,idx);
         UIViewController *VC = (UIViewController *)obj;
         
         UIImage *selectedImage = VC.tabBarItem.selectedImage;
         VC.tabBarItem.selectedImage = [selectedImage imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
         
+        [self.TabBar addTabBarItem:VC.tabBarItem];
+        
         [self addChildViewController:VC];
         
-        [self.TabBar addTabBarItem:VC.tabBarItem];
     }];
 }
 

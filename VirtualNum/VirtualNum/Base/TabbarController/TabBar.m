@@ -32,7 +32,6 @@
     tabBarItem.tabBarItemCount = self.tabBarItemCount;
     
     tabBarItem.tabBarItem = item;
-    
     [tabBarItem addTarget:self action:@selector(buttonClick:) forControlEvents:UIControlEventTouchDown];
     
     [self addSubview:tabBarItem];

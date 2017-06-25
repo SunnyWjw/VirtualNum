@@ -2,8 +2,8 @@
 //  URLMacros.h
 //  MiAiApp
 //
-//  Created by 徐阳 on 2017/5/18.
-//  Copyright © 2017年 徐阳. All rights reserved.
+//  Created by SunnyWu on 2017/6/24.
+//  Copyright © 2017年 SunnyWu. All rights reserved.
 //
 
 
@@ -31,18 +31,17 @@
 #if DevelopSever
 
 /**开发服务器*/
-#define URL_main @"http://192.168.20.31:20000"
-//#define URL_main @"http://192.168.11.122:8090" //展鹏
+#define URL_main @"http://103.198.18.35:8080"
 
 #elif TestSever
 
 /**测试服务器*/
-#define URL_main @"http://192.168.20.31:20000"
+#define URL_main @"http://103.198.18.35:8080"
 
 #elif ProductSever
 
 /**生产服务器*/
-#define URL_main @"http://192.168.20.31:20000"
+#define URL_main @"http://103.198.18.35:8080"
 #endif
 
 
@@ -55,16 +54,14 @@
 
 
 #pragma mark - ——————— 用户相关 ————————
-//自动登录
-#define URL_user_auto_login @"/api/autoLogin"
-//登录
-#define URL_user_login @"/api/login"
-//用户详情
-#define URL_user_info_detail @"/api/user/info/detail"
-//修改头像
-#define URL_user_info_change_photo @"/api/user/info/changephoto"
-//注释
-#define URL_user_info_change @"/api/user/info/change"
+
+//管理员登录
+#define URL_user_login @"/api/user/login"
+//获取用户信息
+#define URL_user_info @"/api/userInfo"
+//号码段配置相关
+#define URL_phone @"/api/phone"
+
 
 
 #endif /* URLMacros_h */
