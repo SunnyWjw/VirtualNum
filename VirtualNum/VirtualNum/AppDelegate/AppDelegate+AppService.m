@@ -42,8 +42,7 @@
 //        self.window.rootViewController = self.mainTabBar;
 //    }
     
-    [[NSUserDefaults standardUserDefaults] setObject:@"1101" forKey:@"companyid"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
+   
 }
 
 

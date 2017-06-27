@@ -18,7 +18,8 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
     //[[NSUserDefaults standardUserDefaults] removeObjectForKey:@"USERNAME"];
-   
+    [[NSUserDefaults standardUserDefaults] setObject:@"1101" forKey:@"companyid"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
     
     //初始化window
     [self initWindow];
