@@ -7,10 +7,9 @@
 //
 
 #import "LoginViewController.h"
-#import "SaveUserInfo.h"
 #import "QCheckBox.h"
 
-@interface LoginViewController ()<UITextFieldDelegate>
+@interface LoginViewController ()<UITextFieldDelegate,UIAlertViewDelegate>
 
 @property(strong,nonatomic) UITextField *userNameTf;
 @property(strong,nonatomic) UITextField *passwordTf;
@@ -188,8 +187,6 @@ static NSString * const PASSWORD = @"PASSWORD";
         return;
     }
     
-    [MBProgressHUD showActivityMessageInView:@"登录中..."];
-    
     NSDictionary *parameters = @{
                                  @"username": self.userNameTf.text,
                                  @"password": self.passwordTf.text} ;
@@ -200,9 +197,16 @@ static NSString * const PASSWORD = @"PASSWORD";
             [self saveUserInfo];
         }else{
             DLog(@"登录失败：%@", des);
+            [self showErrorLog:des];
         }
     }];
+}
 
+-(void)showErrorLog:(NSString *)errorMsg{
+//    [MBProgressHUD showErrorMessage:errorMsg];
+    UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:@"提示" message:errorMsg delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+    alertView.tag = 122;
+    [alertView show];
 }
 
 -(void)saveUserInfo{

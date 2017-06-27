@@ -72,4 +72,9 @@ SINGLETON_FOR_HEADER(UserManager)
  */
 -(BOOL)loadUserInfo;
 
+#pragma mark ————— 保存/删除用户信息 —————
+-(void)SaveInfo:(NSDictionary *)userDic;
+
+-(void)DelInfo;
+
 @end

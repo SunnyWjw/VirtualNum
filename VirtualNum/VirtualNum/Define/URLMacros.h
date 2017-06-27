@@ -61,6 +61,8 @@
 #define URL_user_info @"/api/userInfo"
 //号码段配置相关
 #define URL_phone @"/api/phone"
+//获取可用号码段
+#define URL_AX @"/api/ax"
 
 
 

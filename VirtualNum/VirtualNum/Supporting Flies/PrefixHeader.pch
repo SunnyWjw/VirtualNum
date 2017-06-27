@@ -24,9 +24,9 @@
 #import "RootNavigationController.h"
 #import "AppManager.h"
 #import "UserManager.h"
-#import "SaveUserInfo.h"
 #import "MBProgressHUD+XY.h"
 #import "AFNetAPIClient.h"
+#import "NSString+checkPhone.h"
 
 
 

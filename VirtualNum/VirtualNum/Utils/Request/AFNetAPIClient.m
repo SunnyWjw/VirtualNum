@@ -148,7 +148,7 @@
      AFJSONResponseSerializer:  JSON解析器.
      AFXMLParserResponseSerializer:  XML解析器.
      */
-    
+    DLog(@">>>%@",self.url);
     //设置请求头
     [self setupHTTPHeaderWithManager:manager];
     

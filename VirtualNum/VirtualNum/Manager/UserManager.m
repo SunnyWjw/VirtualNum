@@ -50,6 +50,7 @@ SINGLETON_FOR_CLASS(UserManager);
     
     NSString *baseUrl = NSStringFormat(@"%@%@",URL_main,URL_user_info);
     [[AFNetAPIClient sharedJsonClient].setRequest(baseUrl).RequestType(Post).Parameters(params) startRequestWithSuccess:^(NSURLSessionDataTask *task, id responseObject) {
+        [MBProgressHUD hideHUD];
          [self LoginSuccess:responseObject completion:completion];
     } progress:^(NSProgress *progress) {
         
@@ -93,7 +94,7 @@ SINGLETON_FOR_CLASS(UserManager);
     NSString *successstr = [NSString stringWithFormat:@"%@", tempJSON[@"success"]];
     if ([successstr isEqualToString:@"1"]) {
         [MBProgressHUD showErrorMessage:@"登录成功"];
-        [SaveUserInfo SaveInfo:tempJSON];
+        [self SaveInfo:tempJSON];
        // DLog(@"tempJSON>>%@",tempJSON);
         if (completion) {
             completion(YES,nil);
@@ -101,7 +102,7 @@ SINGLETON_FOR_CLASS(UserManager);
         KPostNotification(KNotificationLoginStateChange, @YES);
     }else{
         if (completion) {
-            completion(NO,@"登录失败");
+            completion(NO,tempJSON[@"message"]);
         }
         KPostNotification(KNotificationLoginStateChange, @NO);
     }
@@ -126,7 +127,21 @@ SINGLETON_FOR_CLASS(UserManager);
 }
 #pragma mark ————— 退出登录 —————
 - (void)logout:(void (^)(BOOL, NSString *))completion{
-    [SaveUserInfo DelInfo];
+    [self DelInfo];
 }
+
+#pragma mark ————— 保存/删除用户信息 —————
+-(void)SaveInfo:(NSDictionary *)userDic{
+    
+}
+
+-(void)DelInfo{
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"USERNAME"];
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"PASSWORD"];
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"zidongdenglu"];
+    KPostNotification(KNotificationLoginStateChange, @NO);
+}
+
+
 
 @end
