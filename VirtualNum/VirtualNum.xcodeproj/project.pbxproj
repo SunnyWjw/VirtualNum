@@ -42,6 +42,9 @@
 		8A9763E71F027E200006F7CF /* UIColor+MyColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A9763E11F027E200006F7CF /* UIColor+MyColor.m */; };
 		8A9763E81F027E200006F7CF /* UIColor+Random.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A9763E31F027E200006F7CF /* UIColor+Random.m */; };
 		8A9763E91F027E200006F7CF /* UIImage+CutCircleImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A9763E51F027E200006F7CF /* UIImage+CutCircleImage.m */; };
+		8AB692A81F0543AE0016C3DF /* PPAddressBookHandle.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AB692A21F0543AE0016C3DF /* PPAddressBookHandle.m */; };
+		8AB692A91F0543AE0016C3DF /* PPGetAddressBook.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AB692A41F0543AE0016C3DF /* PPGetAddressBook.m */; };
+		8AB692AA1F0543AE0016C3DF /* PPPersonModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AB692A61F0543AE0016C3DF /* PPPersonModel.m */; };
 		8AB7C0051F015DF00027EBFB /* AdPageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AB7C0041F015DF00027EBFB /* AdPageView.m */; };
 		8AB7C0081F015E020027EBFB /* AFNetAPIClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AB7C0071F015E020027EBFB /* AFNetAPIClient.m */; };
 		8AB7C00B1F015E120027EBFB /* MBProgressHUD+XY.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AB7C00A1F015E120027EBFB /* MBProgressHUD+XY.m */; };
@@ -129,6 +132,13 @@
 		8A9763E31F027E200006F7CF /* UIColor+Random.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+Random.m"; sourceTree = "<group>"; };
 		8A9763E41F027E200006F7CF /* UIImage+CutCircleImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+CutCircleImage.h"; sourceTree = "<group>"; };
 		8A9763E51F027E200006F7CF /* UIImage+CutCircleImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+CutCircleImage.m"; sourceTree = "<group>"; };
+		8AB692A11F0543AE0016C3DF /* PPAddressBookHandle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPAddressBookHandle.h; sourceTree = "<group>"; };
+		8AB692A21F0543AE0016C3DF /* PPAddressBookHandle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPAddressBookHandle.m; sourceTree = "<group>"; };
+		8AB692A31F0543AE0016C3DF /* PPGetAddressBook.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPGetAddressBook.h; sourceTree = "<group>"; };
+		8AB692A41F0543AE0016C3DF /* PPGetAddressBook.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPGetAddressBook.m; sourceTree = "<group>"; };
+		8AB692A51F0543AE0016C3DF /* PPPersonModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPPersonModel.h; sourceTree = "<group>"; };
+		8AB692A61F0543AE0016C3DF /* PPPersonModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPPersonModel.m; sourceTree = "<group>"; };
+		8AB692A71F0543AE0016C3DF /* PPSingleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPSingleton.h; sourceTree = "<group>"; };
 		8AB7C0031F015DF00027EBFB /* AdPageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdPageView.h; sourceTree = "<group>"; };
 		8AB7C0041F015DF00027EBFB /* AdPageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AdPageView.m; sourceTree = "<group>"; };
 		8AB7C0061F015E020027EBFB /* AFNetAPIClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFNetAPIClient.h; sourceTree = "<group>"; };
@@ -228,6 +238,7 @@
 		8A408C071EFE83DE00C9081F /* ThridParty */ = {
 			isa = PBXGroup;
 			children = (
+				8AB692A01F0543AE0016C3DF /* PPGetAddressBook */,
 			);
 			path = ThridParty;
 			sourceTree = "<group>";
@@ -514,6 +525,20 @@
 			path = VirtualNum;
 			sourceTree = "<group>";
 		};
+		8AB692A01F0543AE0016C3DF /* PPGetAddressBook */ = {
+			isa = PBXGroup;
+			children = (
+				8AB692A11F0543AE0016C3DF /* PPAddressBookHandle.h */,
+				8AB692A21F0543AE0016C3DF /* PPAddressBookHandle.m */,
+				8AB692A31F0543AE0016C3DF /* PPGetAddressBook.h */,
+				8AB692A41F0543AE0016C3DF /* PPGetAddressBook.m */,
+				8AB692A51F0543AE0016C3DF /* PPPersonModel.h */,
+				8AB692A61F0543AE0016C3DF /* PPPersonModel.m */,
+				8AB692A71F0543AE0016C3DF /* PPSingleton.h */,
+			);
+			path = PPGetAddressBook;
+			sourceTree = "<group>";
+		};
 		8AB7BFFF1F015DDB0027EBFB /* Utils */ = {
 			isa = PBXGroup;
 			children = (
@@ -723,7 +748,9 @@
 				8A9763DA1F027E110006F7CF /* MyDate.m in Sources */,
 				8A83F3651EFFD01200F1BB84 /* UserManager.m in Sources */,
 				8A408C2B1EFE867500C9081F /* RootViewController.m in Sources */,
+				8AB692A91F0543AE0016C3DF /* PPGetAddressBook.m in Sources */,
 				8A9763DB1F027E110006F7CF /* MyMd5.m in Sources */,
+				8AB692AA1F0543AE0016C3DF /* PPPersonModel.m in Sources */,
 				8A408C181EFE855F00C9081F /* TabBarBadge.m in Sources */,
 				8A408C3C1EFE86E200C9081F /* RxWebViewNavigationViewController.m in Sources */,
 				8A408C3B1EFE86E200C9081F /* RxWebViewController.m in Sources */,
@@ -740,6 +767,7 @@
 				8A408C381EFE86E200C9081F /* NJKWebViewProgress.m in Sources */,
 				8A9763E81F027E200006F7CF /* UIColor+Random.m in Sources */,
 				8A9763E91F027E200006F7CF /* UIImage+CutCircleImage.m in Sources */,
+				8AB692A81F0543AE0016C3DF /* PPAddressBookHandle.m in Sources */,
 				8AB7C00F1F015E440027EBFB /* HWPopTool.m in Sources */,
 				8A86AE101EFD5DDF00C8533F /* main.m in Sources */,
 				8A408C421EFE889600C9081F /* LoginViewController.m in Sources */,

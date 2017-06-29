@@ -35,3 +35,16 @@
 #define KNotificationNetWorkStateChange @"KNotificationNetWorkStateChange"
 
 #endif /* CommonMacros_h */
+
+/**基本信息**/
+#define permissions @"PERMISSIONS"
+#define userID      @"_ID"
+#define userName  @"USERNAME"
+#define passWord  @"PASSWORD"
+#define companyid @"COMPANYID"
+#define companyName @"COMPANYNAME"
+#define phone   @"PHONENUM"
+#define autoLogin   @"AUTOLOGIN"
+#define X   @"XENUMBER"
+
+

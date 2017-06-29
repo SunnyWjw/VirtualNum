@@ -66,8 +66,8 @@ SINGLETON_FOR_CLASS(UserManager);
 -(void)autoLoginToServer:(loginBlock)completion{
     NSString *baseUrl = NSStringFormat(@"%@%@",URL_main,URL_user_info);
     NSDictionary *parameters = @{
-                                 @"username": [[NSUserDefaults standardUserDefaults] objectForKey:@"USERNAME"],
-                                 @"password": [[NSUserDefaults standardUserDefaults] objectForKey:@"PASSWORD"]
+                                 @"username": [[NSUserDefaults standardUserDefaults] objectForKey:userName],
+                                 @"password": [[NSUserDefaults standardUserDefaults] objectForKey:passWord]
                                  } ;
     
     [[AFNetAPIClient sharedJsonClient].setRequest(baseUrl).RequestType(Post).Parameters(parameters) startRequestWithSuccess:^(NSURLSessionDataTask *task, id responseObject) {
@@ -95,7 +95,7 @@ SINGLETON_FOR_CLASS(UserManager);
     if ([successstr isEqualToString:@"1"]) {
         [MBProgressHUD showErrorMessage:@"登录成功"];
         [self SaveInfo:tempJSON];
-       // DLog(@"tempJSON>>%@",tempJSON);
+        DLog(@"tempJSON>>%@",tempJSON);
         if (completion) {
             completion(YES,nil);
         }
@@ -132,13 +132,15 @@ SINGLETON_FOR_CLASS(UserManager);
 
 #pragma mark ————— 保存/删除用户信息 —————
 -(void)SaveInfo:(NSDictionary *)userDic{
-    
+    [[NSUserDefaults standardUserDefaults] setObject:userDic[@"user"][@"permissions"] forKey:permissions];
+    [[NSUserDefaults standardUserDefaults] setObject:userDic[@"user"][@"_id"] forKey:userID];
+    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 -(void)DelInfo{
-    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"USERNAME"];
-    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"PASSWORD"];
-    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"zidongdenglu"];
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:userName];
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:passWord];
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:autoLogin];
     KPostNotification(KNotificationLoginStateChange, @NO);
 }
 

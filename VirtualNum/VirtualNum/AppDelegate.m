@@ -7,6 +7,7 @@
 //
 
 #import "AppDelegate.h"
+#import "PPGetAddressBook.h"
 
 @interface AppDelegate ()
 
@@ -17,15 +18,14 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
-    //[[NSUserDefaults standardUserDefaults] removeObjectForKey:@"USERNAME"];
-    [[NSUserDefaults standardUserDefaults] setObject:@"1101" forKey:@"companyid"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
     
     //初始化window
     [self initWindow];
     
     //广告页
     //[AppManager appStart];
+    //请求用户获取通讯录权限
+    [PPGetAddressBook requestAddressBookAuthorization];
     
     //初始化app服务
     [self initService];

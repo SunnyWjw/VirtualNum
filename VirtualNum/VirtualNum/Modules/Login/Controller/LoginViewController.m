@@ -24,11 +24,6 @@
 #define TFLandR 5
 #define Width 45
 
-//用户名
-static NSString * const USERNAME = @"USERNAME";
-//密码
-static NSString * const PASSWORD = @"PASSWORD";
-
 
 @implementation LoginViewController
 
@@ -215,21 +210,20 @@ static NSString * const PASSWORD = @"PASSWORD";
     self.passwordTf.text = [self.passwordTf.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     
     //    保存用户名
-    [[NSUserDefaults standardUserDefaults] setObject:self.userNameTf.text forKey:USERNAME];
+    [[NSUserDefaults standardUserDefaults] setObject:self.userNameTf.text forKey:userName];
     
     //    保存密码
-    [[NSUserDefaults standardUserDefaults] setObject:self.passwordTf.text forKey:PASSWORD];
+    [[NSUserDefaults standardUserDefaults] setObject:self.passwordTf.text forKey:passWord];
     
     //    自动登录
     if(self.recordPswBox.checked ==YES){
         DLog(@"选中");
-        [[NSUserDefaults standardUserDefaults] setObject:@"1" forKey:@"zidongdenglu"];
+        [[NSUserDefaults standardUserDefaults] setObject:@"1" forKey:autoLogin];
     }else{
         DLog(@"未选中");
-        [[NSUserDefaults standardUserDefaults] setObject:@"0" forKey:@"zidongdenglu"];
+        [[NSUserDefaults standardUserDefaults] setObject:@"0" forKey:autoLogin];
     }
     [[NSUserDefaults standardUserDefaults] synchronize];
-    DLog(@"zidongdenglu>>>>%@",[[NSUserDefaults standardUserDefaults] objectForKey:@"zidongdenglu"]);
 }
 
 

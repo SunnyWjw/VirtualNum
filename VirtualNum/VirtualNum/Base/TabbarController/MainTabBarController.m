@@ -55,11 +55,11 @@ PropertyNSMutableArray(VCS);//tabbar root VC
 -(void)setUpAllChildViewController{
    _VCS = @[].mutableCopy;
     HomeViewController *homeVC = [[HomeViewController alloc]init];
-    [self setupChildViewController:homeVC title:@"首页" imageName:@"home"
+    [self setupChildViewController:homeVC title:@"通话记录" imageName:@"home"
                    seleceImageName:@"home_sel"];
     
     CallingViewController *callVC = [[CallingViewController alloc]init];
-    [self setupChildViewController:callVC title:@"通话" imageName:@"Calllog" seleceImageName:@"Calllog_sel"];
+    [self setupChildViewController:callVC title:@"联系人" imageName:@"Calllog" seleceImageName:@"Calllog_sel"];
     
     MineViewController *mineVC = [[MineViewController alloc]init];
     [self setupChildViewController:mineVC title:@"个人中心" imageName:@"center" seleceImageName:@"center_sel"];

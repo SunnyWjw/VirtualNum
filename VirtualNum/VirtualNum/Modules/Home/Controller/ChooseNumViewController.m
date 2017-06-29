@@ -33,9 +33,9 @@
     self.title = @"选择X号码";
     
     self.dataArray = [[NSMutableArray alloc]initWithCapacity:0];
-   
+    
     [self creadTableView];
-   
+    
     [self SendRequest];
 }
 
@@ -59,23 +59,23 @@
     if (!comPanyIDStr) {
         [userManager DelInfo];
     }
-
-     NSString *baseUrl = NSStringFormat(@"%@%@",URL_main,URL_phone);
-     NSDictionary *parameters = @{
-                                  @"companyid": comPanyIDStr,
-                                  } ;
     
-    /*
     NSString *baseUrl = NSStringFormat(@"%@%@",URL_main,URL_phone);
     NSDictionary *parameters = @{
-                                 @"page": @"1",
-                                 @"pageSize": @"10"
+                                 @"companyid": comPanyIDStr,
                                  } ;
+    
+    /*
+     NSString *baseUrl = NSStringFormat(@"%@%@",URL_main,URL_phone);
+     NSDictionary *parameters = @{
+     @"page": @"1",
+     @"pageSize": @"10"
+     } ;
      */
     DLog(@"URL>>>%@",baseUrl);
     [MBProgressHUD showActivityMessageInView:@"请求中..."];
     [[AFNetAPIClient sharedJsonClient].setRequest(baseUrl).RequestType(Post).Parameters(parameters) startRequestWithSuccess:^(NSURLSessionDataTask *task, id responseObject) {
-         [MBProgressHUD hideHUD];
+        [MBProgressHUD hideHUD];
         NSString *result = [[NSString alloc] initWithData:responseObject encoding:NSUTF8StringEncoding];
         if([[AFNetAPIClient sharedJsonClient] parseJSONData:result] == nil){
             [MBProgressHUD showErrorMessage:@"服务器繁忙，请稍后再试"];
@@ -86,7 +86,7 @@
         DLog(@"tempJSON>>>%@",tempJSON);
         NSString *successstr = [NSString stringWithFormat:@"%@", tempJSON[@"success"]];
         if ([successstr isEqualToString:@"1"]) {
-        if ([[tempJSON objectForKey:@"data"] isKindOfClass:[NSArray class]])
+            if ([[tempJSON objectForKey:@"data"] isKindOfClass:[NSArray class]])
             {
                 [self.dataArray addObjectsFromArray:[tempJSON objectForKey:@"data"]];
             }
@@ -96,9 +96,9 @@
             [MBProgressHUD showErrorMessage:tempJSON[@"message"]];
         }
     } progress:^(NSProgress *progress) {
-    
+        
     } failure:^(NSURLSessionDataTask *task, NSError *error) {
-         [MBProgressHUD hideHUD];
+        [MBProgressHUD hideHUD];
         [MBProgressHUD showErrorMessage:@"连接网络超时，请稍后再试"];
     }];
 }
@@ -131,9 +131,8 @@
         
     }
     NSDictionary *dic = [self.dataArray objectAtIndex:indexPath.row];
-    cell.TopLab.text=dic[@"companyname"];
-    cell.BottomLab.text=dic[@"xs"];
-    
+    cell.TopLab.text=dic[@"companyid"];//dic[@"companyname"];
+    cell.BottomLab.text=[NSString stringWithFormat:@"X: %@,companyid: %@",dic[@"xs"],dic[@"companyid"]]; //dic[@"xs"];
     
     return cell;
 }
@@ -152,7 +151,7 @@
     [alert setAlertViewStyle:UIAlertViewStylePlainTextInput];//UIAlertViewStyleLoginAndPasswordInput];
     UITextField *nameField = [alert textFieldAtIndex:0];
     nameField.placeholder = @"请输入需要绑定的手机号码";
-   
+    
     [alert show];
 }
 
@@ -163,7 +162,7 @@
         //TODO
         DLog(@"phoneField>>%@",phoneField.text);
         if (phoneField.text.length == 0) {
-              [MBProgressHUD showErrorMessage:@"手机号不能为空"];
+            [MBProgressHUD showErrorMessage:@"手机号不能为空"];
             return;
         }
         
@@ -176,18 +175,21 @@
 }
 
 -(void)sendBingRequest:(NSString *)phoneNumStr{
-//    _dictionary
+    //    _dictionary
     
     NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
-    [dictionary addEntriesFromDictionary:self.dictionary];
+    //    [dictionary addEntriesFromDictionary:self.dictionary];
     [dictionary setObject:phoneNumStr forKey:@"a"];
- 
+    [dictionary setObject:self.dictionary[@"xs"] forKey:@"x"];
+    [dictionary setObject:self.dictionary[@"companyid"] forKey:@"companyid"];
+    [dictionary setObject:self.dictionary[@"companyname"] forKey:@"companyname"];
+    
     
     NSString *baseUrl = NSStringFormat(@"%@%@",URL_main,URL_AX);
     NSDictionary *parameters = @{
                                  @"newItem": dictionary,
                                  @"oldItem": @{},
-                                  @"type": @"create"
+                                 @"type": @"create"
                                  } ;
     DLog(@"parameters>>>%@",parameters);
     [MBProgressHUD showActivityMessageInView:@"请求中..."];
@@ -206,6 +208,8 @@
             if ([[tempJSON objectForKey:@"data"] isKindOfClass:[NSArray class]])
             {
                 [MBProgressHUD showErrorMessage:@"绑定成功"];
+                [[NSUserDefaults standardUserDefaults] setObject:self.dictionary[@"xs"] forKey:X];
+                [[NSUserDefaults standardUserDefaults] setObject:phoneNumStr forKey:phone];
             }
             
         }else{
@@ -217,6 +221,61 @@
         [MBProgressHUD hideHUD];
         [MBProgressHUD showErrorMessage:@"连接网络超时，请稍后再试"];
     }];
+    
+    /*
+    [self put:baseUrl params:parameters success:^(id responseObject) {
+        
+        NSString *result = [[NSString alloc] initWithData:responseObject encoding:NSUTF8StringEncoding];
+        if([[AFNetAPIClient sharedJsonClient] parseJSONData:result] == nil){
+            [MBProgressHUD showErrorMessage:@"服务器繁忙，请稍后再试"];
+            return;
+        }
+        
+        NSDictionary* tempJSON = [[AFNetAPIClient sharedJsonClient] parseJSONData:result];
+        DLog(@"tempJSON>>>%@",tempJSON);
+        NSString *successstr = [NSString stringWithFormat:@"%@", tempJSON[@"success"]];
+        if ([successstr isEqualToString:@"1"]) {
+            if ([[tempJSON objectForKey:@"data"] isKindOfClass:[NSArray class]])
+            {
+                
+                [MBProgressHUD showErrorMessage:@"绑定成功"];
+            }
+            
+        }else{
+            [MBProgressHUD showErrorMessage:tempJSON[@"message"]];
+        }
+        
+    }failure:^(NSError *error) {
+        [MBProgressHUD showErrorMessage:@"连接网络超时，请稍后再试"];
+    }];
+    */
+    
+}
+
+
+- (void)put:(NSString *)url params:(NSDictionary *)params success:(void (^)(id responseObject))success failure:(void (^)(NSError *))failure
+{
+    
+    AFHTTPSessionManager *manger = [AFHTTPSessionManager manager];
+    manger.requestSerializer = [AFJSONRequestSerializer serializer];
+    manger.responseSerializer = [AFHTTPResponseSerializer serializer];
+    
+    [manger PUT:url parameters:params success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        //如果请求成功的话将responseObject保存在sucess Block中
+        if (success)
+        {
+            success(responseObject);
+        }
+        
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        
+        if(failure)
+        {
+            failure(error);
+        }
+        
+    }];
+    
 }
 
 

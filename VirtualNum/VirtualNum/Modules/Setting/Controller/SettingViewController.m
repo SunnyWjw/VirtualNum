@@ -19,13 +19,13 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.title=@"设置";
-    [self createView];
+   [self createView];
     
     
 }
 
 -(void)createView{
-    
+    /*
     UIButton *chooseBtn = [[UIButton alloc]init];
     chooseBtn.backgroundColor =CNavBgColor;
     [chooseBtn setTitle:@"选择号码" forState:UIControlStateNormal];
@@ -39,6 +39,7 @@
         make.top.equalTo(self.view).with.offset(104);
         make.size.mas_equalTo(CGSizeMake(100, 40));
     }];
+     */
     
     
     UIButton *exitBtn = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -75,8 +76,9 @@
     if (alertView.tag == 122)
     {
         if (buttonIndex == 0) {
-            [[NSUserDefaults standardUserDefaults]removeObjectForKey:@"USERNAME"];
-            [[NSUserDefaults standardUserDefaults]removeObjectForKey:@"PASSWORD"];
+            [[NSUserDefaults standardUserDefaults]removeObjectForKey:userName];
+            [[NSUserDefaults standardUserDefaults]removeObjectForKey:passWord];
+            [[NSUserDefaults standardUserDefaults]removeObjectForKey:companyid];
             KPostNotification(KNotificationLoginStateChange, @NO)
         }
     }
