@@ -210,18 +210,18 @@
     self.passwordTf.text = [self.passwordTf.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     
     //    保存用户名
-    [[NSUserDefaults standardUserDefaults] setObject:self.userNameTf.text forKey:userName];
+    [[NSUserDefaults standardUserDefaults] setObject:self.userNameTf.text forKey:VN_USERNAME];
     
     //    保存密码
-    [[NSUserDefaults standardUserDefaults] setObject:self.passwordTf.text forKey:passWord];
+    [[NSUserDefaults standardUserDefaults] setObject:self.passwordTf.text forKey:VN_PASSWORD];
     
     //    自动登录
     if(self.recordPswBox.checked ==YES){
         DLog(@"选中");
-        [[NSUserDefaults standardUserDefaults] setObject:@"1" forKey:autoLogin];
+        [[NSUserDefaults standardUserDefaults] setObject:@"1" forKey:VN_AUTOLOGIN];
     }else{
         DLog(@"未选中");
-        [[NSUserDefaults standardUserDefaults] setObject:@"0" forKey:autoLogin];
+        [[NSUserDefaults standardUserDefaults] setObject:@"0" forKey:VN_AUTOLOGIN];
     }
     [[NSUserDefaults standardUserDefaults] synchronize];
 }

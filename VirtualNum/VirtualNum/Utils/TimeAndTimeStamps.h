@@ -65,4 +65,12 @@
  */
 + (NSString *)dateToString:(NSDate *)date;
 
+
+/**
+ 获取当前时间格式串 例:20170702221249
+
+ @return 返回时间串
+ */
++ (NSString *)getNowDateTimeFoFourteenr;
+
 @end

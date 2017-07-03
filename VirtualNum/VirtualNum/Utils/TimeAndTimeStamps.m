@@ -69,5 +69,14 @@
     return dateString;
 }
 
++ (NSString *)getNowDateTimeFoFourteenr{
+    NSDate *date = [NSDate date];
+    NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateStyle:NSDateFormatterMediumStyle];
+    [dateFormatter setDateFormat:@"yyyyMMddHHmmss"];
+    NSString *dateString = [dateFormatter stringFromDate:date];
+    return dateString;
+}
+
 
 @end

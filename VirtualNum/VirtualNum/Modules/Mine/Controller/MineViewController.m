@@ -8,6 +8,8 @@
 
 #import "MineViewController.h"
 #import "ChooseNumViewController.h"
+#import "ChooseServiceViewController.h"
+#import "BindPhoneViewController.h"
 
 @interface MineViewController ()<UITableViewDelegate,UITableViewDataSource>
 
@@ -24,7 +26,7 @@
     self.title=@"个人中心";
     [self creadTableView];
     
-    self.dataArray = @[@"设置一", @"设置二", @"设置三", @"设置四"];
+    //self.dataArray = @[@"设置一", @"设置二", @"设置三", @"设置四"];
     
 }
 
@@ -43,27 +45,35 @@
     [self setExtraCellLineHidden:self.personalTableView];
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+}
+-(void)viewDidAppear:(BOOL)animated{
+    [self.personalTableView reloadData];
+}
 
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+}
 
 #pragma mark - Table view data source
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 3;
+    return 2;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    NSInteger num;
+    NSInteger num = 0;
     switch (section) {
         case 0:
             num = 3;
             break;
         case 1:
-            num = 1;
+            num = 3;
             break;
-            break;
-        default:
-            num = self.dataArray.count;
     }
     return num;
 }
@@ -93,10 +103,7 @@
             labelTitle.text = @"个人资料";
             break;
         case 1:
-            labelTitle.text =@"section";
-            break;
-        case 2:
-            labelTitle.text =@"section";
+            labelTitle.text =@"设置";
             break;
         default:
             break;
@@ -108,12 +115,9 @@
 {
     static NSString *identity = @"Cell";
     static NSString *identity2 = @"cell2";
-    static NSString *identity3 = @"cell3";
-    static NSString *identity4 = @"cell4";
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identity];
     UITableViewCell *cell2 = [tableView dequeueReusableCellWithIdentifier:identity2];
-    UITableViewCell *cell4 = [tableView dequeueReusableCellWithIdentifier:identity4];
     
     switch (indexPath.section) {
         case 0:
@@ -136,7 +140,7 @@
                 case 1:
                 {
                     cell.textLabel.text =@"企业ID";
-                    NSString * companyIDStr = [[NSUserDefaults standardUserDefaults] objectForKey:companyid];
+                    NSString * companyIDStr = [[NSUserDefaults standardUserDefaults] objectForKey:VN_COMPANYID];
                     if (!companyIDStr) {
                         companyIDStr = @"--";
                     }
@@ -146,7 +150,7 @@
                 default:
                 {
                     cell.textLabel.text =@"X号码";
-                    NSString * xNumStr = [[NSUserDefaults standardUserDefaults] objectForKey:X];
+                    NSString * xNumStr = [[NSUserDefaults standardUserDefaults] objectForKey:VN_X];
                     if (!xNumStr) {
                         xNumStr = @"--";
                     }
@@ -161,22 +165,40 @@
                 cell2 = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:identity2];
                 cell2.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
             }
-            cell2.textLabel.text = @"修改号码";
-            NSString * phoneNumStr = [[NSUserDefaults standardUserDefaults] objectForKey:phone];
-            if (!phoneNumStr) {
-                phoneNumStr = @"--";
+            switch (indexPath.row) {
+                case 0:
+                {
+                    cell2.textLabel.text = @"绑定X号码";
+                    NSString * phoneNumStr = [[NSUserDefaults standardUserDefaults] objectForKey:VN_X];
+                    if (!phoneNumStr) {
+                        phoneNumStr = @"--";
+                    }
+                    cell2.detailTextLabel.text = phoneNumStr;
+                }
+                    break;
+                case 1:
+                {
+                    cell2.textLabel.text = @"修改手机号码";
+                    NSString * phoneNumStr = [[NSUserDefaults standardUserDefaults] objectForKey:VN_PHONE];
+                    if (!phoneNumStr) {
+                        phoneNumStr = @"--";
+                    }
+                    cell2.detailTextLabel.text = phoneNumStr;
+                }
+                    break;
+                default:
+                    cell2.textLabel.text = @"服务模式";
+                    
+                    NSString *callSettingsType = [[NSUserDefaults standardUserDefaults] objectForKey:VN_SERVICE];
+                    NSString *callType=@"";
+                    if([callSettingsType isEqualToString:@"0"]){
+                        callType=@"租车模式";
+                    }else{
+                        callType=@"中介模式";
+                    }
+                    cell2.detailTextLabel.text = callType;
+                    break;
             }
-            cell2.detailTextLabel.text = phoneNumStr;
-        }
-            break;
-        default :
-        {
-            if (cell4 == nil) {
-                cell4 = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:identity3];
-                //cell4.selectionStyle = UITableViewCellSelectionStyleNone;
-            }
-            cell4.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-            cell4.textLabel.text = [self.dataArray objectAtIndex:indexPath.row];
         }
             break;
     }
@@ -185,11 +207,8 @@
         case 0:
             return cell;
             break;
-        case 1:
-            return cell2;
-            break;
         default:
-            return cell4;
+            return cell2;
             break;
     }
 }
@@ -206,16 +225,39 @@
             break;
         case 1:
         {
-                  ChooseNumViewController * chooseVc = [[ChooseNumViewController alloc]init];
-                [self.navigationController pushViewController:chooseVc animated:NO];
-        }
-            break;
-        default:{
-            
+            switch (indexPath.row) {
+                case 0:
+                {
+                    NSString * xNumStr = [[NSUserDefaults standardUserDefaults] objectForKey:VN_X];
+                    if (!xNumStr) {
+                        
+                        ChooseNumViewController * chooseVc = [[ChooseNumViewController alloc]init];
+                        [self.navigationController pushViewController:chooseVc animated:NO];
+                    }else{
+                        [MBProgressHUD showErrorMessage:@"已绑定号码，不可修改"];
+                        return;
+                    }
+                }
+                    break;
+                case 1:
+                {
+                    BindPhoneViewController * bindVc = [[BindPhoneViewController alloc]init];
+                    bindVc.bindTitle =@"修改手机号码";
+                    bindVc.bindType = @"0";
+                    [self.navigationController pushViewController:bindVc animated:NO];
+                }
+                    break;
+                default:
+                {
+                    ChooseServiceViewController * chooseVc = [[ChooseServiceViewController alloc]init];
+                    [self.navigationController pushViewController:chooseVc animated:NO];
+                }
+                    break;
+            }
         }
             break;
     }
-  
+    
 }
 
 //隐藏多余分割线

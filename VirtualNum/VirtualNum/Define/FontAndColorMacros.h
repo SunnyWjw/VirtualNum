@@ -16,7 +16,8 @@
 #define BorderColor  [[UIColor colorWithHexString:@"#919191"]CGColor]
 //列表详情色
 #define LIST_DETAIL_COLOR @"#5a5a5a"
-#define CELL_CONTENT_SIZE 13.0
+#define CELL_CONTENT_SIZE 15.0
+#define CELL_DETAIL_SIZE  13.0
 
 
 #endif /* FontAndColorMacros_h */

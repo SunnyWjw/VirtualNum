@@ -38,13 +38,14 @@
 
 /**基本信息**/
 #define permissions @"PERMISSIONS"
-#define userID      @"_ID"
-#define userName  @"USERNAME"
-#define passWord  @"PASSWORD"
-#define companyid @"COMPANYID"
-#define companyName @"COMPANYNAME"
-#define phone   @"PHONENUM"
-#define autoLogin   @"AUTOLOGIN"
-#define X   @"XENUMBER"
-
-
+#define VN_USERID      @"_ID"
+#define VN_USERNAME  @"USERNAME"
+#define VN_PASSWORD  @"PASSWORD"
+#define VN_COMPANYID @"COMPANYID"
+#define VN_COMPANYNAME @"COMPANYNAME"
+#define VN_PHONE   @"PHONENUM"
+#define VN_AUTOLOGIN   @"AUTOLOGIN"
+#define VN_X  @"XENUMBER"
+#define VN_SERVICE    @"SERVICE"
+#define VN_CallPhoneNum @"CallPhoneNum"
+#define VN_ContactName @"ContactName"

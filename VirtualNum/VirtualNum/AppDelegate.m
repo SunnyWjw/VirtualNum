@@ -8,8 +8,12 @@
 
 #import "AppDelegate.h"
 #import "PPGetAddressBook.h"
+#import <CoreTelephony/CTCallCenter.h>
+#import <CoreTelephony/CTCall.h>
 
 @interface AppDelegate ()
+
+@property(nonatomic,strong)CTCallCenter *callCenter;
 
 @end
 
@@ -24,6 +28,7 @@
     
     //广告页
     //[AppManager appStart];
+    
     //请求用户获取通讯录权限
     [PPGetAddressBook requestAddressBookAuthorization];
     
@@ -35,6 +40,9 @@
     
     //网络监听
     //[self monitorNetworkStatus];
+    
+    //监听通话状态
+    [self callCenterState];
     
     // Override point for customization after application launch.
     return YES;

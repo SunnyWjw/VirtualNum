@@ -8,6 +8,9 @@
 
 #import "CallingViewController.h"
 #import "PPGetAddressBook.h"
+#import "UIAlertController+PPPersonModel.h"
+#import "CallPhone.h"
+
 #define START NSDate *startTime = [NSDate date]
 #define END NSLog(@"Time: %f", -[startTime timeIntervalSinceNow])
 
@@ -125,12 +128,18 @@
     NSString *key = _keys[indexPath.section];
     PPPersonModel *people = [_contactPeopleDict[key] objectAtIndex:indexPath.row];
     
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:people.name
-                                                    message:[NSString stringWithFormat:@"号码:%@",people.mobileArray]
-                                                   delegate:nil
-                                          cancelButtonTitle:@"知道啦"
-                                          otherButtonTitles:nil];
-    [alert show];
+    if (people.mobileArray.count > 1) {
+        //进行判断
+        [self presentViewController:[UIAlertController alertControllerWithContactObject:people] animated:true completion:^{
+            
+        }];
+    }else if (people.mobileArray.count == 1){
+        [CallPhone sendCallRequest:people.mobileArray.firstObject ContactName:people.name];
+    }else{
+        [MBProgressHUD showErrorMessage:@"该联系人没有添加联系电话，不能进行呼叫"];
+    }
+    
+    [tableView deselectRowAtIndexPath:indexPath animated:true];
 }
 
 

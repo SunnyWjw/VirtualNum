@@ -9,14 +9,23 @@
 #import "HomeViewController.h"
 #import "ChooseNumViewController.h"
 #import "HWPopTool.h"
+#import "DataBase.h"
+#import "CallLog.h"
+#import "CalllogCell.h"
 
 
-@interface HomeViewController ()<UIAlertViewDelegate,UITextFieldDelegate>
+@interface HomeViewController ()<UIAlertViewDelegate,UITextFieldDelegate,UITableViewDelegate,UITableViewDataSource>
 
+@property (strong, nonatomic) UITableView *tableView;
 @property (strong, nonatomic) UIView *contentView;
 @property (strong, nonatomic) UIButton *popBtn;
 @property (strong, nonatomic) UITextField *idTF;
 @property (strong, nonatomic) UILabel *promptLab;
+
+/**
+ *  数据源
+ */
+@property(nonatomic,strong) NSMutableArray *dataArray;
 
 @end
 
@@ -27,26 +36,30 @@
     // Do any additional setup after loading the view.
     
     self.title=@"呼叫记录";
-    //    [self creadTableView];
-   // [self judgeAX];
+    [self creadTableView];
     
     __block HomeViewController/*主控制器*/ *weakSelf = self;
-    NSString *companyidStr =[[NSUserDefaults standardUserDefaults] objectForKey:companyid];
+    NSString *companyidStr =[[NSUserDefaults standardUserDefaults] objectForKey:VN_COMPANYID];
     if (!companyidStr) {
-//        dispatch_time_t delayTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0/*延迟执行时间*/ * NSEC_PER_SEC));
-//        
-//        dispatch_after(delayTime, dispatch_get_main_queue(), ^{
-//            [weakSelf popViewShow];
-//        });
-       // [NSThread sleepForTimeInterval:2.0];
         [weakSelf popViewShow];
     }
-    NSString *xStr =[[NSUserDefaults standardUserDefaults] objectForKey:X];
-    if (!xStr) {
-        [self judgeAX];
+    else{
+        NSString *xStr =[[NSUserDefaults standardUserDefaults] objectForKey:VN_X];
+        if (!xStr) {
+            [self judgeAX];
+        }
     }
 }
 
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    
+    self.dataArray = [[DataBase sharedDataBase] getAllCallLog];
+}
+
+-(void)viewDidAppear:(BOOL)animated{
+    [self.tableView reloadData];
+}
 
 
 - (void)popViewShow {
@@ -75,15 +88,15 @@
     _promptLab.textColor = [UIColor redColor];
     [_contentView addSubview:_promptLab];
     
-    UIButton * cancelBtn =  [UIButton buttonWithType:UIButtonTypeCustom];
-    cancelBtn.frame =CGRectMake(10, 90, 80, 40);
-    [cancelBtn setTitle:@"取消" forState:UIControlStateNormal];
-    cancelBtn.backgroundColor= CNavBgColor;
-    [cancelBtn addTarget:self action:@selector(closeAndBack) forControlEvents:UIControlEventTouchUpInside];
-    [_contentView addSubview:cancelBtn];
+    //    UIButton * cancelBtn =  [UIButton buttonWithType:UIButtonTypeCustom];
+    //    cancelBtn.frame =CGRectMake(10, 90, 80, 40);
+    //    [cancelBtn setTitle:@"取消" forState:UIControlStateNormal];
+    //    cancelBtn.backgroundColor= CNavBgColor;
+    //    [cancelBtn addTarget:self action:@selector(closeAndBack) forControlEvents:UIControlEventTouchUpInside];
+    //    [_contentView addSubview:cancelBtn];
     
     UIButton * sureBtn =  [UIButton buttonWithType:UIButtonTypeCustom];
-    sureBtn.frame =CGRectMake(110, 90, 80, 40);
+    sureBtn.frame =CGRectMake(10, 90, 180, 40);
     [sureBtn setTitle:@"确定" forState:UIControlStateNormal];
     sureBtn.backgroundColor= CNavBgColor;
     [sureBtn addTarget:self action:@selector(sureAndBack) forControlEvents:UIControlEventTouchUpInside];
@@ -100,11 +113,14 @@
 - (void)closeAndBack {
     [[HWPopTool sharedInstance] closeWithBlcok:^{
         [self.navigationController popViewControllerAnimated:YES];
-        
     }];
+    NSString *xStr =[[NSUserDefaults standardUserDefaults] objectForKey:VN_X];
+    if (!xStr) {
+        [self judgeAX];
+    }
 }
 -(void)sureAndBack{
-   
+    
     self.idTF.text = [self.idTF.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     
     // 判断用户名
@@ -114,7 +130,7 @@
         return;
     }
     
-    [[NSUserDefaults standardUserDefaults] setObject:self.idTF.text forKey:companyid];
+    [[NSUserDefaults standardUserDefaults] setObject:self.idTF.text forKey:VN_COMPANYID];
     [[NSUserDefaults standardUserDefaults] synchronize];
     [self closeAndBack];
 }
@@ -128,6 +144,44 @@
         alertView.tag=1001;
         [alertView show];
     }
+}
+
+#pragma mark - Table view data source
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    return 60;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    
+    return self.dataArray.count;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+    
+    static NSString *identity = @"detail" ;
+    CalllogCell *cell = [tableView dequeueReusableCellWithIdentifier:identity];
+
+    if (cell == nil)
+    {
+        cell = [[CalllogCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identity];
+        cell.selectionStyle = UITableViewCellSelectionStyleGray;
+        
+    }
+    
+    CallLog *callLog = self.dataArray[indexPath.row];
+    cell.calledNameLab.text = callLog.calledName;
+    cell.callPhoneNumLab.text = callLog.CallPhoneNum;
+    cell.generateTimeLab.text = callLog.generateTime;
+    
+    return cell;
+}
+
+#pragma mark Table view delegate
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    
 }
 
 #pragma mark -
@@ -145,19 +199,17 @@
 
 
 -(void)creadTableView{
-    UIButton *chooseBtn = [[UIButton alloc]init];
-    chooseBtn.backgroundColor =CNavBgColor;
-    [chooseBtn setTitle:@"选择号码" forState:UIControlStateNormal];
-    chooseBtn.titleLabel.font = [UIFont boldSystemFontOfSize:16.0];
-    [chooseBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [chooseBtn addTarget:self action:@selector(chooseClick) forControlEvents:UIControlEventTouchUpInside];
-    chooseBtn.layer.masksToBounds = YES;
-    chooseBtn.layer.cornerRadius = 3.0;
-    [self.view addSubview:chooseBtn];
-    [chooseBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.view).with.offset(64);
-        make.size.mas_equalTo(CGSizeMake(100, 60));
+    self.tableView = [[UITableView alloc]init];
+    self.tableView.delegate = self;
+    self.tableView.dataSource = self;
+    [self.view addSubview:self.tableView];
+    [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.view).with.offset(0);
+        make.left.equalTo(self.view).with.offset(0);
+        make.right.equalTo(self.view).with.offset(0);
+        make.bottom.equalTo(self.view).with.offset(0);
     }];
+    [Common setExtraCellLineHidden:self.tableView];
 }
 
 - (void)chooseClick

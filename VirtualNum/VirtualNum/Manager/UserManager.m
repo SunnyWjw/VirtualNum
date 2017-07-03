@@ -66,8 +66,8 @@ SINGLETON_FOR_CLASS(UserManager);
 -(void)autoLoginToServer:(loginBlock)completion{
     NSString *baseUrl = NSStringFormat(@"%@%@",URL_main,URL_user_info);
     NSDictionary *parameters = @{
-                                 @"username": [[NSUserDefaults standardUserDefaults] objectForKey:userName],
-                                 @"password": [[NSUserDefaults standardUserDefaults] objectForKey:passWord]
+                                 @"username": [[NSUserDefaults standardUserDefaults] objectForKey:VN_USERNAME],
+                                 @"password": [[NSUserDefaults standardUserDefaults] objectForKey:VN_PASSWORD]
                                  } ;
     
     [[AFNetAPIClient sharedJsonClient].setRequest(baseUrl).RequestType(Post).Parameters(parameters) startRequestWithSuccess:^(NSURLSessionDataTask *task, id responseObject) {
@@ -133,14 +133,14 @@ SINGLETON_FOR_CLASS(UserManager);
 #pragma mark ————— 保存/删除用户信息 —————
 -(void)SaveInfo:(NSDictionary *)userDic{
     [[NSUserDefaults standardUserDefaults] setObject:userDic[@"user"][@"permissions"] forKey:permissions];
-    [[NSUserDefaults standardUserDefaults] setObject:userDic[@"user"][@"_id"] forKey:userID];
+    [[NSUserDefaults standardUserDefaults] setObject:userDic[@"user"][@"_id"] forKey:VN_USERID];
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 -(void)DelInfo{
-    [[NSUserDefaults standardUserDefaults] removeObjectForKey:userName];
-    [[NSUserDefaults standardUserDefaults] removeObjectForKey:passWord];
-    [[NSUserDefaults standardUserDefaults] removeObjectForKey:autoLogin];
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:VN_USERNAME];
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:VN_PASSWORD];
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:VN_AUTOLOGIN];
     KPostNotification(KNotificationLoginStateChange, @NO);
 }
 

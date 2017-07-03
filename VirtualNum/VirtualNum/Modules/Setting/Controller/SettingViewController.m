@@ -8,6 +8,7 @@
 
 #import "SettingViewController.h"
 #import "ChooseNumViewController.h"
+#import "UserManager.h"
 
 @interface SettingViewController ()<UIAlertViewDelegate>
 
@@ -76,9 +77,7 @@
     if (alertView.tag == 122)
     {
         if (buttonIndex == 0) {
-            [[NSUserDefaults standardUserDefaults]removeObjectForKey:userName];
-            [[NSUserDefaults standardUserDefaults]removeObjectForKey:passWord];
-            [[NSUserDefaults standardUserDefaults]removeObjectForKey:companyid];
+            [userManager DelInfo];
             KPostNotification(KNotificationLoginStateChange, @NO)
         }
     }

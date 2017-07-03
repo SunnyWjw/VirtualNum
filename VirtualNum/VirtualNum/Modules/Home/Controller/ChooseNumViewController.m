@@ -55,9 +55,15 @@
 
 -(void)SendRequest{
     
-    NSString *comPanyIDStr = [[NSUserDefaults standardUserDefaults] objectForKey:@"companyid"];
+    NSString *comPanyIDStr = [[NSUserDefaults standardUserDefaults] objectForKey:VN_COMPANYID];
     if (!comPanyIDStr) {
+       
+        UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:nil message:@"获取信息失败，请重新登录" delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+        [alertView show];
+
         [userManager DelInfo];
+        KPostNotification(KNotificationLoginStateChange, @NO);
+        return;
     }
     
     NSString *baseUrl = NSStringFormat(@"%@%@",URL_main,URL_phone);
@@ -170,26 +176,32 @@
             [MBProgressHUD showErrorMessage:@"请输入正确的手机号"];
             return;
         }
-        [self sendBingRequest:phoneField.text];
+        [self sendBingRequest:phoneField.text OtherDic:self.dictionary];
     }
 }
 
--(void)sendBingRequest:(NSString *)phoneNumStr{
-    //    _dictionary
+
+/**
+ 绑定AX
+
+ @param phoneNumStr 需要绑定的手机号码
+ @param companyInfo 企业相关信息
+ */
+-(void)sendBingRequest:(NSString *)phoneNumStr OtherDic:(NSDictionary *)companyInfo{
     
     NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
-    //    [dictionary addEntriesFromDictionary:self.dictionary];
     [dictionary setObject:phoneNumStr forKey:@"a"];
-    [dictionary setObject:self.dictionary[@"xs"] forKey:@"x"];
-    [dictionary setObject:self.dictionary[@"companyid"] forKey:@"companyid"];
-    [dictionary setObject:self.dictionary[@"companyname"] forKey:@"companyname"];
+    [dictionary setObject:companyInfo[@"xs"] forKey:@"x"];
+    [dictionary setObject:companyInfo[@"companyid"] forKey:@"companyid"];
+    [dictionary setObject:companyInfo[@"companyname"] forKey:@"companyname"];
     
     
     NSString *baseUrl = NSStringFormat(@"%@%@",URL_main,URL_AX);
     NSDictionary *parameters = @{
                                  @"newItem": dictionary,
-                                 @"oldItem": @{},
-                                 @"type": @"create"
+                                 @"oldItem": companyInfo,
+//                                 @"type": @"create"
+                                 @"type": @"update"
                                  } ;
     DLog(@"parameters>>>%@",parameters);
     [MBProgressHUD showActivityMessageInView:@"请求中..."];
@@ -208,8 +220,9 @@
             if ([[tempJSON objectForKey:@"data"] isKindOfClass:[NSArray class]])
             {
                 [MBProgressHUD showErrorMessage:@"绑定成功"];
-                [[NSUserDefaults standardUserDefaults] setObject:self.dictionary[@"xs"] forKey:X];
-                [[NSUserDefaults standardUserDefaults] setObject:phoneNumStr forKey:phone];
+                [[NSUserDefaults standardUserDefaults] setObject:companyInfo[@"xs"] forKey:VN_X];
+                [[NSUserDefaults standardUserDefaults] setObject:phoneNumStr forKey:VN_PHONE];
+                [[NSUserDefaults standardUserDefaults]setObject:companyInfo[@"companyname"] forKey:VN_COMPANYNAME];
             }
             
         }else{

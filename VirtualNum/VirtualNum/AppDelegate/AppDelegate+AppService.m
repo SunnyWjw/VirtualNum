@@ -8,6 +8,8 @@
 
 #import "AppDelegate+AppService.h"
 #import "LoginViewController.h"
+#import "CallLog.h"
+#import "DataBase.h"
 
 @implementation AppDelegate (AppService)
 
@@ -48,6 +50,13 @@
 
 #pragma mark ————— 初始化用户系统 —————
 -(void)initUserManager{
+    
+    NSString *callSettingsType = [[NSUserDefaults standardUserDefaults] objectForKey:VN_SERVICE];
+    if (callSettingsType.length == 0) {
+        callSettingsType = @"0";
+        [[NSUserDefaults standardUserDefaults] setObject:callSettingsType forKey:VN_SERVICE];
+    }
+    
     
     if([self loadUserDefaults]){
         
@@ -211,6 +220,86 @@
     }];
     */
 }
+
+#pragma mark ————— 通话状态监听 —————
+- (void)callCenterState{
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    
+    self.callCenter = [[CTCallCenter alloc] init];
+    
+    self.callCenter.callEventHandler = ^(CTCall* call) {
+        
+        if ([call.callState isEqualToString:CTCallStateDisconnected])
+            
+        {
+            
+             DLog(@"挂断了电话咯Call has been disconnected");
+        }
+        
+        else if ([call.callState isEqualToString:CTCallStateConnected])
+            
+        {
+            
+            DLog(@"电话通了Call has just been connected");
+            
+        }
+        
+        else if([call.callState isEqualToString:CTCallStateIncoming])
+            
+        {
+            
+             DLog(@"来电话了Call is incoming");
+            
+        }
+        
+        else if ([call.callState isEqualToString:CTCallStateDialing])
+            
+        {
+            
+            DLog(@"正在播出电话call is dialing");
+            CallLog *callLog = [[CallLog alloc] init];
+            NSString *callPhoneNum = [userDefaults objectForKey:VN_CallPhoneNum];
+            NSString *calledName = [userDefaults objectForKey:VN_ContactName];
+            NSString *callingName = [userDefaults objectForKey:VN_USERNAME];
+            callingName = callingName.length > 0 ? callingName : @"";
+            NSString *XNum = [userDefaults objectForKey:VN_X];
+            XNum = XNum.length > 0 ? callingName : 0;
+            //[numberFormatter numberFromString:str];
+            NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
+            [numberFormatter setNumberStyle:NSNumberFormatterDecimalStyle];
+            NSNumber *numTemp = [numberFormatter numberFromString:XNum];
+            NSNumber *randomNum = [numberFormatter numberFromString:[TimeAndTimeStamps getNowDateTimeFoFourteenr]];
+            
+            NSString *serviceType = [userDefaults objectForKey:VN_SERVICE];
+            serviceType = serviceType.length > 0 ? serviceType : @"";
+            NSString *create = [userDefaults objectForKey:VN_COMPANYID];
+            create = create.length > 0 ? create : @"";
+            
+            callLog.CallPhoneNum = callPhoneNum;
+            callLog.calledName = calledName;
+            callLog.CallingName = callingName;
+            callLog.XNum = numTemp;
+            callLog.randomNum = randomNum;
+            callLog.durationTime = 0;
+            callLog.serviceType = serviceType;
+            callLog.generatorPersonnel = create;
+            
+           [[DataBase sharedDataBase] addCallLog:callLog];
+            
+            
+        }
+        
+        else  
+            
+        {  
+            
+           DLog(@"嘛都没做Nothing is done");
+            
+        }  
+        
+    };
+}
+
 
 + (AppDelegate *)shareAppDelegate{
     return (AppDelegate *)[[UIApplication sharedApplication] delegate];
