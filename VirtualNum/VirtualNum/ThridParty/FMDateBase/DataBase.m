@@ -186,7 +186,7 @@ static DataBase *_DBCtl = nil;
     
     NSMutableArray *dataArray = [[NSMutableArray alloc] init];
     
-    FMResultSet *res = [_db executeQuery:@"SELECT * FROM CallLog order by generateTime desc"];
+    FMResultSet *res = [_db executeQuery:@"SELECT strftime('%H:%M:%S',generateTime) as CreateTime,* FROM CallLog order by generateTime desc"];
     
     while ([res next]) {
         CallLog *callLog = [[CallLog alloc] init];
@@ -198,7 +198,7 @@ static DataBase *_DBCtl = nil;
         callLog.randomNum=@([[res stringForColumn:@"randomNum"] integerValue]);
         callLog.durationTime=@([[res stringForColumn:@"durationTime"] integerValue]);
         callLog.serviceType=[res stringForColumn:@"serviceType"];
-        callLog.generateTime=[res stringForColumn:@"generateTime"];
+        callLog.generateTime=[res stringForColumn:@"CreateTime"];
         callLog.generatorPersonnel=[res stringForColumn:@"generatorPersonnel"];
         
         [dataArray addObject:callLog];
@@ -222,7 +222,7 @@ static DataBase *_DBCtl = nil;
     
     NSMutableArray *dataArray = [[NSMutableArray alloc] init];
     
-    FMResultSet *res = [_db executeQuery:@"SELECT top ? * FROM CallLog order by generateTime desc",howMuch];
+    FMResultSet *res = [_db executeQuery:@"SELECT top ? strftime('%H:%M:%S',generateTime) as CreateTime,* FROM CallLog order by generateTime desc",howMuch];
     
     while ([res next]) {
         CallLog *callLog = [[CallLog alloc] init];
@@ -234,7 +234,7 @@ static DataBase *_DBCtl = nil;
         callLog.randomNum=@([[res stringForColumn:@"randomNum"] integerValue]);
         callLog.durationTime=@([[res stringForColumn:@"durationTime"] integerValue]);
         callLog.serviceType=[res stringForColumn:@"serviceType"];
-        callLog.generateTime=[res stringForColumn:@"generateTime"];
+        callLog.generateTime=[res stringForColumn:@"CreateTime"];
         callLog.generatorPersonnel=[res stringForColumn:@"generatorPersonnel"];
         
         [dataArray addObject:callLog];
