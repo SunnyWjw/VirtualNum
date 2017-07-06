@@ -39,6 +39,11 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>SVPullToRefresh.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>YYKit.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -52,12 +57,22 @@
 			<key>primary</key>
 			<true/>
 		</dict>
+		<key>1AF3A9BDCEB22673C940C7D6797BC917</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>3E28FB7550E07F37B7FD73D4BE52287A</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>586F2DFA9BDCC6675C2546793A69E5CC</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>76241946F5F22D395E1AAF97B83BCAE2</key>
+		<key>648F1989E76651CADB3C4CFBF23F69EC</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -77,12 +92,7 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>C82BB0C66BE7492381EBA10C1DD3F7C0</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>EC77C9367C2B609020A8F30D16896211</key>
+		<key>ED5D28BF0E726A804FB5D44024427E3B</key>
 		<dict>
 			<key>primary</key>
 			<true/>

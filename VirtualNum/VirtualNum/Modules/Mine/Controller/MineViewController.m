@@ -228,15 +228,17 @@
             switch (indexPath.row) {
                 case 0:
                 {
-                    NSString * xNumStr = [[NSUserDefaults standardUserDefaults] objectForKey:VN_X];
-                    if (!xNumStr) {
-                        
-                        ChooseNumViewController * chooseVc = [[ChooseNumViewController alloc]init];
-                        [self.navigationController pushViewController:chooseVc animated:NO];
-                    }else{
-                        [MBProgressHUD showErrorMessage:@"已绑定号码，不可修改"];
-                        return;
-                    }
+                    //                    NSString * xNumStr = [[NSUserDefaults standardUserDefaults] objectForKey:VN_X];
+                    //                    if (!xNumStr) {
+                    //
+                    //                        ChooseNumViewController * chooseVc = [[ChooseNumViewController alloc]init];
+                    //                        [self.navigationController pushViewController:chooseVc animated:NO];
+                    //                    }else{
+                    //                        [MBProgressHUD showErrorMessage:@"已绑定号码，不可修改"];
+                    //                        return;
+                    //                    }
+                    ChooseNumViewController * chooseVc = [[ChooseNumViewController alloc]init];
+                    [self.navigationController pushViewController:chooseVc animated:NO];
                 }
                     break;
                 case 1:

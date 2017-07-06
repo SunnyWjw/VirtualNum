@@ -49,6 +49,7 @@
             [self judgeAX];
         }
     }
+     [self judgeAX];
 }
 
 - (void)viewWillAppear:(BOOL)animated{

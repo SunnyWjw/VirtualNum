@@ -21,6 +21,7 @@
 @property (strong, nonatomic) UIButton *popBtn;
 
 @property (nonatomic,strong)NSDictionary *dictionary;
+@property(nonatomic,assign) int curPage;
 
 
 @end
@@ -31,57 +32,92 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.title = @"选择X号码";
-    
     self.dataArray = [[NSMutableArray alloc]initWithCapacity:0];
     
+    self.curPage = 1;
     [self creadTableView];
     
-    [self SendRequest];
+    [self SendRequestWithPage:self.curPage];
 }
+
 
 -(void)creadTableView{
     self.tableView = [[UITableView alloc]init];
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
-    [self.view addSubview:self.tableView];
+    [self.view addSubview:_tableView];
     [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.view).with.offset(0);
         make.left.equalTo(self.view).with.offset(0);
         make.right.equalTo(self.view).with.offset(0);
         make.bottom.equalTo(self.view).with.offset(0);
     }];
+    
+    __weak ChooseNumViewController *weakself=self;
+    [self.tableView addPullToRefreshWithActionHandler:^{
+        [weakself stopPull];
+    }];
+    
+    // setup infinite scrolling
+    [self.tableView addInfiniteScrollingWithActionHandler:^{
+        [weakself stopInfinite];
+    }];
+    
+}
+
+#pragma mark -
+#pragma mark 上拉加载
+- (void)stopInfinite
+{
+    //    // 停止上拉加载
+    [self.tableView.pullToRefreshView stopAnimating];
+    self.curPage = self.curPage+1;
+    //    //开始刷新数据
+    [self SendRequestWithPage:self.curPage];
+}
+
+#pragma mark 下拉刷新
+- (void)stopPull
+{
+    [self.tableView.pullToRefreshView stopAnimating];
+    [self.dataArray removeAllObjects];
+    [self.tableView reloadData];
+    [self SendRequestWithPage:1];
+    
 }
 
 
--(void)SendRequest{
-    
+-(void)SendRequestWithPage:(int)page{
+    DLog(@"page>>>%i",page)
     NSString *comPanyIDStr = [[NSUserDefaults standardUserDefaults] objectForKey:VN_COMPANYID];
     if (!comPanyIDStr) {
-       
+        
         UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:nil message:@"获取信息失败，请重新登录" delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
         [alertView show];
-
+        
         [userManager DelInfo];
         KPostNotification(KNotificationLoginStateChange, @NO);
         return;
     }
     
+    //    NSString *baseUrl = NSStringFormat(@"%@%@",URL_main,URL_phone);
+    //    NSDictionary *parameters = @{
+    //                                 @"companyid": comPanyIDStr,
+    //                                 } ;
+    
+    
     NSString *baseUrl = NSStringFormat(@"%@%@",URL_main,URL_phone);
     NSDictionary *parameters = @{
-                                 @"companyid": comPanyIDStr,
+                                 @"page": [NSString stringWithFormat:@"%d",page],
+                                 @"pageSize": @"5"
                                  } ;
     
-    /*
-     NSString *baseUrl = NSStringFormat(@"%@%@",URL_main,URL_phone);
-     NSDictionary *parameters = @{
-     @"page": @"1",
-     @"pageSize": @"10"
-     } ;
-     */
-    DLog(@"URL>>>%@",baseUrl);
+    DLog(@"URL>>>%@ \n parameters>>%@",baseUrl,parameters);
+    //    NSDictionary *newParam = [SBAPIurl TextCodeBase64:parameters];
     [MBProgressHUD showActivityMessageInView:@"请求中..."];
     [[AFNetAPIClient sharedJsonClient].setRequest(baseUrl).RequestType(Post).Parameters(parameters) startRequestWithSuccess:^(NSURLSessionDataTask *task, id responseObject) {
         [MBProgressHUD hideHUD];
+        
         NSString *result = [[NSString alloc] initWithData:responseObject encoding:NSUTF8StringEncoding];
         if([[AFNetAPIClient sharedJsonClient] parseJSONData:result] == nil){
             [MBProgressHUD showErrorMessage:@"服务器繁忙，请稍后再试"];
@@ -104,8 +140,10 @@
     } progress:^(NSProgress *progress) {
         
     } failure:^(NSURLSessionDataTask *task, NSError *error) {
+        
         [MBProgressHUD hideHUD];
         [MBProgressHUD showErrorMessage:@"连接网络超时，请稍后再试"];
+        DLog(@"error>>>%@",error);
     }];
 }
 
@@ -114,7 +152,7 @@
 #pragma mark UITableView dataSourse数据源
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    
+    DLog(@"dataArrayCount>>>%lu",(unsigned long)self.dataArray.count);
     return  [self.dataArray count];
     
 }
@@ -183,7 +221,7 @@
 
 /**
  绑定AX
-
+ 
  @param phoneNumStr 需要绑定的手机号码
  @param companyInfo 企业相关信息
  */
@@ -200,7 +238,7 @@
     NSDictionary *parameters = @{
                                  @"newItem": dictionary,
                                  @"oldItem": companyInfo,
-//                                 @"type": @"create"
+                                 //                                 @"type": @"create"
                                  @"type": @"update"
                                  } ;
     DLog(@"parameters>>>%@",parameters);
@@ -236,32 +274,32 @@
     }];
     
     /*
-    [self put:baseUrl params:parameters success:^(id responseObject) {
-        
-        NSString *result = [[NSString alloc] initWithData:responseObject encoding:NSUTF8StringEncoding];
-        if([[AFNetAPIClient sharedJsonClient] parseJSONData:result] == nil){
-            [MBProgressHUD showErrorMessage:@"服务器繁忙，请稍后再试"];
-            return;
-        }
-        
-        NSDictionary* tempJSON = [[AFNetAPIClient sharedJsonClient] parseJSONData:result];
-        DLog(@"tempJSON>>>%@",tempJSON);
-        NSString *successstr = [NSString stringWithFormat:@"%@", tempJSON[@"success"]];
-        if ([successstr isEqualToString:@"1"]) {
-            if ([[tempJSON objectForKey:@"data"] isKindOfClass:[NSArray class]])
-            {
-                
-                [MBProgressHUD showErrorMessage:@"绑定成功"];
-            }
-            
-        }else{
-            [MBProgressHUD showErrorMessage:tempJSON[@"message"]];
-        }
-        
-    }failure:^(NSError *error) {
-        [MBProgressHUD showErrorMessage:@"连接网络超时，请稍后再试"];
-    }];
-    */
+     [self put:baseUrl params:parameters success:^(id responseObject) {
+     
+     NSString *result = [[NSString alloc] initWithData:responseObject encoding:NSUTF8StringEncoding];
+     if([[AFNetAPIClient sharedJsonClient] parseJSONData:result] == nil){
+     [MBProgressHUD showErrorMessage:@"服务器繁忙，请稍后再试"];
+     return;
+     }
+     
+     NSDictionary* tempJSON = [[AFNetAPIClient sharedJsonClient] parseJSONData:result];
+     DLog(@"tempJSON>>>%@",tempJSON);
+     NSString *successstr = [NSString stringWithFormat:@"%@", tempJSON[@"success"]];
+     if ([successstr isEqualToString:@"1"]) {
+     if ([[tempJSON objectForKey:@"data"] isKindOfClass:[NSArray class]])
+     {
+     
+     [MBProgressHUD showErrorMessage:@"绑定成功"];
+     }
+     
+     }else{
+     [MBProgressHUD showErrorMessage:tempJSON[@"message"]];
+     }
+     
+     }failure:^(NSError *error) {
+     [MBProgressHUD showErrorMessage:@"连接网络超时，请稍后再试"];
+     }];
+     */
     
 }
 
