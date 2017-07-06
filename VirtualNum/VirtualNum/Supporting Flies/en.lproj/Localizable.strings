@@ -1,0 +1,10 @@
+/* 
+  Localizable.strings
+  VirtualNum
+
+  Created by SunnyWu on 2017/7/7.
+  Copyright © 2017年 SunnyWu. All rights reserved.
+*/
+"Pull to refresh..." = "Pull to refresh...";
+"Release to refresh..." = "Release to refresh...";
+"Loading..." = "Loading...";
