@@ -21,12 +21,15 @@
 @property (strong, nonatomic) UIButton *popBtn;
 
 @property (nonatomic,strong)NSDictionary *dictionary;
-@property(nonatomic,assign) int curPage;
+@property (nonatomic,assign) int curPage;
+@property (nonatomic,assign) int pageSizeCount;
 
 
 @end
 
 @implementation ChooseNumViewController
+
+
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -40,6 +43,11 @@
     [self SendRequestWithPage:self.curPage];
 }
 
+- (void)viewDidAppear:(BOOL)animated {
+    [self.tableView triggerPullToRefresh];
+}
+
+
 
 -(void)creadTableView{
     self.tableView = [[UITableView alloc]init];
@@ -47,7 +55,7 @@
     self.tableView.dataSource = self;
     [self.view addSubview:_tableView];
     [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.view).with.offset(0);
+        make.top.equalTo(self.view).with.offset(64);
         make.left.equalTo(self.view).with.offset(0);
         make.right.equalTo(self.view).with.offset(0);
         make.bottom.equalTo(self.view).with.offset(0);
@@ -69,7 +77,12 @@
 #pragma mark 上拉加载
 - (void)stopInfinite
 {
-    //    // 停止上拉加载
+    DLog(@" 上拉加载");
+    if (self.curPage > self.pageSizeCount) {
+        [MBProgressHUD showErrorMessage:@"这是最后一页了！"];
+        return;
+    }
+    // 停止上拉加载
     [self.tableView.pullToRefreshView stopAnimating];
     self.curPage = self.curPage+1;
     //    //开始刷新数据
@@ -79,16 +92,17 @@
 #pragma mark 下拉刷新
 - (void)stopPull
 {
+    DLog(@" 下拉刷新");
+    self.curPage = 1;
     [self.tableView.pullToRefreshView stopAnimating];
     [self.dataArray removeAllObjects];
     [self.tableView reloadData];
-    [self SendRequestWithPage:1];
+    [self SendRequestWithPage:self.curPage];
     
 }
 
 
 -(void)SendRequestWithPage:(int)page{
-    DLog(@"page>>>%i",page)
     NSString *comPanyIDStr = [[NSUserDefaults standardUserDefaults] objectForKey:VN_COMPANYID];
     if (!comPanyIDStr) {
         
@@ -117,7 +131,8 @@
     [MBProgressHUD showActivityMessageInView:@"请求中..."];
     [[AFNetAPIClient sharedJsonClient].setRequest(baseUrl).RequestType(Post).Parameters(parameters) startRequestWithSuccess:^(NSURLSessionDataTask *task, id responseObject) {
         [MBProgressHUD hideHUD];
-        
+        [self.tableView.pullToRefreshView stopAnimating];
+        [self.tableView.infiniteScrollingView stopAnimating];
         NSString *result = [[NSString alloc] initWithData:responseObject encoding:NSUTF8StringEncoding];
         if([[AFNetAPIClient sharedJsonClient] parseJSONData:result] == nil){
             [MBProgressHUD showErrorMessage:@"服务器繁忙，请稍后再试"];
@@ -132,6 +147,7 @@
             {
                 [self.dataArray addObjectsFromArray:[tempJSON objectForKey:@"data"]];
             }
+            self.pageSizeCount = [[tempJSON[@"page"] objectForKey:@"pageSize"] intValue];
             
             [self.tableView reloadData];
         }else{
@@ -140,7 +156,8 @@
     } progress:^(NSProgress *progress) {
         
     } failure:^(NSURLSessionDataTask *task, NSError *error) {
-        
+        [self.tableView.pullToRefreshView stopAnimating];
+        [self.tableView.infiniteScrollingView stopAnimating];
         [MBProgressHUD hideHUD];
         [MBProgressHUD showErrorMessage:@"连接网络超时，请稍后再试"];
         DLog(@"error>>>%@",error);

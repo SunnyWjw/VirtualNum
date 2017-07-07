@@ -14,7 +14,13 @@
 #import "CalllogCell.h"
 
 
-@interface HomeViewController ()<UIAlertViewDelegate,UITextFieldDelegate,UITableViewDelegate,UITableViewDataSource>
+@interface HomeViewController ()<UIAlertViewDelegate,UITextFieldDelegate,UITableViewDelegate,UITableViewDataSource,UITabBarControllerDelegate,AFFNumericKeyboardDelegate>{
+    UILabel *inputNumber;
+    UIButton *callButton;
+    UIButton *deleteButton;
+    UIButton *downButton;
+    BOOL isKeyBoard;
+}
 
 @property (strong, nonatomic) UITableView *tableView;
 @property (strong, nonatomic) UIView *contentView;
@@ -30,6 +36,8 @@
 @end
 
 @implementation HomeViewController
+
+@synthesize keyboard;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -49,7 +57,8 @@
             [self judgeAX];
         }
     }
-     [self judgeAX];
+    //     [self judgeAX];
+    [self intKeyboard];
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -62,6 +71,28 @@
     [self.tableView reloadData];
 }
 
+
+-(void)intKeyboard{
+    inputNumber = [[UILabel alloc] initWithFrame:CGRectMake(50, 0, kWIDTH-100, 44)];
+    inputNumber.frame = CGRectMake(50, 0, kWIDTH-100, 44);
+    inputNumber.textAlignment = NSTextAlignmentCenter;
+    inputNumber.textColor = [UIColor whiteColor];
+    inputNumber.font = [UIFont systemFontOfSize:34.0f];
+    inputNumber.adjustsFontSizeToFitWidth = YES;
+    inputNumber.backgroundColor = [UIColor clearColor];
+    [self.navigationController.navigationBar addSubview:inputNumber];
+    inputNumber.hidden = YES;
+    
+    keyboard = [[AFFNumericKeyboard alloc]init];
+    keyboard.delegate = self;
+    [self.view addSubview:keyboard];
+    [keyboard mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.view).with.offset(kHEIGHT-216-50);
+        make.left.equalTo(self.view).with.offset(0);
+        make.right.equalTo(self.view).with.offset(0);
+        make.height.mas_equalTo(216);
+    }];
+}
 
 - (void)popViewShow {
     _contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 200, 150)];
@@ -111,6 +142,7 @@
     
 }
 
+#pragma mark -
 - (void)closeAndBack {
     [[HWPopTool sharedInstance] closeWithBlcok:^{
         [self.navigationController popViewControllerAnimated:YES];
@@ -162,7 +194,7 @@
     
     static NSString *identity = @"detail" ;
     CalllogCell *cell = [tableView dequeueReusableCellWithIdentifier:identity];
-
+    
     if (cell == nil)
     {
         cell = [[CalllogCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identity];
@@ -219,8 +251,232 @@
     [self.navigationController pushViewController:chooseVc animated:NO];
 }
 
+#pragma mark -
+#pragma mark -
+#pragma mark 键盘输入和删除
+//后退键
+-(void)numberKeyboardStirng:(NSString *)str {
+    
+    self.navigationItem.leftBarButtonItem = nil;
+    self.navigationItem.hidesBackButton = YES;
+    
+    if ([str isEqualToString:@"1"]) {
+        if (inputNumber.text.length !=0) {
+            inputNumber.text = [inputNumber.text substringToIndex:inputNumber.text.length -1];
+            
+            if (inputNumber.text.length == 0) {
+                inputNumber.text = nil;
+                self.navigationItem.title = @"通话记录";
+                
+                inputNumber.hidden = YES;
+                callButton.hidden = YES;
+                downButton.hidden = YES;
+                deleteButton.hidden = YES;
+                
+            }else {
+                self.navigationItem.hidesBackButton = YES;
+                inputNumber.hidden = NO;
+                callButton.hidden = NO;
+                deleteButton.hidden = NO;
+                downButton.hidden = NO;
+            }
+        }
+    }
+    
+    if ([str isEqualToString:@"2"]) {
+        if (inputNumber.text.length != 0)
+        {
+            inputNumber.text = nil;
+            inputNumber.hidden = YES;
+            self.navigationItem.title = @"拨号";
+            
+            callButton.hidden = YES;
+            deleteButton.hidden = YES;
+            downButton.hidden = YES;
+            
+            inputNumber.hidden = YES;
+            callButton.hidden = YES;
+            deleteButton.hidden = YES;
+            downButton.hidden = YES;
+            
+        }else {
+            self.navigationItem.hidesBackButton = YES;
+            
+            inputNumber.hidden = YES;
+            callButton.hidden = YES;
+            downButton.hidden = YES;
+            
+        }
+    }
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self seaInputNumber:inputNumber
+               textDidChange:inputNumber.text];
+    });
+}
+#pragma mark 键盘输入
+///输入数字
+-(void)numberKeyboardInput:(NSString*)number {
+    //    NSLog(@"number=== %@",number);
+    self.navigationItem.leftBarButtonItem = nil;
+    self.navigationItem.hidesBackButton = YES;
+    if (inputNumber.text == nil && inputNumber.hidden) {
+        self.navigationItem.title = nil;
+        inputNumber.hidden = NO;
+        inputNumber.text = number;
+        [self createBelowView];
+    }else {
+        inputNumber.text = [inputNumber.text stringByAppendingString:number];
+    }
+    //    NSLog(@"inputNumber.text===%@",inputNumber.text);
+    self.tableView.hidden = YES;
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self seaInputNumber:inputNumber
+               textDidChange:inputNumber.text];
+        //[SeaResultTable reloadData];
+    });
+}
 
+#pragma mark  创建tabbarView
+- (void)createBelowView {
+    //后退删除键
+    deleteButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    deleteButton.frame = [(UIButton *)self.tabBarController.tabBar.subviews[3] frame];
+    [deleteButton setImage:[UIImage imageNamed:@"btn_delet"] forState:UIControlStateNormal];
+    [deleteButton setTitle:@"后退" forState:UIControlStateNormal];
+    deleteButton.backgroundColor = [UIColor groupTableViewBackgroundColor];
+    [self.tabBarController.tabBar addSubview:deleteButton];
+    
+    // 单击的 Recognizer
+    UITapGestureRecognizer* singleRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(singleTap:)];
+    //点击的次数
+    singleRecognizer.numberOfTapsRequired = 1; // 单击
+    //给rightCallButton添加一个手势监测；
+    [deleteButton addGestureRecognizer:singleRecognizer];
+    // 双击的 Recognizer
+    UILongPressGestureRecognizer* longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPress:)];
+    //关键语句，给rightCallButton添加一个手势监测；
+    [deleteButton addGestureRecognizer:longPress];
+    
+    downButton =  [UIButton buttonWithType:UIButtonTypeCustom];
+    downButton.frame =CGRectMake(0, 0, self.view.bounds.size.width/4, 50);
+    [downButton setImage:[UIImage imageNamed:@"tab_dial_ic_close"] forState:UIControlStateNormal];
+    [downButton setTitle:@"收起键盘" forState:UIControlStateNormal];
+    
+    [downButton setTitleColor:[UIColor colorWithHexString:@"#3F9AEE"] forState:UIControlStateNormal];
+    downButton.titleLabel.font = [UIFont systemFontOfSize:11];
+    downButton.backgroundColor = [UIColor groupTableViewBackgroundColor];
+    [downButton addTarget:self action:@selector(downKeyboard:) forControlEvents:UIControlEventTouchUpInside];
+    [self.tabBarController.tabBar addSubview:downButton];
+    
+    //    CGRect tempFrameOne = [(UIButton *)self.tabBarController.tabBar.subviews[0] frame];
+    
+    //呼叫键
+    callButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    CGRect tempFrame = [(UIButton *)self.tabBarController.tabBar.subviews[1] frame];
+    CGRect tempFrameSec = [(UIButton *)self.tabBarController.tabBar.subviews[2] frame];
+    callButton.frame = CGRectMake(self.view.bounds.size.width/4, 0, tempFrame.size.width+tempFrameSec.size.width+6, 50);
+    [callButton setTitle:@"发起呼叫" forState:UIControlStateNormal];
+    [callButton setTitleColor:[UIColor whiteColor]forState:UIControlStateNormal];
+    callButton.backgroundColor = [UIColor colorWithRed:73/255.0 green:199/255.0 blue:127/255.0 alpha:1];
+    [callButton.layer setMasksToBounds:YES];
+    [callButton.layer setCornerRadius:10.0f];
+    [self.tabBarController.tabBar addSubview:callButton];
+    
+    // [callButton addTarget:self action:@selector(call) forControlEvents:UIControlEventTouchUpInside];
+}
 
+#pragma mark 显示或收起键盘
+-(void)downKeyboard:(UIButton*)sender{
+    if ([sender.titleLabel.text isEqualToString:@"收起键盘"]) {
+        [downButton setImage:[UIImage imageNamed:@"tab_dial_ic_open"] forState:UIControlStateNormal];
+        [downButton setTitle:@"显示键盘" forState:UIControlStateNormal];
+        [UIView animateWithDuration:0.3 animations:^{
+            [keyboard mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.top.equalTo(self.view).with.offset(kHEIGHT);
+                make.left.equalTo(self.view).with.offset(0);
+                make.right.equalTo(self.view).with.offset(0);
+                make.height.mas_equalTo(216);
+            }];
+        } completion:^(BOOL finished) {
+            self.keyboard.hidden = YES;
+        }];
+    }else{
+        
+        [downButton setImage:[UIImage imageNamed:@"tab_dial_ic_close"] forState:UIControlStateNormal];
+        [downButton setTitle:@"收起键盘" forState:UIControlStateNormal];
+        self.keyboard.hidden = NO;
+        [UIView animateWithDuration:0.3 animations:^{
+            [keyboard mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.top.equalTo(self.view).with.offset(kHEIGHT-265);
+                make.left.equalTo(self.view).with.offset(0);
+                make.right.equalTo(self.view).with.offset(0);
+                make.height.mas_equalTo(216);
+            }];
+        }];
+    }
+    [sender setTitleColor:[UIColor colorWithHexString:@"#3F9AEE"] forState:UIControlStateNormal];
+    sender.titleLabel.font = [UIFont systemFontOfSize:11];
+}
+#pragma mark 点击后退删除一个字符
+- (void)singleTap:(UITapGestureRecognizer*)recognizer
+{
+    [self numberKeyboardStirng:@"1"];
+}
+#pragma mark 点击后退删除全部字符
+- (void)longPress:(UILongPressGestureRecognizer*)recognizer
+{
+    [self numberKeyboardStirng:@"2"];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self seaInputNumber:inputNumber
+               textDidChange:inputNumber.text];
+        //[SeaResultTable reloadData];
+    });
+}
+
+#pragma UISearchDisplayDelegate
+- (void)seaInputNumber:(UILabel *)seaInputNumber
+         textDidChange:(NSString *)searchText {
+    
+}
+
+#pragma mark - tabBar代理
+- (void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController
+{
+    UITabBarItem *callItem = self.tabBarController.tabBar.items[1];
+    
+    if (tabBarController.selectedIndex == 1 && isKeyBoard) {
+        
+        tabBarController.selectedIndex = 1;
+        if (self.keyboard.hidden) {
+            UIImage* imageSelected = [UIImage imageNamed:@"tab_dial_ic_close"];
+            callItem.selectedImage = [imageSelected imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+            callItem.title = @"收起键盘";
+            self.keyboard.hidden = NO;
+            [UIView animateWithDuration:0.3 animations:^{
+                self.keyboard.frame = CGRectMake(0, kHEIGHT-265, kWIDTH, 216);}];
+            
+        } else {
+            
+            UIImage* imageSelected = [UIImage imageNamed:@"tab_dial_ic_open"];
+            callItem.selectedImage = [imageSelected imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+            callItem.title = @"显示键盘";
+            [UIView animateWithDuration:0.3 animations:^{
+                self.keyboard.frame = CGRectMake(0, kHEIGHT, kWIDTH, 216);
+            } completion:^(BOOL finished) {
+                self.keyboard.hidden = YES;
+            }];
+        }
+    }else{
+        isKeyBoard = NO;
+        callItem.title = @"通话记录";
+    }
+    //    } else if (tabBarController.selectedIndex == 2 || tabBarController.selectedIndex == 3) {
+    //        isKeyBoard = NO;
+    //        callItem.title = @"通话记录";
+    //    }
+}
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

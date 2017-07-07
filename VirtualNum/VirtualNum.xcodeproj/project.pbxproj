@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8A12FD541F0FD53500BFF962 /* AFFNumericKeyboard.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A12FD511F0FD53500BFF962 /* AFFNumericKeyboard.m */; };
+		8A12FD551F0FD53500BFF962 /* AFFNumericKeyboardDtmf.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A12FD531F0FD53500BFF962 /* AFFNumericKeyboardDtmf.m */; };
+		8A12FD5C1F0FD8D200BFF962 /* UIButton+FillColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A12FD571F0FD8D200BFF962 /* UIButton+FillColor.m */; };
+		8A12FD5D1F0FD8D200BFF962 /* UIButton+TopBottom.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A12FD591F0FD8D200BFF962 /* UIButton+TopBottom.m */; };
+		8A12FD5E1F0FD8D200BFF962 /* UIImage+EditImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A12FD5B1F0FD8D200BFF962 /* UIImage+EditImage.m */; };
 		8A408C0E1EFE84AE00C9081F /* MainTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A408C0D1EFE84AE00C9081F /* MainTabBarController.m */; };
 		8A408C161EFE855F00C9081F /* TabBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A408C111EFE855F00C9081F /* TabBar.m */; };
 		8A408C171EFE855F00C9081F /* TabBarItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A408C131EFE855F00C9081F /* TabBarItem.m */; };
@@ -71,6 +76,16 @@
 		1B6BBFA975533AC6516270A4 /* Pods-VirtualNum.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VirtualNum.release.xcconfig"; path = "../Pods/Target Support Files/Pods-VirtualNum/Pods-VirtualNum.release.xcconfig"; sourceTree = "<group>"; };
 		2475113AD1DACB079ADE9C8D /* Pods-VirtualNum.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VirtualNum.debug.xcconfig"; path = "../Pods/Target Support Files/Pods-VirtualNum/Pods-VirtualNum.debug.xcconfig"; sourceTree = "<group>"; };
 		49FABA1EA2210A0556BFAE0F /* libPods-VirtualNum.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-VirtualNum.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		8A12FD501F0FD53500BFF962 /* AFFNumericKeyboard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFFNumericKeyboard.h; sourceTree = "<group>"; };
+		8A12FD511F0FD53500BFF962 /* AFFNumericKeyboard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFFNumericKeyboard.m; sourceTree = "<group>"; };
+		8A12FD521F0FD53500BFF962 /* AFFNumericKeyboardDtmf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFFNumericKeyboardDtmf.h; sourceTree = "<group>"; };
+		8A12FD531F0FD53500BFF962 /* AFFNumericKeyboardDtmf.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFFNumericKeyboardDtmf.m; sourceTree = "<group>"; };
+		8A12FD561F0FD8D200BFF962 /* UIButton+FillColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIButton+FillColor.h"; sourceTree = "<group>"; };
+		8A12FD571F0FD8D200BFF962 /* UIButton+FillColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIButton+FillColor.m"; sourceTree = "<group>"; };
+		8A12FD581F0FD8D200BFF962 /* UIButton+TopBottom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIButton+TopBottom.h"; sourceTree = "<group>"; };
+		8A12FD591F0FD8D200BFF962 /* UIButton+TopBottom.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIButton+TopBottom.m"; sourceTree = "<group>"; };
+		8A12FD5A1F0FD8D200BFF962 /* UIImage+EditImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+EditImage.h"; sourceTree = "<group>"; };
+		8A12FD5B1F0FD8D200BFF962 /* UIImage+EditImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+EditImage.m"; sourceTree = "<group>"; };
 		8A408C0C1EFE84AE00C9081F /* MainTabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainTabBarController.h; sourceTree = "<group>"; };
 		8A408C0D1EFE84AE00C9081F /* MainTabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainTabBarController.m; sourceTree = "<group>"; };
 		8A408C101EFE855F00C9081F /* TabBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TabBar.h; sourceTree = "<group>"; };
@@ -215,6 +230,17 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		8A12FD4F1F0FD53500BFF962 /* NumericKeyboard */ = {
+			isa = PBXGroup;
+			children = (
+				8A12FD501F0FD53500BFF962 /* AFFNumericKeyboard.h */,
+				8A12FD511F0FD53500BFF962 /* AFFNumericKeyboard.m */,
+				8A12FD521F0FD53500BFF962 /* AFFNumericKeyboardDtmf.h */,
+				8A12FD531F0FD53500BFF962 /* AFFNumericKeyboardDtmf.m */,
+			);
+			path = NumericKeyboard;
+			sourceTree = "<group>";
+		};
 		8A408BFD1EFE83CE00C9081F /* AppDelegate */ = {
 			isa = PBXGroup;
 			children = (
@@ -284,6 +310,7 @@
 		8A408C071EFE83DE00C9081F /* ThridParty */ = {
 			isa = PBXGroup;
 			children = (
+				8A12FD4F1F0FD53500BFF962 /* NumericKeyboard */,
 				8AC740D91F092219008F1E0C /* FMDateBase */,
 				8AB692A01F0543AE0016C3DF /* PPGetAddressBook */,
 			);
@@ -606,6 +633,12 @@
 		8AB7BFFF1F015DDB0027EBFB /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				8A12FD561F0FD8D200BFF962 /* UIButton+FillColor.h */,
+				8A12FD571F0FD8D200BFF962 /* UIButton+FillColor.m */,
+				8A12FD581F0FD8D200BFF962 /* UIButton+TopBottom.h */,
+				8A12FD591F0FD8D200BFF962 /* UIButton+TopBottom.m */,
+				8A12FD5A1F0FD8D200BFF962 /* UIImage+EditImage.h */,
+				8A12FD5B1F0FD8D200BFF962 /* UIImage+EditImage.m */,
 				8AE2116E1F0E841F004E52C3 /* GTMBase64 */,
 				8AE2116B1F0E8404004E52C3 /* SBAPIurl.h */,
 				8AE2116C1F0E8404004E52C3 /* SBAPIurl.m */,
@@ -842,10 +875,12 @@
 				8AB7C0051F015DF00027EBFB /* AdPageView.m in Sources */,
 				8A9763DA1F027E110006F7CF /* MyDate.m in Sources */,
 				8A51D43B1F09E12B009F6B2E /* CalllogCell.m in Sources */,
+				8A12FD541F0FD53500BFF962 /* AFFNumericKeyboard.m in Sources */,
 				8AE2116D1F0E8404004E52C3 /* SBAPIurl.m in Sources */,
 				8A83F3651EFFD01200F1BB84 /* UserManager.m in Sources */,
 				8A408C2B1EFE867500C9081F /* RootViewController.m in Sources */,
 				8AC740D41F090B95008F1E0C /* CallPhone.m in Sources */,
+				8A12FD551F0FD53500BFF962 /* AFFNumericKeyboardDtmf.m in Sources */,
 				8AB692A91F0543AE0016C3DF /* PPGetAddressBook.m in Sources */,
 				8A9763DB1F027E110006F7CF /* MyMd5.m in Sources */,
 				8AB692AA1F0543AE0016C3DF /* PPPersonModel.m in Sources */,
@@ -868,8 +903,10 @@
 				8AC740DC1F092229008F1E0C /* DataBase.m in Sources */,
 				8A408C381EFE86E200C9081F /* NJKWebViewProgress.m in Sources */,
 				8AC740C51F08F030008F1E0C /* ChooseServiceViewController.m in Sources */,
+				8A12FD5D1F0FD8D200BFF962 /* UIButton+TopBottom.m in Sources */,
 				8A9763E81F027E200006F7CF /* UIColor+Random.m in Sources */,
 				8A9763E91F027E200006F7CF /* UIImage+CutCircleImage.m in Sources */,
+				8A12FD5C1F0FD8D200BFF962 /* UIButton+FillColor.m in Sources */,
 				8AB692A81F0543AE0016C3DF /* PPAddressBookHandle.m in Sources */,
 				8AB7C00F1F015E440027EBFB /* HWPopTool.m in Sources */,
 				8A86AE101EFD5DDF00C8533F /* main.m in Sources */,
@@ -877,6 +914,7 @@
 				8A51AC831EFFE1CF00824269 /* ChooseNumViewController.m in Sources */,
 				8A408C561EFE89F200C9081F /* SettingViewController.m in Sources */,
 				8A408C5E1EFE925400C9081F /* AppManager.m in Sources */,
+				8A12FD5E1F0FD8D200BFF962 /* UIImage+EditImage.m in Sources */,
 				8AB7C0081F015E020027EBFB /* AFNetAPIClient.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -138,4 +138,10 @@ shared##className = [[self alloc] init]; \
 return shared##className; \
 }
 
+
+#define kWIDTH [UIScreen mainScreen].bounds.size.width
+#define kHEIGHT [UIScreen mainScreen].bounds.size.height
+
+#define kNumbers     @"*#-0123456789"
+
 #endif /* define_h */

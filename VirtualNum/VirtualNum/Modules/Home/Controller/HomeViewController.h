@@ -7,7 +7,13 @@
 //
 
 #import "RootViewController.h"
+#import "AFFNumericKeyboard.h"
 
 @interface HomeViewController : RootViewController
+{
+    AFFNumericKeyboard *keyboard;
+}
+
+@property (nonatomic, strong) AFFNumericKeyboard *keyboard;
 
 @end
