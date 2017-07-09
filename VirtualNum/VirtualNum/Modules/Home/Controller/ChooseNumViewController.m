@@ -55,21 +55,21 @@
     self.tableView.dataSource = self;
     [self.view addSubview:_tableView];
     [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.view).with.offset(64);
+        make.top.equalTo(self.view).with.offset(0);
         make.left.equalTo(self.view).with.offset(0);
         make.right.equalTo(self.view).with.offset(0);
         make.bottom.equalTo(self.view).with.offset(0);
     }];
     
-    __weak ChooseNumViewController *weakself=self;
-    [self.tableView addPullToRefreshWithActionHandler:^{
-        [weakself stopPull];
-    }];
-    
-    // setup infinite scrolling
-    [self.tableView addInfiniteScrollingWithActionHandler:^{
-        [weakself stopInfinite];
-    }];
+//    __weak ChooseNumViewController *weakself=self;
+//    [self.tableView addPullToRefreshWithActionHandler:^{
+//        [weakself stopPull];
+//    }];
+//    
+//    // setup infinite scrolling
+//    [self.tableView addInfiniteScrollingWithActionHandler:^{
+//        [weakself stopInfinite];
+//    }];
     
 }
 
@@ -77,8 +77,7 @@
 #pragma mark 上拉加载
 - (void)stopInfinite
 {
-    DLog(@" 上拉加载");
-    if (self.curPage > self.pageSizeCount) {
+    if (self.curPage >= self.pageSizeCount) {
         [MBProgressHUD showErrorMessage:@"这是最后一页了！"];
         return;
     }
@@ -92,13 +91,12 @@
 #pragma mark 下拉刷新
 - (void)stopPull
 {
-    DLog(@" 下拉刷新");
     self.curPage = 1;
-    [self.tableView.pullToRefreshView stopAnimating];
+    
     [self.dataArray removeAllObjects];
     [self.tableView reloadData];
     [self SendRequestWithPage:self.curPage];
-    
+    [self.tableView.pullToRefreshView stopAnimating];
 }
 
 
@@ -114,17 +112,17 @@
         return;
     }
     
-    //    NSString *baseUrl = NSStringFormat(@"%@%@",URL_main,URL_phone);
-    //    NSDictionary *parameters = @{
-    //                                 @"companyid": comPanyIDStr,
-    //                                 } ;
+        NSString *baseUrl = NSStringFormat(@"%@%@",URL_main,URL_phone);
+        NSDictionary *parameters = @{
+                                     @"companyid": comPanyIDStr,
+                                     } ;
     
     
-    NSString *baseUrl = NSStringFormat(@"%@%@",URL_main,URL_phone);
-    NSDictionary *parameters = @{
-                                 @"page": [NSString stringWithFormat:@"%d",page],
-                                 @"pageSize": @"5"
-                                 } ;
+//    NSString *baseUrl = NSStringFormat(@"%@%@",URL_main,URL_phone);
+//    NSDictionary *parameters = @{
+//                                 @"page": [NSString stringWithFormat:@"%d",page],
+//                                 @"pageSize": @"5"
+//                                 } ;
     
     DLog(@"URL>>>%@ \n parameters>>%@",baseUrl,parameters);
     //    NSDictionary *newParam = [SBAPIurl TextCodeBase64:parameters];
@@ -140,7 +138,7 @@
         }
         
         NSDictionary* tempJSON = [[AFNetAPIClient sharedJsonClient] parseJSONData:result];
-        DLog(@"tempJSON>>>%@",tempJSON);
+        //DLog(@"tempJSON>>>%@",tempJSON);
         NSString *successstr = [NSString stringWithFormat:@"%@", tempJSON[@"success"]];
         if ([successstr isEqualToString:@"1"]) {
             if ([[tempJSON objectForKey:@"data"] isKindOfClass:[NSArray class]])
@@ -160,7 +158,6 @@
         [self.tableView.infiniteScrollingView stopAnimating];
         [MBProgressHUD hideHUD];
         [MBProgressHUD showErrorMessage:@"连接网络超时，请稍后再试"];
-        DLog(@"error>>>%@",error);
     }];
 }
 
@@ -169,7 +166,6 @@
 #pragma mark UITableView dataSourse数据源
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    DLog(@"dataArrayCount>>>%lu",(unsigned long)self.dataArray.count);
     return  [self.dataArray count];
     
 }

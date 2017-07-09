@@ -48,6 +48,11 @@
  */
 @property(nonatomic,copy) NSString *generatorPersonnel;
 
+/*
+ 呼叫次数
+ */
+@property(nonatomic,copy) NSString *callCount;
+
 
 
 @end

@@ -23,6 +23,12 @@
  通话记录创建时间
  */
 @property(nonatomic,strong) UILabel *generateTimeLab;
+
+/**
+ 随机数
+ */
+@property(nonatomic,strong) UILabel *xLab;
+
 /**
  详情
  */

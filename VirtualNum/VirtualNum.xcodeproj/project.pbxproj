@@ -69,6 +69,11 @@
 		8AE211721F0E841F004E52C3 /* GTMBase64.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AE211701F0E841F004E52C3 /* GTMBase64.m */; };
 		8AE211751F0E9BBF004E52C3 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 8AE211771F0E9BBF004E52C3 /* InfoPlist.strings */; };
 		8AE2117B1F0E9C71004E52C3 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 8AE2117D1F0E9C71004E52C3 /* Localizable.strings */; };
+		8AFF50211F12661400A0A0BC /* CallLogDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AFF50201F12661400A0A0BC /* CallLogDetailViewController.m */; };
+		8AFF50261F126CCA00A0A0BC /* CalllogDetailCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AFF50241F126CCA00A0A0BC /* CalllogDetailCell.m */; };
+		8AFF50271F126CCA00A0A0BC /* CalllogDetailCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8AFF50251F126CCA00A0A0BC /* CalllogDetailCell.xib */; };
+		8AFF502B1F126D1900A0A0BC /* ContactCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AFF50291F126D1900A0A0BC /* ContactCell.m */; };
+		8AFF502C1F126D1900A0A0BC /* ContactCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8AFF502A1F126D1900A0A0BC /* ContactCell.xib */; };
 		A168D58146F3F5D1679B630E /* libPods-VirtualNum.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 49FABA1EA2210A0556BFAE0F /* libPods-VirtualNum.a */; };
 /* End PBXBuildFile section */
 
@@ -206,6 +211,14 @@
 		8AE211781F0E9BEC004E52C3 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		8AE2117C1F0E9C71004E52C3 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		8AE2117E1F0E9C87004E52C3 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		8AFF501F1F12661400A0A0BC /* CallLogDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CallLogDetailViewController.h; sourceTree = "<group>"; };
+		8AFF50201F12661400A0A0BC /* CallLogDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CallLogDetailViewController.m; sourceTree = "<group>"; };
+		8AFF50231F126CCA00A0A0BC /* CalllogDetailCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CalllogDetailCell.h; sourceTree = "<group>"; };
+		8AFF50241F126CCA00A0A0BC /* CalllogDetailCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CalllogDetailCell.m; sourceTree = "<group>"; };
+		8AFF50251F126CCA00A0A0BC /* CalllogDetailCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CalllogDetailCell.xib; sourceTree = "<group>"; };
+		8AFF50281F126D1900A0A0BC /* ContactCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactCell.h; sourceTree = "<group>"; };
+		8AFF50291F126D1900A0A0BC /* ContactCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactCell.m; sourceTree = "<group>"; };
+		8AFF502A1F126D1900A0A0BC /* ContactCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ContactCell.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -375,6 +388,8 @@
 				8A408C4F1EFE89C900C9081F /* HomeViewController.m */,
 				8A51AC811EFFE1CF00824269 /* ChooseNumViewController.h */,
 				8A51AC821EFFE1CF00824269 /* ChooseNumViewController.m */,
+				8AFF501F1F12661400A0A0BC /* CallLogDetailViewController.h */,
+				8AFF50201F12661400A0A0BC /* CallLogDetailViewController.m */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -395,6 +410,12 @@
 				8A51AC861EFFE7C700824269 /* ChooseNumCell.m */,
 				8A51D4391F09E12B009F6B2E /* CalllogCell.h */,
 				8A51D43A1F09E12B009F6B2E /* CalllogCell.m */,
+				8AFF50231F126CCA00A0A0BC /* CalllogDetailCell.h */,
+				8AFF50241F126CCA00A0A0BC /* CalllogDetailCell.m */,
+				8AFF50251F126CCA00A0A0BC /* CalllogDetailCell.xib */,
+				8AFF50281F126D1900A0A0BC /* ContactCell.h */,
+				8AFF50291F126D1900A0A0BC /* ContactCell.m */,
+				8AFF502A1F126D1900A0A0BC /* ContactCell.xib */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -797,8 +818,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8AFF502C1F126D1900A0A0BC /* ContactCell.xib in Resources */,
 				8AC740CE1F08F23C008F1E0C /* CallSettingsCell.xib in Resources */,
 				8AE2117B1F0E9C71004E52C3 /* Localizable.strings in Resources */,
+				8AFF50271F126CCA00A0A0BC /* CalllogDetailCell.xib in Resources */,
 				8AE211751F0E9BBF004E52C3 /* InfoPlist.strings in Resources */,
 				8A86AE1B1EFD5DDF00C8533F /* Assets.xcassets in Resources */,
 			);
@@ -859,6 +882,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8AFF502B1F126D1900A0A0BC /* ContactCell.m in Sources */,
 				8AC740C91F08F12D008F1E0C /* Common.m in Sources */,
 				8A408C4D1EFE891400C9081F /* AppDelegate+PushService.m in Sources */,
 				8AE211721F0E841F004E52C3 /* GTMBase64.m in Sources */,
@@ -885,8 +909,10 @@
 				8A9763DB1F027E110006F7CF /* MyMd5.m in Sources */,
 				8AB692AA1F0543AE0016C3DF /* PPPersonModel.m in Sources */,
 				8A408C181EFE855F00C9081F /* TabBarBadge.m in Sources */,
+				8AFF50261F126CCA00A0A0BC /* CalllogDetailCell.m in Sources */,
 				8A408C3C1EFE86E200C9081F /* RxWebViewNavigationViewController.m in Sources */,
 				8AC740D11F08F9AA008F1E0C /* BindPhoneViewController.m in Sources */,
+				8AFF50211F12661400A0A0BC /* CallLogDetailViewController.m in Sources */,
 				8A408C3B1EFE86E200C9081F /* RxWebViewController.m in Sources */,
 				8A408C3F1EFE873100C9081F /* RootNavigationController.m in Sources */,
 				8AC740C21F08E53C008F1E0C /* UIAlertController+PPPersonModel.m in Sources */,

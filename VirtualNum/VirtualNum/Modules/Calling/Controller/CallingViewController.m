@@ -29,9 +29,25 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
      self.title=@"联系人";
+    
     [self creadTableView];
-    
-    
+    [self initAddressBook];
+}
+
+-(void)creadTableView{
+    self.tableView = [[UITableView alloc]init];
+    self.tableView.delegate = self;
+    self.tableView.dataSource = self;
+    [self.view addSubview:self.tableView];
+    [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.view).with.offset(0);
+        make.left.equalTo(self.view).with.offset(0);
+        make.right.equalTo(self.view).with.offset(0);
+        make.bottom.equalTo(self.view).with.offset(-49);
+    }];
+}
+
+-(void)initAddressBook{
     UIActivityIndicatorView *indicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
     indicator.frame = CGRectMake(0, 0, 80, 80);
     indicator.center = CGPointMake([UIScreen mainScreen].bounds.size.width*0.5, [UIScreen mainScreen].bounds.size.height*0.5-80);
@@ -63,19 +79,6 @@
     }];
     
     self.tableView.rowHeight = 60;
-}
-
--(void)creadTableView{
-    self.tableView = [[UITableView alloc]init];
-    self.tableView.delegate = self;
-    self.tableView.dataSource = self;
-    [self.view addSubview:self.tableView];
-    [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.view).with.offset(0);
-        make.left.equalTo(self.view).with.offset(0);
-        make.right.equalTo(self.view).with.offset(0);
-        make.bottom.equalTo(self.view).with.offset(0);
-    }];
 }
 
 #pragma mark - TableViewDatasouce/TableViewDelegate

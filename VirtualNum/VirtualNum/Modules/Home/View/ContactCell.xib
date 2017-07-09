@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="detail" rowHeight="60" id="VfV-Q4-zHZ" customClass="ContactCell">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="60"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="VfV-Q4-zHZ" id="0QR-w6-e8R">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="59.5"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="手机  182-9613-1759-92" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" enabled="NO" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IWC-vA-QUG">
+                        <rect key="frame" x="13" y="16" width="187" height="28"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="width" relation="lessThanOrEqual" constant="250" id="9Cx-4t-gQP"/>
+                            <constraint firstAttribute="height" constant="28" id="j0i-5I-p0Z"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="17"/>
+                        <color key="textColor" red="0.43529411764705883" green="0.44313725490196076" blue="0.47450980392156861" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2IP-ZS-Hxz">
+                        <rect key="frame" x="287" y="17" width="25" height="25"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="25" id="ZpJ-aX-YQ3"/>
+                        </constraints>
+                        <state key="normal" image="call_for_dial">
+                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                        </state>
+                    </button>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="is_registered" translatesAutoresizingMaskIntoConstraints="NO" id="BBb-3b-jzu">
+                        <rect key="frame" x="208" y="21" width="18" height="18"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="18" id="DT7-eL-cLH"/>
+                            <constraint firstAttribute="height" constant="18" id="zaY-x4-lFB"/>
+                        </constraints>
+                    </imageView>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="2IP-ZS-Hxz" firstAttribute="top" secondItem="0QR-w6-e8R" secondAttribute="topMargin" constant="9" id="0Aa-FU-oEm"/>
+                    <constraint firstAttribute="bottomMargin" secondItem="2IP-ZS-Hxz" secondAttribute="bottom" constant="9" id="5Eu-ML-QDD"/>
+                    <constraint firstItem="BBb-3b-jzu" firstAttribute="leading" secondItem="IWC-vA-QUG" secondAttribute="trailing" constant="8" id="5dQ-bG-MSX"/>
+                    <constraint firstItem="IWC-vA-QUG" firstAttribute="leading" secondItem="0QR-w6-e8R" secondAttribute="leadingMargin" constant="5" id="E6C-iC-Cla"/>
+                    <constraint firstItem="BBb-3b-jzu" firstAttribute="top" secondItem="0QR-w6-e8R" secondAttribute="topMargin" constant="13" id="G7U-JY-wlC"/>
+                    <constraint firstItem="2IP-ZS-Hxz" firstAttribute="trailing" secondItem="0QR-w6-e8R" secondAttribute="trailingMargin" id="dqm-Zj-RGZ"/>
+                    <constraint firstItem="IWC-vA-QUG" firstAttribute="top" secondItem="0QR-w6-e8R" secondAttribute="topMargin" constant="8" id="hfc-XV-m1G"/>
+                </constraints>
+            </tableViewCellContentView>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+            <connections>
+                <outlet property="callButton" destination="2IP-ZS-Hxz" id="iVC-6m-yDH"/>
+                <outlet property="isRegistered" destination="BBb-3b-jzu" id="72C-TW-gke"/>
+                <outlet property="leftLabel" destination="IWC-vA-QUG" id="khY-UY-4IS"/>
+            </connections>
+            <point key="canvasLocation" x="125" y="225"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="call_for_dial" width="68" height="45"/>
+        <image name="is_registered" width="40" height="40"/>
+    </resources>
+</document>

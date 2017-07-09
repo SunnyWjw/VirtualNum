@@ -52,10 +52,21 @@
     self.generateTimeLab = [[UILabel alloc]init];
     self.generateTimeLab.textColor = [UIColor colorWithHexString:LIST_DETAIL_COLOR];//@"#4c4c4c"
     self.generateTimeLab.backgroundColor = [UIColor clearColor];
-    self.generateTimeLab.textAlignment = NSTextAlignmentLeft;
+    self.generateTimeLab.textAlignment = NSTextAlignmentRight;
     self.generateTimeLab.font = [UIFont systemFontOfSize:CELL_DETAIL_SIZE];//10.0
     self.generateTimeLab.alpha = 0.7;
     [self.contentView addSubview:self.generateTimeLab];
+    
+    
+    self.xLab = [[UILabel alloc]init];
+    self.xLab.textColor = [UIColor colorWithHexString:LIST_DETAIL_COLOR];//@"#4c4c4c"
+    self.xLab.backgroundColor = [UIColor clearColor];
+    self.xLab.textAlignment = NSTextAlignmentLeft;
+    self.xLab.font = [UIFont systemFontOfSize:CELL_DETAIL_SIZE];//10.0
+    self.xLab.alpha = 0.7;
+    self.xLab.textAlignment = NSTextAlignmentRight;
+    [self.contentView addSubview:self.xLab];
+    
     
     self.detailImgView = [[UIImageView alloc] init];
     self.detailImgView.image = [UIImage imageNamed:@"detail"];
@@ -76,12 +87,22 @@
     }];
 
     [self.generateTimeLab mas_makeConstraints:^(MASConstraintMaker *make) {
-        //make.top.equalTo(self.callPhoneNumLab.mas_bottom).with.offset(TOP);
+        make.top.equalTo(self).with.offset(TOP);
         make.right.equalTo(self).with.offset(-30);
         //        make.right.equalTo(self).with.offset(-TAndB);
-        make.centerY.equalTo(self.mas_centerY);
-        make.height.mas_equalTo(25);
+//        make.centerY.equalTo(self.mas_centerY);
+//        make.height.mas_equalTo(25);
+         make.size.mas_equalTo(CGSizeMake(200, 25));
         
+    }];
+    
+    [self.xLab mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.equalTo(self).with.offset(-TOP);
+        make.right.equalTo(self).with.offset(-30);
+        //        make.right.equalTo(self).with.offset(-TAndB);
+//        make.centerY.equalTo(self.mas_centerY);
+//        make.height.mas_equalTo(25);
+        make.size.mas_equalTo(CGSizeMake(200, 25));
     }];
     
     [self.detailImgView mas_makeConstraints:^(MASConstraintMaker *make) {

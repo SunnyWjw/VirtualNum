@@ -37,15 +37,16 @@
 #endif /* CommonMacros_h */
 
 /**基本信息**/
-#define permissions @"PERMISSIONS"
+#define permissions @"PERMISSIONS"          //权限
 #define VN_USERID      @"_ID"
-#define VN_USERNAME  @"USERNAME"
-#define VN_PASSWORD  @"PASSWORD"
-#define VN_COMPANYID @"COMPANYID"
-#define VN_COMPANYNAME @"COMPANYNAME"
-#define VN_PHONE   @"PHONENUM"
-#define VN_AUTOLOGIN   @"AUTOLOGIN"
-#define VN_X  @"XENUMBER"
-#define VN_SERVICE    @"SERVICE"
-#define VN_CallPhoneNum @"CallPhoneNum"
-#define VN_ContactName @"ContactName"
+#define VN_USERNAME  @"USERNAME"            //用户名
+#define VN_PASSWORD  @"PASSWORD"            //密码
+#define VN_COMPANYID @"COMPANYID"           //企业ID
+#define VN_COMPANYNAME @"COMPANYNAME"       //企业名称
+#define VN_PHONE   @"PHONENUM"      //手机号码
+#define VN_AUTOLOGIN   @"AUTOLOGIN"     //自动登录
+#define VN_X  @"XENUMBER"   //X号码
+#define VN_SERVICE    @"SERVICE"        //呼叫模式
+#define VN_CallPhoneNum @"CallPhoneNum"         //呼叫号码
+#define VN_ContactName @"ContactName"           //呼叫联系人
+#define VN_TRANS    @"trans"    //随机数

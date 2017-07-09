@@ -53,4 +53,14 @@
  */
 - (NSMutableArray *)getTopNumCallLog:(NSNumber *)howMuch;
 
+/**
+ 条件查询通话记录
+ 
+ @param CallPhoneNum 被叫号码
+ @param xNum x号码
+ @param howMuch 前多少记录
+ @return 返回通话记录
+ */
+- (NSMutableArray *)queryAllCallLog:(NSString *)CallPhoneNum XNum:(NSString *)xNum TopNumber:(NSString *)howMuch;
+
 @end

@@ -186,7 +186,7 @@ static DataBase *_DBCtl = nil;
     
     NSMutableArray *dataArray = [[NSMutableArray alloc] init];
     
-    FMResultSet *res = [_db executeQuery:@"SELECT strftime('%H:%M:%S',generateTime) as CreateTime,* FROM CallLog order by generateTime desc"];
+    FMResultSet *res = [_db executeQuery:@"SELECT strftime('%H:%M:%S',generateTime) as CreateTime,count(CallPhoneNum)as CallCount,* FROM CallLog GROUP BY CallPhoneNum order by generateTime desc"];
     
     while ([res next]) {
         CallLog *callLog = [[CallLog alloc] init];
@@ -200,6 +200,7 @@ static DataBase *_DBCtl = nil;
         callLog.serviceType=[res stringForColumn:@"serviceType"];
         callLog.generateTime=[res stringForColumn:@"CreateTime"];
         callLog.generatorPersonnel=[res stringForColumn:@"generatorPersonnel"];
+        callLog.callCount =[res stringForColumn:@"CallCount"];
         
         [dataArray addObject:callLog];
         
@@ -222,7 +223,10 @@ static DataBase *_DBCtl = nil;
     
     NSMutableArray *dataArray = [[NSMutableArray alloc] init];
     
-    FMResultSet *res = [_db executeQuery:@"SELECT top ? strftime('%H:%M:%S',generateTime) as CreateTime,* FROM CallLog order by generateTime desc",howMuch];
+    NSString *querySql = [NSString stringWithFormat:@" limit 0,%@",howMuch];
+    
+    NSString *tempA = @"SELECT strftime('%H:%M:%S',generateTime) as CreateTime,count(CallPhoneNum)as CallCount,* FROM CallLog GROUP BY CallPhoneNum order by generateTime desc ";
+    FMResultSet *res = [_db executeQuery:[NSString stringWithFormat:@"%@%@",tempA,querySql]];
     
     while ([res next]) {
         CallLog *callLog = [[CallLog alloc] init];
@@ -236,10 +240,54 @@ static DataBase *_DBCtl = nil;
         callLog.serviceType=[res stringForColumn:@"serviceType"];
         callLog.generateTime=[res stringForColumn:@"CreateTime"];
         callLog.generatorPersonnel=[res stringForColumn:@"generatorPersonnel"];
+        callLog.callCount =[res stringForColumn:@"CallCount"];
         
         [dataArray addObject:callLog];
         
     }
+    
+    [_db close];
+    
+    return dataArray;
+}
+
+
+- (NSMutableArray *)queryAllCallLog:(NSString *)CallPhoneNum XNum:(NSString *)xNum TopNumber:(NSString *)howMuch{
+    [_db open];
+    
+    NSMutableArray *dataArray = [[NSMutableArray alloc] init];
+    
+    NSString *querySql = @"";
+    if (howMuch.length > 0) {
+        NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
+        [numberFormatter setNumberStyle:NSNumberFormatterDecimalStyle];
+        NSNumber *numTemp = [numberFormatter numberFromString:howMuch];
+        querySql = [NSString stringWithFormat:@" CallPhoneNum = '%@' and generatorPersonnel = '%@' order by generateTime desc limit 0,%@",CallPhoneNum,xNum,numTemp];
+     
+    }else{
+        querySql = [NSString stringWithFormat:@" CallPhoneNum = '%@' and generatorPersonnel = '%@' order by generateTime desc",CallPhoneNum,xNum];
+    }
+    NSString *tempA = @"SELECT strftime('%H:%M:%S',generateTime) as CreateTime,* FROM CallLog where";
+  
+    FMResultSet *res = [_db executeQuery:[NSString stringWithFormat:@"%@%@",tempA,querySql]];
+    while ([res next]) {
+        CallLog *callLog = [[CallLog alloc] init];
+        callLog.ID =@([[res stringForColumn:@"id"] integerValue]);
+        callLog.calledName=[res stringForColumn:@"calledName"];
+        callLog.CallingName=[res stringForColumn:@"CallingName"];
+        callLog.CallPhoneNum=[res stringForColumn:@"CallPhoneNum"];
+        callLog.XNum=@([[res stringForColumn:@"XNum"] integerValue]);
+        callLog.randomNum=@([[res stringForColumn:@"randomNum"] integerValue]);
+        callLog.durationTime=@([[res stringForColumn:@"durationTime"] integerValue]);
+        callLog.serviceType=[res stringForColumn:@"serviceType"];
+        callLog.generateTime=[res stringForColumn:@"generateTime"];
+        callLog.generatorPersonnel=[res stringForColumn:@"generatorPersonnel"];
+        
+        [dataArray addObject:callLog];
+        
+    }
+    
+   
     
     [_db close];
     

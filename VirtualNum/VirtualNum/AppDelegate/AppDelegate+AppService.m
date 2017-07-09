@@ -262,13 +262,15 @@
             NSString *calledName = [userDefaults objectForKey:VN_ContactName];
             NSString *callingName = [userDefaults objectForKey:VN_USERNAME];
             callingName = callingName.length > 0 ? callingName : @"";
+            
             NSString *XNum = [userDefaults objectForKey:VN_X];
-            XNum = XNum.length > 0 ? callingName : 0;
-            //[numberFormatter numberFromString:str];
+            XNum = XNum.length > 0 ? XNum : 0;
+            
             NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
             [numberFormatter setNumberStyle:NSNumberFormatterDecimalStyle];
             NSNumber *numTemp = [numberFormatter numberFromString:XNum];
-            NSNumber *randomNum = [numberFormatter numberFromString:[TimeAndTimeStamps getNowDateTimeFoFourteenr]];
+            
+            NSNumber *randomNum = [numberFormatter numberFromString:[userDefaults objectForKey:VN_TRANS]];
             
             NSString *serviceType = [userDefaults objectForKey:VN_SERVICE];
             serviceType = serviceType.length > 0 ? serviceType : @"";

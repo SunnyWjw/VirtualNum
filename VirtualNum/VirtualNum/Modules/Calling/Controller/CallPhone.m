@@ -46,11 +46,18 @@
     }
     NSString *companyNameStr = [userDefaults objectForKey:VN_COMPANYNAME];
     
+    NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
+    [numberFormatter setNumberStyle:NSNumberFormatterDecimalStyle];
+    NSNumber *randomNum = [numberFormatter numberFromString:[TimeAndTimeStamps getNowDateTimeFoFourteenr]];
+    
+    [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%@",randomNum] forKey:VN_TRANS];
+    
+    //xNumStr = [NSString stringWithFormat:@"021%@",xNumStr];
     NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
     [dictionary setValue:aNumStr forKey:@"a"];
     [dictionary setValue:xNumStr forKey:@"x"];
     [dictionary setValue:phoneNum forKey:@"b"];
-    [dictionary setValue:@"11" forKey:@"trans"];
+    [dictionary setValue:[NSString stringWithFormat:@"%@",randomNum] forKey:@"trans"];
     [dictionary setValue:@"single" forKey:@"mode"];
     [dictionary setValue:companyIDStr forKey:@"companyid"];
     [dictionary setValue:companyNameStr forKey:@"companyname"];

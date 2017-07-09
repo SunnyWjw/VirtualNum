@@ -12,7 +12,7 @@
 @protocol AFFNumericKeyboardDelegate <NSObject>
 
 - (void) numberKeyboardInput:(NSString*) number;
-- (void) numberKeyboardBackspace:(BOOL)sender;
+//- (void) numberKeyboardBackspace:(BOOL)sender;
 //- (void) changeKeyboardType;
 
 @end
