@@ -247,33 +247,33 @@
     
     NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
     [dictionary setObject:phoneNumStr forKey:@"a"];
-    //    [dictionary setObject:companyInfo[@"xs"] forKey:@"x"];
-    [dictionary setObject:@"80246994" forKey:@"x"];
+        [dictionary setObject:companyInfo[@"xs"] forKey:@"x"];
+    //[dictionary setObject:@"80246994" forKey:@"x"];
     [dictionary setObject:companyInfo[@"companyid"] forKey:@"companyid"];
     [dictionary setObject:companyInfo[@"companyname"] forKey:@"companyname"];
     
     NSMutableDictionary *dic = [NSMutableDictionary dictionary];
     [dic setObject:@"15900000794" forKey:@"a"];
-    //    [dictionary setObject:companyInfo[@"xs"] forKey:@"x"];
-    [dic setObject:@"80246994" forKey:@"x"];
+        [dictionary setObject:companyInfo[@"xs"] forKey:@"x"];
+//    [dic setObject:@"80246994" forKey:@"x"];
     [dic setObject:companyInfo[@"companyid"] forKey:@"companyid"];
     [dic setObject:companyInfo[@"companyname"] forKey:@"companyname"];
     
     
     NSString *baseUrl = NSStringFormat(@"%@%@",URL_main,URL_AX);
-    NSDictionary *updateParameters = @{
-                                       @"newItem": dictionary,
-                                       @"oldItem": dic,
-                                       @"type": @"update"
-                                       } ;
-    //    NSDictionary *cretateParameters = @{
-    //                                       @"newItem": dictionary,
-    //                                       @"oldItem": @{},
-    //                                       @"type": @"create"
-    //                                       } ;
-    DLog(@"parameters>>>%@",updateParameters);
+//    NSDictionary *updateParameters = @{
+//                                       @"newItem": dictionary,
+//                                       @"oldItem": dic,
+//                                       @"type": @"update"
+//                                       } ;
+        NSDictionary *cretateParameters = @{
+                                           @"newItem": dictionary,
+                                           @"oldItem": @{},
+                                           @"type": @"create"
+                                           } ;
+    DLog(@"parameters>>>%@",cretateParameters);
     [MBProgressHUD showActivityMessageInView:@"请求中..."];
-    [[AFNetAPIClient sharedJsonClient].setRequest(baseUrl).RequestType(Put).Parameters(updateParameters) startRequestWithSuccess:^(NSURLSessionDataTask *task, id responseObject) {
+    [[AFNetAPIClient sharedJsonClient].setRequest(baseUrl).RequestType(Put).Parameters(cretateParameters) startRequestWithSuccess:^(NSURLSessionDataTask *task, id responseObject) {
         [MBProgressHUD hideHUD];
         NSString *result = [[NSString alloc] initWithData:responseObject encoding:NSUTF8StringEncoding];
         if([[AFNetAPIClient sharedJsonClient] parseJSONData:result] == nil){
@@ -288,7 +288,9 @@
             if ([[tempJSON objectForKey:@"data"] isKindOfClass:[NSArray class]])
             {
                 [MBProgressHUD showErrorMessage:@"绑定成功"];
-                [[NSUserDefaults standardUserDefaults] setObject:@"80246994" forKey:VN_X];
+//                [[NSUserDefaults standardUserDefaults] setObject:@"80246994" forKey:VN_X];
+                 [[NSUserDefaults standardUserDefaults] setObject:companyInfo[@"xs"] forKey:VN_X];
+                
                 [[NSUserDefaults standardUserDefaults] setObject:phoneNumStr forKey:VN_PHONE];
                 [[NSUserDefaults standardUserDefaults]setObject:companyInfo[@"companyname"] forKey:VN_COMPANYNAME];
             }

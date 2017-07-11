@@ -52,7 +52,7 @@
     
     [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%@",randomNum] forKey:VN_TRANS];
     
-    xNumStr = [NSString stringWithFormat:@"21%@",xNumStr];
+    xNumStr = [NSString stringWithFormat:@"%@%@",VN_CALLPREFIX,xNumStr];
     NSString *mode = [userDefaults objectForKey:VN_SERVICE];
     mode = [mode isEqual:@"0"] ? @"dual" : @"single";
     

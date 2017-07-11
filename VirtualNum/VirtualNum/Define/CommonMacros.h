@@ -50,3 +50,4 @@
 #define VN_CallPhoneNum @"CallPhoneNum"         //呼叫号码
 #define VN_ContactName @"ContactName"           //呼叫联系人
 #define VN_TRANS    @"trans"    //随机数
+#define VN_CALLPREFIX   @"0"    //呼叫前缀，例：呼叫x为80246994时，实际呼叫02180246994
