@@ -11,7 +11,7 @@
 #import "ChooseServiceViewController.h"
 #import "BindPhoneViewController.h"
 
-@interface MineViewController ()<UITableViewDelegate,UITableViewDataSource>
+@interface MineViewController ()<UITableViewDelegate,UITableViewDataSource,UIAlertViewDelegate>
 
 @property (nonatomic,strong) NSArray * dataArray;
 @property (nonatomic,strong) UITableView *personalTableView;
@@ -69,7 +69,7 @@
     NSInteger num = 0;
     switch (section) {
         case 0:
-            num = 3;
+            num = 4;
             break;
         case 1:
             num = 3;
@@ -147,6 +147,16 @@
                     cell.detailTextLabel.text =companyIDStr;
                 }
                     break;
+                case 2:
+                {
+                    cell.textLabel.text = @"手机号码";
+                    NSString * phoneNumStr = [[NSUserDefaults standardUserDefaults] objectForKey:VN_PHONE];
+                    if (!phoneNumStr) {
+                        phoneNumStr = @"--";
+                    }
+                    cell.detailTextLabel.text = phoneNumStr;
+                }
+                    break;
                 default:
                 {
                     cell.textLabel.text =@"X号码";
@@ -178,12 +188,7 @@
                     break;
                 case 1:
                 {
-                    cell2.textLabel.text = @"修改手机号码";
-                    NSString * phoneNumStr = [[NSUserDefaults standardUserDefaults] objectForKey:VN_PHONE];
-                    if (!phoneNumStr) {
-                        phoneNumStr = @"--";
-                    }
-                    cell2.detailTextLabel.text = phoneNumStr;
+                    cell2.textLabel.text = @"解绑X";
                 }
                     break;
                 default:
@@ -228,25 +233,26 @@
             switch (indexPath.row) {
                 case 0:
                 {
-                    //                    NSString * xNumStr = [[NSUserDefaults standardUserDefaults] objectForKey:VN_X];
-                    //                    if (!xNumStr) {
-                    //
-                    //                        ChooseNumViewController * chooseVc = [[ChooseNumViewController alloc]init];
-                    //                        [self.navigationController pushViewController:chooseVc animated:NO];
-                    //                    }else{
-                    //                        [MBProgressHUD showErrorMessage:@"已绑定号码，不可修改"];
-                    //                        return;
-                    //                    }
                     ChooseNumViewController * chooseVc = [[ChooseNumViewController alloc]init];
                     [self.navigationController pushViewController:chooseVc animated:NO];
                 }
                     break;
                 case 1:
                 {
-                    BindPhoneViewController * bindVc = [[BindPhoneViewController alloc]init];
-                    bindVc.bindTitle =@"修改手机号码";
-                    bindVc.bindType = @"0";
-                    [self.navigationController pushViewController:bindVc animated:NO];
+                    NSString *xNumStr = [[NSUserDefaults standardUserDefaults] objectForKey:VN_X];
+                    if (!xNumStr) {
+                        [MBProgressHUD showErrorMessage:@"请先绑定X号码"];
+                        return;
+                    }
+                    NSString *phoneNum = [[NSUserDefaults standardUserDefaults] objectForKey:VN_PHONE];
+                    if (!phoneNum) {
+                        [MBProgressHUD showErrorMessage:@"请先绑定手机号码"];
+                        return;
+                    }
+                    NSString *msg = [NSString stringWithFormat:@"您确定在解绑 %@ ?",xNumStr];
+                    UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:nil message:msg delegate:self cancelButtonTitle:@"确定" otherButtonTitles:@"取消", nil];
+                    alertView.tag=10086;
+                    [alertView show];
                 }
                     break;
                 default:
@@ -259,8 +265,117 @@
         }
             break;
     }
-    
 }
+
+#pragma mark - UIAlertView delegate
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == 0) {
+        if (alertView.tag == 10086)
+        {
+            [self sendUnBindRequest];
+        }
+    }
+}
+
+
+/**
+ 发送解除解除绑定AX的请求
+ */
+- (void) sendUnBindRequest{
+    NSString * companyIDStr = [[NSUserDefaults standardUserDefaults] objectForKey:VN_COMPANYID];
+    NSString *xNumStr = [[NSUserDefaults standardUserDefaults] objectForKey:VN_X];
+    NSString *phoneNum = [[NSUserDefaults standardUserDefaults] objectForKey:VN_PHONE];
+    
+    NSString *baseUrl = NSStringFormat(@"%@%@",URL_main,URL_AX);
+    NSDictionary *parameters = @{
+                                 @"a": phoneNum,
+                                 @"x": xNumStr,
+                                 @"companyid": companyIDStr,
+                                 @"companyname": @""
+                                 } ;
+    DLog(@"解绑AXparameters>>>%@",parameters);
+    [MBProgressHUD showActivityMessageInView:@"请求中..."];
+    
+    [self Delete:baseUrl params:parameters success:^(id responseObject) {
+        [MBProgressHUD hideHUD];
+        NSString *result = [[NSString alloc] initWithData:responseObject encoding:NSUTF8StringEncoding];
+        if([[AFNetAPIClient sharedJsonClient] parseJSONData:result] == nil){
+            [MBProgressHUD showErrorMessage:@"服务器繁忙，请稍后再试"];
+            return;
+        }
+        
+        NSDictionary* tempJSON = [[AFNetAPIClient sharedJsonClient] parseJSONData:result];
+        DLog(@"tempJSON>>>%@",tempJSON);
+        NSString *successstr = [NSString stringWithFormat:@"%@", tempJSON[@"success"]];
+        if ([successstr isEqualToString:@"1"]) {
+            if ([[tempJSON objectForKey:@"data"] isKindOfClass:[NSArray class]])
+            {
+                [MBProgressHUD showErrorMessage:@"解除绑定成功"];
+                [[NSUserDefaults standardUserDefaults]removeObjectForKey:VN_X];
+                [self.personalTableView reloadData];
+            }
+            
+        }else{
+            [MBProgressHUD showErrorMessage:tempJSON[@"message"]];
+        }
+    } failure:^(NSError *error) {
+        [MBProgressHUD hideHUD];
+        [MBProgressHUD showErrorMessage:@"连接网络超时，请稍后再试"];
+        
+    }];
+    
+    
+    //    [[AFNetAPIClient sharedJsonClient].setRequest(baseUrl).RequestType(Delete).Parameters(parameters) startRequestWithSuccess:^(NSURLSessionDataTask *task, id responseObject) {
+    //        [MBProgressHUD hideHUD];
+    //        NSString *result = [[NSString alloc] initWithData:responseObject encoding:NSUTF8StringEncoding];
+    //        if([[AFNetAPIClient sharedJsonClient] parseJSONData:result] == nil){
+    //            [MBProgressHUD showErrorMessage:@"服务器繁忙，请稍后再试"];
+    //            return;
+    //        }
+    //
+    //        NSDictionary* tempJSON = [[AFNetAPIClient sharedJsonClient] parseJSONData:result];
+    //        DLog(@"tempJSON>>>%@",tempJSON);
+    //        NSString *successstr = [NSString stringWithFormat:@"%@", tempJSON[@"success"]];
+    //        if ([successstr isEqualToString:@"1"]) {
+    //            if ([[tempJSON objectForKey:@"data"] isKindOfClass:[NSArray class]])
+    //            {
+    //                [MBProgressHUD showErrorMessage:@"解除绑定成功"];
+    //                [[NSUserDefaults standardUserDefaults]removeObjectForKey:VN_X];
+    //                [self.personalTableView reloadData];
+    //            }
+    //
+    //        }else{
+    //            [MBProgressHUD showErrorMessage:tempJSON[@"message"]];
+    //        }
+    //    } progress:^(NSProgress *progress) {
+    //
+    //    } failure:^(NSURLSessionDataTask *task, NSError *error) {
+    //        [MBProgressHUD hideHUD];
+    //        [MBProgressHUD showErrorMessage:@"连接网络超时，请稍后再试"];
+    //    }];
+}
+
+- (void)Delete:(NSString *)url params:(NSDictionary *)params success:(void (^)(id responseObject))success failure:(void (^)(NSError *))failure
+{
+    
+    AFHTTPSessionManager *manger = [AFHTTPSessionManager manager];
+    manger.requestSerializer = [AFJSONRequestSerializer serializer];
+    manger.responseSerializer = [AFHTTPResponseSerializer serializer];
+    
+    [manger DELETE:url parameters:params success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        if (success) {
+            success(responseObject);
+        }
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        if(failure)
+        {
+            failure(error);
+        }
+        
+    }];
+}
+
 
 //隐藏多余分割线
 - (void)setExtraCellLineHidden: (UITableView *)tableView

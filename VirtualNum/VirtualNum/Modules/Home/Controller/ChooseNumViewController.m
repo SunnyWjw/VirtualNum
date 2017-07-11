@@ -10,7 +10,7 @@
 #import "ChooseNumCell.h"
 #import "HWPopTool.h"
 
-@interface ChooseNumViewController ()<UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate>
+@interface ChooseNumViewController ()<UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate,UINavigationControllerDelegate>
 
 @property (nonatomic,strong)UITableView *tableView;
 @property (nonatomic,strong)NSMutableArray *dataArray;;
@@ -27,6 +27,9 @@
 
 @end
 
+static BOOL InfiniteBool;   //上拉加载
+static BOOL PullBool;   //下拉刷新
+
 @implementation ChooseNumViewController
 
 
@@ -35,42 +38,47 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.title = @"选择X号码";
+    // 设置导航控制器的代理为self
+    //self.navigationController.delegate = self;
+//    self.navigationController.navigationBar.hidden = YES;
     self.dataArray = [[NSMutableArray alloc]initWithCapacity:0];
     
     self.curPage = 1;
     [self creadTableView];
     
+    InfiniteBool = NO;
+    PullBool = YES;
+    
     [self SendRequestWithPage:self.curPage];
 }
 
+
 - (void)viewDidAppear:(BOOL)animated {
-    [self.tableView triggerPullToRefresh];
+ 
 }
-
-
 
 -(void)creadTableView{
     self.tableView = [[UITableView alloc]init];
+    self.tableView.frame = self.view.bounds;
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     [self.view addSubview:_tableView];
-    [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.view).with.offset(0);
-        make.left.equalTo(self.view).with.offset(0);
-        make.right.equalTo(self.view).with.offset(0);
-        make.bottom.equalTo(self.view).with.offset(0);
+//    [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.top.equalTo(self.view).with.offset(0);
+//        make.left.equalTo(self.view).with.offset(0);
+//        make.right.equalTo(self.view).with.offset(0);
+//        make.bottom.equalTo(self.view).with.offset(0);
+//    }];
+    
+    __weak ChooseNumViewController *weakself=self;
+    [self.tableView addPullToRefreshWithActionHandler:^{
+        [weakself stopPull];
     }];
     
-//    __weak ChooseNumViewController *weakself=self;
-//    [self.tableView addPullToRefreshWithActionHandler:^{
-//        [weakself stopPull];
-//    }];
-//    
-//    // setup infinite scrolling
-//    [self.tableView addInfiniteScrollingWithActionHandler:^{
-//        [weakself stopInfinite];
-//    }];
-    
+    // setup infinite scrolling
+    [self.tableView addInfiniteScrollingWithActionHandler:^{
+        [weakself stopInfinite];
+    }];
 }
 
 #pragma mark -
@@ -78,9 +86,12 @@
 - (void)stopInfinite
 {
     if (self.curPage >= self.pageSizeCount) {
+        [self.tableView.infiniteScrollingView stopAnimating];
         [MBProgressHUD showErrorMessage:@"这是最后一页了！"];
         return;
     }
+    InfiniteBool = YES;
+    PullBool = NO;
     // 停止上拉加载
     [self.tableView.pullToRefreshView stopAnimating];
     self.curPage = self.curPage+1;
@@ -92,7 +103,8 @@
 - (void)stopPull
 {
     self.curPage = 1;
-    
+    InfiniteBool = NO;
+    PullBool = YES;
     [self.dataArray removeAllObjects];
     [self.tableView reloadData];
     [self SendRequestWithPage:self.curPage];
@@ -112,25 +124,28 @@
         return;
     }
     
-        NSString *baseUrl = NSStringFormat(@"%@%@",URL_main,URL_phone);
-        NSDictionary *parameters = @{
-                                     @"companyid": comPanyIDStr,
-                                     } ;
+    NSString *baseUrl = NSStringFormat(@"%@%@",URL_main,URL_phone);
+    //    NSDictionary *parameters = @{
+    //                                 @"companyid": comPanyIDStr,
+    //                                 } ;
     
-    
-//    NSString *baseUrl = NSStringFormat(@"%@%@",URL_main,URL_phone);
-//    NSDictionary *parameters = @{
-//                                 @"page": [NSString stringWithFormat:@"%d",page],
-//                                 @"pageSize": @"5"
-//                                 } ;
+    NSDictionary *parameters = @{
+                                 @"page": [NSString stringWithFormat:@"%d",page],
+                                 @"pageSize": @"15"
+                                 } ;
     
     DLog(@"URL>>>%@ \n parameters>>%@",baseUrl,parameters);
     //    NSDictionary *newParam = [SBAPIurl TextCodeBase64:parameters];
     [MBProgressHUD showActivityMessageInView:@"请求中..."];
     [[AFNetAPIClient sharedJsonClient].setRequest(baseUrl).RequestType(Post).Parameters(parameters) startRequestWithSuccess:^(NSURLSessionDataTask *task, id responseObject) {
         [MBProgressHUD hideHUD];
-        [self.tableView.pullToRefreshView stopAnimating];
-        [self.tableView.infiniteScrollingView stopAnimating];
+        
+        if (InfiniteBool) {
+            [self.tableView.infiniteScrollingView stopAnimating];
+        }else{
+           [self.tableView.pullToRefreshView stopAnimating];
+        }
+        
         NSString *result = [[NSString alloc] initWithData:responseObject encoding:NSUTF8StringEncoding];
         if([[AFNetAPIClient sharedJsonClient] parseJSONData:result] == nil){
             [MBProgressHUD showErrorMessage:@"服务器繁忙，请稍后再试"];
@@ -154,8 +169,11 @@
     } progress:^(NSProgress *progress) {
         
     } failure:^(NSURLSessionDataTask *task, NSError *error) {
-        [self.tableView.pullToRefreshView stopAnimating];
-        [self.tableView.infiniteScrollingView stopAnimating];
+        if (InfiniteBool) {
+            [self.tableView.infiniteScrollingView stopAnimating];
+        }else{
+            [self.tableView.pullToRefreshView stopAnimating];
+        }
         [MBProgressHUD hideHUD];
         [MBProgressHUD showErrorMessage:@"连接网络超时，请稍后再试"];
     }];
@@ -198,7 +216,13 @@
 {
     [tableView deselectRowAtIndexPath:indexPath animated:NO];
     _dictionary = [self.dataArray objectAtIndex:indexPath.row];
-    [self showPopView:_dictionary];
+    NSString * xNumStr = [[NSUserDefaults standardUserDefaults] objectForKey:VN_X];
+    if (!xNumStr) {
+        [self showPopView:_dictionary];
+    }else{
+        [MBProgressHUD showErrorMessage:@"已绑定号码，不可修改"];
+        return;
+    }
 }
 
 -(void)showPopView:(NSDictionary *)dic{
@@ -242,21 +266,33 @@
     
     NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
     [dictionary setObject:phoneNumStr forKey:@"a"];
-    [dictionary setObject:companyInfo[@"xs"] forKey:@"x"];
+    //    [dictionary setObject:companyInfo[@"xs"] forKey:@"x"];
+    [dictionary setObject:@"80246994" forKey:@"x"];
     [dictionary setObject:companyInfo[@"companyid"] forKey:@"companyid"];
     [dictionary setObject:companyInfo[@"companyname"] forKey:@"companyname"];
     
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    [dic setObject:@"15900000794" forKey:@"a"];
+    //    [dictionary setObject:companyInfo[@"xs"] forKey:@"x"];
+    [dic setObject:@"80246994" forKey:@"x"];
+    [dic setObject:companyInfo[@"companyid"] forKey:@"companyid"];
+    [dic setObject:companyInfo[@"companyname"] forKey:@"companyname"];
+    
     
     NSString *baseUrl = NSStringFormat(@"%@%@",URL_main,URL_AX);
-    NSDictionary *parameters = @{
-                                 @"newItem": dictionary,
-                                 @"oldItem": companyInfo,
-                                 //                                 @"type": @"create"
-                                 @"type": @"update"
-                                 } ;
-    DLog(@"parameters>>>%@",parameters);
+    NSDictionary *updateParameters = @{
+                                       @"newItem": dictionary,
+                                       @"oldItem": dic,
+                                       @"type": @"update"
+                                       } ;
+    //    NSDictionary *cretateParameters = @{
+    //                                       @"newItem": dictionary,
+    //                                       @"oldItem": @{},
+    //                                       @"type": @"create"
+    //                                       } ;
+    DLog(@"parameters>>>%@",updateParameters);
     [MBProgressHUD showActivityMessageInView:@"请求中..."];
-    [[AFNetAPIClient sharedJsonClient].setRequest(baseUrl).RequestType(Put).Parameters(parameters) startRequestWithSuccess:^(NSURLSessionDataTask *task, id responseObject) {
+    [[AFNetAPIClient sharedJsonClient].setRequest(baseUrl).RequestType(Put).Parameters(updateParameters) startRequestWithSuccess:^(NSURLSessionDataTask *task, id responseObject) {
         [MBProgressHUD hideHUD];
         NSString *result = [[NSString alloc] initWithData:responseObject encoding:NSUTF8StringEncoding];
         if([[AFNetAPIClient sharedJsonClient] parseJSONData:result] == nil){
@@ -271,7 +307,7 @@
             if ([[tempJSON objectForKey:@"data"] isKindOfClass:[NSArray class]])
             {
                 [MBProgressHUD showErrorMessage:@"绑定成功"];
-                [[NSUserDefaults standardUserDefaults] setObject:companyInfo[@"xs"] forKey:VN_X];
+                [[NSUserDefaults standardUserDefaults] setObject:@"80246994" forKey:VN_X];
                 [[NSUserDefaults standardUserDefaults] setObject:phoneNumStr forKey:VN_PHONE];
                 [[NSUserDefaults standardUserDefaults]setObject:companyInfo[@"companyname"] forKey:VN_COMPANYNAME];
             }
@@ -285,63 +321,7 @@
         [MBProgressHUD hideHUD];
         [MBProgressHUD showErrorMessage:@"连接网络超时，请稍后再试"];
     }];
-    
-    /*
-     [self put:baseUrl params:parameters success:^(id responseObject) {
-     
-     NSString *result = [[NSString alloc] initWithData:responseObject encoding:NSUTF8StringEncoding];
-     if([[AFNetAPIClient sharedJsonClient] parseJSONData:result] == nil){
-     [MBProgressHUD showErrorMessage:@"服务器繁忙，请稍后再试"];
-     return;
-     }
-     
-     NSDictionary* tempJSON = [[AFNetAPIClient sharedJsonClient] parseJSONData:result];
-     DLog(@"tempJSON>>>%@",tempJSON);
-     NSString *successstr = [NSString stringWithFormat:@"%@", tempJSON[@"success"]];
-     if ([successstr isEqualToString:@"1"]) {
-     if ([[tempJSON objectForKey:@"data"] isKindOfClass:[NSArray class]])
-     {
-     
-     [MBProgressHUD showErrorMessage:@"绑定成功"];
-     }
-     
-     }else{
-     [MBProgressHUD showErrorMessage:tempJSON[@"message"]];
-     }
-     
-     }failure:^(NSError *error) {
-     [MBProgressHUD showErrorMessage:@"连接网络超时，请稍后再试"];
-     }];
-     */
-    
 }
-
-
-- (void)put:(NSString *)url params:(NSDictionary *)params success:(void (^)(id responseObject))success failure:(void (^)(NSError *))failure
-{
-    
-    AFHTTPSessionManager *manger = [AFHTTPSessionManager manager];
-    manger.requestSerializer = [AFJSONRequestSerializer serializer];
-    manger.responseSerializer = [AFHTTPResponseSerializer serializer];
-    
-    [manger PUT:url parameters:params success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        //如果请求成功的话将responseObject保存在sucess Block中
-        if (success)
-        {
-            success(responseObject);
-        }
-        
-    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        
-        if(failure)
-        {
-            failure(error);
-        }
-        
-    }];
-    
-}
-
 
 
 - (void)didReceiveMemoryWarning {

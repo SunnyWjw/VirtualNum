@@ -52,13 +52,16 @@
     
     [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%@",randomNum] forKey:VN_TRANS];
     
-    //xNumStr = [NSString stringWithFormat:@"021%@",xNumStr];
+    xNumStr = [NSString stringWithFormat:@"21%@",xNumStr];
+    NSString *mode = [userDefaults objectForKey:VN_SERVICE];
+    mode = [mode isEqual:@"0"] ? @"dual" : @"single";
+    
     NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
     [dictionary setValue:aNumStr forKey:@"a"];
     [dictionary setValue:xNumStr forKey:@"x"];
     [dictionary setValue:phoneNum forKey:@"b"];
     [dictionary setValue:[NSString stringWithFormat:@"%@",randomNum] forKey:@"trans"];
-    [dictionary setValue:@"single" forKey:@"mode"];
+    [dictionary setValue:mode forKey:@"mode"];
     [dictionary setValue:companyIDStr forKey:@"companyid"];
     [dictionary setValue:companyNameStr forKey:@"companyname"];
     
@@ -68,9 +71,9 @@
                                  @"type": @"create"
                                  //@"type": @"update"
                                  } ;
-    DLog(@"parameters>>>%@",parameters);
+    DLog(@"绑定AXBparameters>>>%@",parameters);
     [MBProgressHUD showActivityMessageInView:@"请求中..."];
-    [[AFNetAPIClient sharedJsonClient].setRequest(baseUrl).RequestType(Post).Parameters(parameters) startRequestWithSuccess:^(NSURLSessionDataTask *task, id responseObject) {
+    [[AFNetAPIClient sharedJsonClient].setRequest(baseUrl).RequestType(Put).Parameters(parameters) startRequestWithSuccess:^(NSURLSessionDataTask *task, id responseObject) {
         [MBProgressHUD hideHUD];
         NSString *result = [[NSString alloc] initWithData:responseObject encoding:NSUTF8StringEncoding];
         if([[AFNetAPIClient sharedJsonClient] parseJSONData:result] == nil){
@@ -82,7 +85,7 @@
         DLog(@"tempJSON>>>%@",tempJSON);
         NSString *successstr = [NSString stringWithFormat:@"%@", tempJSON[@"success"]];
         if ([successstr isEqualToString:@"1"]) {
-            NSMutableString *str=[[NSMutableString alloc]initWithFormat:@"tel://%@",phoneNum];
+            NSMutableString *str=[[NSMutableString alloc]initWithFormat:@"tel://%@",xNumStr];
             [[UIApplication sharedApplication]openURL:[NSURL URLWithString:str]];
         }else{
             [MBProgressHUD showErrorMessage:tempJSON[@"message"]];

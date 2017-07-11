@@ -63,7 +63,7 @@
     
     switch (section) {
         case 0:
-            return 1;
+            return 2;
             break;
             
         default:
@@ -103,10 +103,20 @@
                 NSArray *cellBundleAry = [[NSBundle mainBundle] loadNibNamed:@"ContactCell" owner:self options:nil];
                 cell = [cellBundleAry lastObject];
             }
-            
-            cell.leftLabel.text = [NSString stringWithFormat:@"%@ %@",_callLog.calledName,_callLog.CallPhoneNum];
-            [cell.callButton setImage:[UIImage imageNamed:@"phone"] forState:UIControlStateNormal];
-            
+            switch (indexPath.row) {
+                case 0:
+                {
+                    cell.leftLabel.text = [NSString stringWithFormat:@"%@ %@",_callLog.calledName,_callLog.CallPhoneNum];
+                    [cell.callButton setImage:[UIImage imageNamed:@"phone"] forState:UIControlStateNormal];
+                }
+                    break;
+                case 1:
+                {
+                    NSString *mode = [_callLog.serviceType isEqual:@"0" ] ? @"租车模式" : @"中介模式";
+                    cell.leftLabel.text = [NSString stringWithFormat:@"呼叫模式: %@",mode];
+                }
+                    break;
+            }
             return cell;
         }
             break;
@@ -122,8 +132,8 @@
             cell2.selectionStyle = UITableViewCellSelectionStyleNone;
             
             CallLog *detailCallLog = self.dataArray[indexPath.row];
-            cell2.leftLabel.text = detailCallLog.generateTime;
-            cell2.centerLabel.text = @"呼出";
+            cell2.leftLabel.text =[NSString stringWithFormat:@"呼出 %@",detailCallLog.generateTime];
+            cell2.centerLabel.text =[NSString stringWithFormat:@"%@",detailCallLog.randomNum];
             cell2.rightLabel.text = [NSString stringWithFormat:@"%@秒",detailCallLog.durationTime];
             
             return cell2;
@@ -137,9 +147,11 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-
+    
     if (indexPath.section == 0) {
-        [CallPhone sendCallRequest:_callLog.CallPhoneNum ContactName:_callLog.calledName];
+        if (indexPath.row == 0) {
+            [CallPhone sendCallRequest:_callLog.CallPhoneNum ContactName:_callLog.calledName];
+        }
     }
 }
 
