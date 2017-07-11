@@ -60,8 +60,8 @@
     
     self.tabBarController.delegate = self;
     
-     [self judgeAX];
-//    [self initCompanyID];
+   // [self judgeAX];
+    [self initCompanyID];
     [self intKeyboard];
     //[self initAddressBook];
 }

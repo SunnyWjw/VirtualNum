@@ -22,13 +22,11 @@
 
 @property (nonatomic,strong)NSDictionary *dictionary;
 @property (nonatomic,assign) int curPage;
-@property (nonatomic,assign) int pageSizeCount;
+@property (nonatomic,assign) int totalCount;
 
 
 @end
 
-static BOOL InfiniteBool;   //上拉加载
-static BOOL PullBool;   //下拉刷新
 
 @implementation ChooseNumViewController
 
@@ -46,9 +44,6 @@ static BOOL PullBool;   //下拉刷新
     self.curPage = 1;
     [self creadTableView];
     
-    InfiniteBool = NO;
-    PullBool = YES;
-    
     [self SendRequestWithPage:self.curPage];
 }
 
@@ -63,38 +58,30 @@ static BOOL PullBool;   //下拉刷新
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     [self.view addSubview:_tableView];
-//    [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.top.equalTo(self.view).with.offset(0);
-//        make.left.equalTo(self.view).with.offset(0);
-//        make.right.equalTo(self.view).with.offset(0);
-//        make.bottom.equalTo(self.view).with.offset(0);
-//    }];
-    
-    __weak ChooseNumViewController *weakself=self;
-    [self.tableView addPullToRefreshWithActionHandler:^{
-        [weakself stopPull];
+
+    __weak typeof(self) weakSelf = self;
+    //默认block方法：设置下拉刷新
+    self.tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingBlock:^{
+          [weakSelf stopPull];
     }];
     
-    // setup infinite scrolling
-    [self.tableView addInfiniteScrollingWithActionHandler:^{
-        [weakself stopInfinite];
-    }];
-}
+    //默认block方法：设置上拉加载更多
+    self.tableView.mj_footer = [MJRefreshAutoNormalFooter footerWithRefreshingBlock:^{
+        //Call this Block When enter the refresh status automatically
+        [weakSelf stopInfinite];
+    }];}
 
 #pragma mark -
 #pragma mark 上拉加载
 - (void)stopInfinite
 {
-    if (self.curPage >= self.pageSizeCount) {
-        [self.tableView.infiniteScrollingView stopAnimating];
+    self.curPage = self.curPage+1;
+    int pageCount = ceil(self.totalCount / 15.0);
+    if (self.curPage > pageCount) {
+        [self endRefresh];
         [MBProgressHUD showErrorMessage:@"这是最后一页了！"];
         return;
     }
-    InfiniteBool = YES;
-    PullBool = NO;
-    // 停止上拉加载
-    [self.tableView.pullToRefreshView stopAnimating];
-    self.curPage = self.curPage+1;
     //    //开始刷新数据
     [self SendRequestWithPage:self.curPage];
 }
@@ -103,14 +90,17 @@ static BOOL PullBool;   //下拉刷新
 - (void)stopPull
 {
     self.curPage = 1;
-    InfiniteBool = NO;
-    PullBool = YES;
     [self.dataArray removeAllObjects];
     [self.tableView reloadData];
     [self SendRequestWithPage:self.curPage];
-    [self.tableView.pullToRefreshView stopAnimating];
 }
-
+/**
+ *  停止刷新
+ */
+-(void)endRefresh{
+    [self.tableView.mj_header endRefreshing];
+    [self.tableView.mj_footer endRefreshing];
+}
 
 -(void)SendRequestWithPage:(int)page{
     NSString *comPanyIDStr = [[NSUserDefaults standardUserDefaults] objectForKey:VN_COMPANYID];
@@ -140,12 +130,7 @@ static BOOL PullBool;   //下拉刷新
     [[AFNetAPIClient sharedJsonClient].setRequest(baseUrl).RequestType(Post).Parameters(parameters) startRequestWithSuccess:^(NSURLSessionDataTask *task, id responseObject) {
         [MBProgressHUD hideHUD];
         
-        if (InfiniteBool) {
-            [self.tableView.infiniteScrollingView stopAnimating];
-        }else{
-           [self.tableView.pullToRefreshView stopAnimating];
-        }
-        
+        [self endRefresh];
         NSString *result = [[NSString alloc] initWithData:responseObject encoding:NSUTF8StringEncoding];
         if([[AFNetAPIClient sharedJsonClient] parseJSONData:result] == nil){
             [MBProgressHUD showErrorMessage:@"服务器繁忙，请稍后再试"];
@@ -153,14 +138,14 @@ static BOOL PullBool;   //下拉刷新
         }
         
         NSDictionary* tempJSON = [[AFNetAPIClient sharedJsonClient] parseJSONData:result];
-        //DLog(@"tempJSON>>>%@",tempJSON);
+        DLog(@"tempJSON>>>%@",tempJSON);
         NSString *successstr = [NSString stringWithFormat:@"%@", tempJSON[@"success"]];
         if ([successstr isEqualToString:@"1"]) {
             if ([[tempJSON objectForKey:@"data"] isKindOfClass:[NSArray class]])
             {
                 [self.dataArray addObjectsFromArray:[tempJSON objectForKey:@"data"]];
             }
-            self.pageSizeCount = [[tempJSON[@"page"] objectForKey:@"pageSize"] intValue];
+            self.totalCount = [[tempJSON[@"page"] objectForKey:@"total"] intValue];
             
             [self.tableView reloadData];
         }else{
@@ -169,11 +154,7 @@ static BOOL PullBool;   //下拉刷新
     } progress:^(NSProgress *progress) {
         
     } failure:^(NSURLSessionDataTask *task, NSError *error) {
-        if (InfiniteBool) {
-            [self.tableView.infiniteScrollingView stopAnimating];
-        }else{
-            [self.tableView.pullToRefreshView stopAnimating];
-        }
+       [self endRefresh];
         [MBProgressHUD hideHUD];
         [MBProgressHUD showErrorMessage:@"连接网络超时，请稍后再试"];
     }];
