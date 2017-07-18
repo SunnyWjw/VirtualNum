@@ -8,11 +8,12 @@
 
 #import "UIAlertController+PPPersonModel.h"
 #import "CallPhone.h"
+#import "ChooseTransidViewController.h"
 
 @implementation UIAlertController (PPPersonModel)
 
 #pragma mark - public function
-+(instancetype)alertControllerWithContactObject:(PPPersonModel *)contactObject
++(instancetype)alertControllerWithContactObject:(PPPersonModel *)contactObject ViewController:(UIViewController *)viewController
 {
     
     //Set initailtal value
@@ -40,7 +41,7 @@
     
     if (contactObject.mobileArray.count > 1)
     {
-        [self __addSheetAction:alertController Phones:contactObject.mobileArray ContactName:contactObject.name];
+        [self __addSheetAction:alertController Phones:contactObject.mobileArray ContactName:contactObject.name ViewController:viewController];
     }
     
     else if (contactObject.mobileArray.count == 0){
@@ -63,7 +64,7 @@
 
 
 #pragma mark - private fucntion
-+ (void)__addSheetAction:(UIAlertController *)alertController Phones:(NSMutableArray<PPPersonModel *> *)phones ContactName:(NSString *)name
++ (void)__addSheetAction:(UIAlertController *)alertController Phones:(NSMutableArray<PPPersonModel *> *)phones ContactName:(NSString *)name  ViewController:(UIViewController *)viewController
 {
 
     for (int i= 0; i<phones.count; i++) {
@@ -71,7 +72,22 @@
             
             NSLog(@"点击的号码是>>>%@,>>%@",action.title,name);
         
-            [CallPhone sendCallRequest:action.title ContactName:name];
+//            [CallPhone sendCallRequest:action.title ContactName:name ViewController:self];
+            CallPhone *callphone = [[CallPhone alloc] init];
+            [callphone sendCallRequest:action.title ContactName:name  Respone:^(NSDictionary *tempJSON, NSString *model, NSString *XNum) {
+                NSString *successstr = [NSString stringWithFormat:@"%@", tempJSON[@"success"]];
+                if ([successstr isEqualToString:@"1"]) {
+                    if ([model isEqualToString:@"dual"]) {
+                        ChooseTransidViewController *ctVC = [[ChooseTransidViewController alloc] init];
+                        [viewController.navigationController pushViewController:ctVC animated:YES];
+                    }else{
+                        NSMutableString *str=[[NSMutableString alloc]initWithFormat:@"tel://%@",XNum];
+                        [[UIApplication sharedApplication]openURL:[NSURL URLWithString:str]];
+                    }
+                }else{
+                    [MBProgressHUD showErrorMessage:tempJSON[@"message"]];
+                }
+            }];
         }];
         
         [alertController addAction:action];

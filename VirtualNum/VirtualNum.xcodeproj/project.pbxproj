@@ -12,6 +12,7 @@
 		8A12FD5C1F0FD8D200BFF962 /* UIButton+FillColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A12FD571F0FD8D200BFF962 /* UIButton+FillColor.m */; };
 		8A12FD5D1F0FD8D200BFF962 /* UIButton+TopBottom.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A12FD591F0FD8D200BFF962 /* UIButton+TopBottom.m */; };
 		8A12FD5E1F0FD8D200BFF962 /* UIImage+EditImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A12FD5B1F0FD8D200BFF962 /* UIImage+EditImage.m */; };
+		8A2E27901F1CF38700E7C4A5 /* ChooseTransidViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A2E278F1F1CF38700E7C4A5 /* ChooseTransidViewController.m */; };
 		8A408C0E1EFE84AE00C9081F /* MainTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A408C0D1EFE84AE00C9081F /* MainTabBarController.m */; };
 		8A408C161EFE855F00C9081F /* TabBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A408C111EFE855F00C9081F /* TabBar.m */; };
 		8A408C171EFE855F00C9081F /* TabBarItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A408C131EFE855F00C9081F /* TabBarItem.m */; };
@@ -91,6 +92,8 @@
 		8A12FD591F0FD8D200BFF962 /* UIButton+TopBottom.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIButton+TopBottom.m"; sourceTree = "<group>"; };
 		8A12FD5A1F0FD8D200BFF962 /* UIImage+EditImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+EditImage.h"; sourceTree = "<group>"; };
 		8A12FD5B1F0FD8D200BFF962 /* UIImage+EditImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+EditImage.m"; sourceTree = "<group>"; };
+		8A2E278E1F1CF38700E7C4A5 /* ChooseTransidViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChooseTransidViewController.h; sourceTree = "<group>"; };
+		8A2E278F1F1CF38700E7C4A5 /* ChooseTransidViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChooseTransidViewController.m; sourceTree = "<group>"; };
 		8A408C0C1EFE84AE00C9081F /* MainTabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainTabBarController.h; sourceTree = "<group>"; };
 		8A408C0D1EFE84AE00C9081F /* MainTabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainTabBarController.m; sourceTree = "<group>"; };
 		8A408C101EFE855F00C9081F /* TabBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TabBar.h; sourceTree = "<group>"; };
@@ -390,6 +393,8 @@
 				8A51AC821EFFE1CF00824269 /* ChooseNumViewController.m */,
 				8AFF501F1F12661400A0A0BC /* CallLogDetailViewController.h */,
 				8AFF50201F12661400A0A0BC /* CallLogDetailViewController.m */,
+				8A2E278E1F1CF38700E7C4A5 /* ChooseTransidViewController.h */,
+				8A2E278F1F1CF38700E7C4A5 /* ChooseTransidViewController.m */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -921,6 +926,7 @@
 				8A9763E71F027E200006F7CF /* UIColor+MyColor.m in Sources */,
 				8AB7C00B1F015E120027EBFB /* MBProgressHUD+XY.m in Sources */,
 				8A9763DC1F027E110006F7CF /* AutomaticCalculationWithWidth.m in Sources */,
+				8A2E27901F1CF38700E7C4A5 /* ChooseTransidViewController.m in Sources */,
 				8A408C171EFE855F00C9081F /* TabBarItem.m in Sources */,
 				8AC740CD1F08F23C008F1E0C /* CallSettingsCell.m in Sources */,
 				8A408C4C1EFE891400C9081F /* AppDelegate+AppService.m in Sources */,

@@ -13,7 +13,7 @@
 @interface ChooseNumViewController ()<UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate,UINavigationControllerDelegate>
 
 @property (nonatomic,strong)UITableView *tableView;
-@property (nonatomic,strong)NSMutableArray *dataArray;;
+@property (nonatomic,strong)NSMutableArray *dataArray;
 
 @property (strong, nonatomic) UIView *contentView;
 @property (strong, nonatomic) UILabel *chooseLab;

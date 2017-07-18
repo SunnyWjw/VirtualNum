@@ -17,6 +17,7 @@
 #import "PPGetAddressBook.h"
 #import "CallPhone.h"
 #import "CallLogDetailViewController.h"
+#import "ChooseTransidViewController.h"
 
 
 @interface HomeViewController ()<UIAlertViewDelegate,UITextFieldDelegate,UITableViewDelegate,UITableViewDataSource,UITabBarControllerDelegate,AFFNumericKeyboardDelegate>{
@@ -60,10 +61,11 @@
     
     self.tabBarController.delegate = self;
     
-   // [self judgeAX];
+    //[self judgeAX];
     [self initCompanyID];
     [self intKeyboard];
     //[self initAddressBook];
+    // [self initTransID];
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -75,6 +77,14 @@
 -(void)viewDidAppear:(BOOL)animated{
     [self.tableView reloadData];
     isKeyBoard = YES;
+}
+-(void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+}
+
+-(void)initTransID{
+    ChooseTransidViewController *ctVC = [[ChooseTransidViewController alloc] init];
+    [self.navigationController pushViewController:ctVC animated:YES];
 }
 
 #pragma mark - 初始化CompanyID
@@ -292,7 +302,31 @@
 
 #pragma mark 发起呼叫call
 - (void)call {
-    [CallPhone sendCallRequest:inputNumber.text ContactName:@""];
+    /*
+     NSString *mode = [[NSUserDefaults standardUserDefaults] objectForKey:VN_SERVICE];
+     //            mode = [mode isEqual:@"0"] ? @"dual" : @"single";
+     if ([mode isEqualToString:@"0"]) {
+     //租车模式
+     }else{
+     //中介模式
+     [CallPhone sendCallRequest:inputNumber.text ContactName:@"" ViewController:self];
+     }
+     */
+     CallPhone *callphone = [[CallPhone alloc] init];
+    [callphone sendCallRequest:inputNumber.text ContactName:@"" Respone:^(NSDictionary *tempJSON, NSString *model, NSString *XNum) {
+        NSString *successstr = [NSString stringWithFormat:@"%@", tempJSON[@"success"]];
+        if ([successstr isEqualToString:@"1"]) {
+            if ([model isEqualToString:@"dual"]) {
+                ChooseTransidViewController *ctVC = [[ChooseTransidViewController alloc] init];
+                [self.navigationController pushViewController:ctVC animated:YES];
+            }else{
+                NSMutableString *str=[[NSMutableString alloc]initWithFormat:@"tel://%@",XNum];
+                [[UIApplication sharedApplication]openURL:[NSURL URLWithString:str]];
+            }
+        }else{
+            [MBProgressHUD showErrorMessage:tempJSON[@"message"]];
+        }
+    }];
 }
 
 #pragma mark - Table view data source
@@ -379,10 +413,10 @@
             inputNumber.text = nil;
             self.navigationItem.title = @"拨号";
             [self HiddenORShow:YES];
-             [self.tableView setHidden:NO];
+            [self.tableView setHidden:NO];
         }else {
             [self HiddenORShow:YES];
-             [self.tableView setHidden:NO];
+            [self.tableView setHidden:NO];
         }
     }
     
@@ -398,7 +432,6 @@
     deleteButton.hidden = sh;
     downButton.hidden = sh;
     SeaResultTable.hidden = sh;
-    
 }
 
 #pragma mark 键盘输入

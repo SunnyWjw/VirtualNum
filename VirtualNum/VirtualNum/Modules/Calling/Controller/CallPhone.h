@@ -7,11 +7,18 @@
 //
 
 #import <Foundation/Foundation.h>
-
 #import "PPPersonModel.h"
+
+typedef void(^CallResponeBlcok) (NSDictionary * tempJSON,NSString * model,NSString * XNum);//1
 
 @interface CallPhone : NSObject
 
-+(void) sendCallRequest:(NSString *)phoneNum ContactName:(NSString *)contactName;
+//@property (nonatomic,copy)CallResponeBlcok callPhonekBlcok;//2
+
++(instancetype)allocWithZone:(struct _NSZone *)zone;//单例
+
+
+-(void) sendCallRequest:(NSString *)phoneNum ContactName:(NSString *)contactName
+                Respone:( CallResponeBlcok )respone;
 
 @end

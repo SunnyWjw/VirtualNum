@@ -19,7 +19,7 @@
  
  @return 创建好的UIAlertController对象
  */
-+(instancetype)alertControllerWithContactObject:(PPPersonModel *)contactObject;
++(instancetype)alertControllerWithContactObject:(PPPersonModel *)contactObject ViewController:(UIViewController *)viewController;;
 
 
 

@@ -12,6 +12,7 @@
 #import "ContactCell.h"
 #import "UIImage+EditImage.h"
 #import "CallPhone.h"
+#import "ChooseTransidViewController.h"
 
 
 @interface CallLogDetailViewController ()<UITableViewDelegate,UITableViewDataSource>
@@ -150,7 +151,22 @@
     
     if (indexPath.section == 0) {
         if (indexPath.row == 0) {
-            [CallPhone sendCallRequest:_callLog.CallPhoneNum ContactName:_callLog.calledName];
+        
+            CallPhone *callphone = [[CallPhone alloc] init];
+            [callphone sendCallRequest:_callLog.CallPhoneNum ContactName:_callLog.calledName Respone:^(NSDictionary *tempJSON, NSString *model, NSString *XNum) {
+                NSString *successstr = [NSString stringWithFormat:@"%@", tempJSON[@"success"]];
+                if ([successstr isEqualToString:@"1"]) {
+                    if ([model isEqualToString:@"dual"]) {
+                        ChooseTransidViewController *ctVC = [[ChooseTransidViewController alloc] init];
+                        [self.navigationController pushViewController:ctVC animated:YES];
+                    }else{
+                        NSMutableString *str=[[NSMutableString alloc]initWithFormat:@"tel://%@",XNum];
+                        [[UIApplication sharedApplication]openURL:[NSURL URLWithString:str]];
+                    }
+                }else{
+                    [MBProgressHUD showErrorMessage:tempJSON[@"message"]];
+                }
+            }];
         }
     }
 }

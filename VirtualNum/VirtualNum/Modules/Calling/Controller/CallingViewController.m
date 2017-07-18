@@ -10,6 +10,7 @@
 #import "PPGetAddressBook.h"
 #import "UIAlertController+PPPersonModel.h"
 #import "CallPhone.h"
+#import "ChooseTransidViewController.h"
 
 #define START NSDate *startTime = [NSDate date]
 #define END NSLog(@"Time: %f", -[startTime timeIntervalSinceNow])
@@ -29,7 +30,6 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
      self.title=@"联系人";
-    
     [self creadTableView];
     [self initAddressBook];
 }
@@ -133,11 +133,26 @@
     
     if (people.mobileArray.count > 1) {
         //进行判断
-        [self presentViewController:[UIAlertController alertControllerWithContactObject:people] animated:true completion:^{
+        [self presentViewController:[UIAlertController alertControllerWithContactObject:people ViewController:self] animated:true completion:^{
             
         }];
     }else if (people.mobileArray.count == 1){
-        [CallPhone sendCallRequest:people.mobileArray.firstObject ContactName:people.name];
+//        [CallPhone sendCallRequest:people.mobileArray.firstObject ContactName:people.name ViewController:self];
+        CallPhone *callphone = [[CallPhone alloc] init];
+        [callphone sendCallRequest:people.mobileArray.firstObject ContactName:people.name  Respone:^(NSDictionary *tempJSON, NSString *model, NSString *XNum) {
+            NSString *successstr = [NSString stringWithFormat:@"%@", tempJSON[@"success"]];
+            if ([successstr isEqualToString:@"1"]) {
+                if ([model isEqualToString:@"dual"]) {
+                    ChooseTransidViewController *ctVC = [[ChooseTransidViewController alloc] init];
+                    [self.navigationController pushViewController:ctVC animated:YES];
+                }else{
+                    NSMutableString *str=[[NSMutableString alloc]initWithFormat:@"tel://%@",XNum];
+                    [[UIApplication sharedApplication]openURL:[NSURL URLWithString:str]];
+                }
+            }else{
+                [MBProgressHUD showErrorMessage:tempJSON[@"message"]];
+            }
+        }];
     }else{
         [MBProgressHUD showErrorMessage:@"该联系人没有添加联系电话，不能进行呼叫"];
     }
