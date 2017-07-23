@@ -80,6 +80,13 @@
 }
 -(void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
+    inputNumber.text = nil;
+    self.navigationItem.title = @"通话记录";
+    [self HiddenORShow:YES];
+    [self.tableView setHidden:NO];
+//    [UIView animateWithDuration:0.3 animations:^{
+//        self.keyboard.frame = CGRectMake(0, kHEIGHT, kWIDTH, 216);}];
+keyboard.hidden = YES;
 }
 
 -(void)initTransID{
@@ -110,6 +117,7 @@
     inputNumber.frame = CGRectMake(50, 0, kWIDTH-100, 44);
     inputNumber.textAlignment = NSTextAlignmentCenter;
     inputNumber.textColor = [UIColor whiteColor];
+    inputNumber.backgroundColor = [UIColor redColor];
     inputNumber.font = [UIFont systemFontOfSize:34.0f];
     inputNumber.adjustsFontSizeToFitWidth = YES;
     inputNumber.backgroundColor = [UIColor clearColor];
@@ -118,11 +126,11 @@
     
     keyboard = [[AFFNumericKeyboard alloc]init];
     keyboard.delegate = self;
-    [self.view addSubview:keyboard];
+    [[UIApplication sharedApplication].delegate.window addSubview:keyboard];
     [keyboard mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.view).with.offset(kHEIGHT-216-49);
-        make.left.equalTo(self.view).with.offset(0);
-        make.right.equalTo(self.view).with.offset(0);
+        make.top.equalTo(kAppWindow).with.offset(kHEIGHT-216-49);
+        make.left.equalTo(kAppWindow).with.offset(0);
+        make.right.equalTo(kAppWindow).with.offset(0);
         make.height.mas_equalTo(216);
     }];
     
@@ -302,24 +310,17 @@
 
 #pragma mark 发起呼叫call
 - (void)call {
-    /*
-     NSString *mode = [[NSUserDefaults standardUserDefaults] objectForKey:VN_SERVICE];
-     //            mode = [mode isEqual:@"0"] ? @"dual" : @"single";
-     if ([mode isEqualToString:@"0"]) {
-     //租车模式
-     }else{
-     //中介模式
-     [CallPhone sendCallRequest:inputNumber.text ContactName:@"" ViewController:self];
-     }
-     */
+    
      CallPhone *callphone = [[CallPhone alloc] init];
     [callphone sendCallRequest:inputNumber.text ContactName:@"" Respone:^(NSDictionary *tempJSON, NSString *model, NSString *XNum) {
+        inputNumber.text = @"";
         NSString *successstr = [NSString stringWithFormat:@"%@", tempJSON[@"success"]];
         if ([successstr isEqualToString:@"1"]) {
             if ([model isEqualToString:@"dual"]) {
                 ChooseTransidViewController *ctVC = [[ChooseTransidViewController alloc] init];
                 [self.navigationController pushViewController:ctVC animated:YES];
             }else{
+                XNum = [NSString stringWithFormat:@"%@%@",VN_CALLPREFIX,XNum];
                 NSMutableString *str=[[NSMutableString alloc]initWithFormat:@"tel://%@",XNum];
                 [[UIApplication sharedApplication]openURL:[NSURL URLWithString:str]];
             }
@@ -402,7 +403,7 @@
                 [self.tableView setHidden:NO];
             }else {
                 [self HiddenORShow:NO];
-                [self.tableView setHidden:YES];
+//                [self.tableView setHidden:YES];
             }
         }
     }
@@ -420,17 +421,17 @@
         }
     }
     
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self seaInputNumber:inputNumber
-               textDidChange:inputNumber.text];
-    });
+//    dispatch_async(dispatch_get_main_queue(), ^{
+//        [self seaInputNumber:inputNumber
+//               textDidChange:inputNumber.text];
+//    });
 }
 
 -(void)HiddenORShow:(BOOL)sh{
     inputNumber.hidden = sh;
     callButton.hidden = sh;
     deleteButton.hidden = sh;
-    downButton.hidden = sh;
+   downButton.hidden = sh;
     SeaResultTable.hidden = sh;
 }
 
@@ -480,7 +481,6 @@
     [callButton.layer setMasksToBounds:YES];
     [callButton.layer setCornerRadius:10.0f];
     [self.tabBarController.tabBar addSubview:callButton];
-    
     [callButton addTarget:self action:@selector(call) forControlEvents:UIControlEventTouchUpInside];
     
     //后退删除键
@@ -516,7 +516,7 @@
         }];
     }else{
         [downButton setImage:[UIImage imageNamed:@"tab_dial_ic_close"] withTitle:@"收起键盘" forState:UIControlStateNormal];
-        self.keyboard.hidden = NO;
+        
         [UIView animateWithDuration:0.3 animations:^{
             [keyboard mas_updateConstraints:^(MASConstraintMaker *make) {
                 make.top.equalTo(self.view).with.offset(kHEIGHT-265);
@@ -524,6 +524,8 @@
                 make.right.equalTo(self.view).with.offset(0);
                 make.height.mas_equalTo(216);
             }];
+        } completion:^(BOOL finished) {
+            self.keyboard.hidden = NO;
         }];
     }
     [sender setTitleColor:[UIColor colorWithHexString:@"#3F9AEE"] forState:UIControlStateNormal];
@@ -539,12 +541,12 @@
 - (void)longPress:(UILongPressGestureRecognizer*)recognizer
 {
     [self numberKeyboardStirng:@"2"];
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self seaInputNumber:inputNumber
-               textDidChange:inputNumber.text];
-        //[SeaResultTable reloadData];
-        // [self.tableView reloadData];
-    });
+//    dispatch_async(dispatch_get_main_queue(), ^{
+//        [self seaInputNumber:inputNumber
+//               textDidChange:inputNumber.text];
+//        //[SeaResultTable reloadData];
+//        // [self.tableView reloadData];
+//    });
 }
 
 #pragma UISearchDisplayDelegate
@@ -595,6 +597,7 @@
             UIImage* imageSelected = [UIImage imageNamed:@"tab_dial_ic_open"];
             callItem.selectedImage = [imageSelected imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
             callItem.title = @"显示键盘";
+            
             [UIView animateWithDuration:0.3 animations:^{
                 self.keyboard.frame = CGRectMake(0, kHEIGHT, kWIDTH, 216);
             } completion:^(BOOL finished) {

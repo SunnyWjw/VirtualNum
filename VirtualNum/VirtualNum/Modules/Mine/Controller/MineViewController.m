@@ -292,11 +292,12 @@
                                  @"a": phoneNum,
                                  @"x": xNumStr,
                                  @"companyid": companyIDStr,
-                                 @"companyname": @""
+                                 @"companyname": @"爱讯达"
                                  } ;
     DLog(@"解绑AXparameters>>>%@",parameters);
     [MBProgressHUD showActivityMessageInView:@"请求中..."];
     
+    /*
     [self Delete:baseUrl params:parameters success:^(id responseObject) {
         [MBProgressHUD hideHUD];
         NSString *result = [[NSString alloc] initWithData:responseObject encoding:NSUTF8StringEncoding];
@@ -324,44 +325,49 @@
         [MBProgressHUD showErrorMessage:@"连接网络超时，请稍后再试"];
         
     }];
+    */
     
+        [[AFNetAPIClient sharedJsonClient].setRequest(baseUrl).RequestType(Delete).Parameters(parameters) startRequestWithSuccess:^(NSURLSessionDataTask *task, id responseObject) {
+            [MBProgressHUD hideHUD];
+            NSString *result = [[NSString alloc] initWithData:responseObject encoding:NSUTF8StringEncoding];
+            if([[AFNetAPIClient sharedJsonClient] parseJSONData:result] == nil){
+                [MBProgressHUD showErrorMessage:@"服务器繁忙，请稍后再试"];
+                return;
+            }
     
-    //    [[AFNetAPIClient sharedJsonClient].setRequest(baseUrl).RequestType(Delete).Parameters(parameters) startRequestWithSuccess:^(NSURLSessionDataTask *task, id responseObject) {
-    //        [MBProgressHUD hideHUD];
-    //        NSString *result = [[NSString alloc] initWithData:responseObject encoding:NSUTF8StringEncoding];
-    //        if([[AFNetAPIClient sharedJsonClient] parseJSONData:result] == nil){
-    //            [MBProgressHUD showErrorMessage:@"服务器繁忙，请稍后再试"];
-    //            return;
-    //        }
-    //
-    //        NSDictionary* tempJSON = [[AFNetAPIClient sharedJsonClient] parseJSONData:result];
-    //        DLog(@"tempJSON>>>%@",tempJSON);
-    //        NSString *successstr = [NSString stringWithFormat:@"%@", tempJSON[@"success"]];
-    //        if ([successstr isEqualToString:@"1"]) {
-    //            if ([[tempJSON objectForKey:@"data"] isKindOfClass:[NSArray class]])
-    //            {
-    //                [MBProgressHUD showErrorMessage:@"解除绑定成功"];
-    //                [[NSUserDefaults standardUserDefaults]removeObjectForKey:VN_X];
-    //                [self.personalTableView reloadData];
-    //            }
-    //
-    //        }else{
-    //            [MBProgressHUD showErrorMessage:tempJSON[@"message"]];
-    //        }
-    //    } progress:^(NSProgress *progress) {
-    //
-    //    } failure:^(NSURLSessionDataTask *task, NSError *error) {
-    //        [MBProgressHUD hideHUD];
-    //        [MBProgressHUD showErrorMessage:@"连接网络超时，请稍后再试"];
-    //    }];
+            NSDictionary* tempJSON = [[AFNetAPIClient sharedJsonClient] parseJSONData:result];
+            DLog(@"tempJSON>>>%@",tempJSON);
+            NSString *successstr = [NSString stringWithFormat:@"%@", tempJSON[@"success"]];
+            if ([successstr isEqualToString:@"1"]) {
+                if ([[tempJSON objectForKey:@"data"] isKindOfClass:[NSArray class]])
+                {
+                    [MBProgressHUD showErrorMessage:@"解除绑定成功"];
+                    [[NSUserDefaults standardUserDefaults]removeObjectForKey:VN_X];
+                    [self.personalTableView reloadData];
+                }
+    
+            }else{
+                [MBProgressHUD showErrorMessage:tempJSON[@"message"]];
+            }
+        } progress:^(NSProgress *progress) {
+    
+        } failure:^(NSURLSessionDataTask *task, NSError *error) {
+            [MBProgressHUD hideHUD];
+            [MBProgressHUD showErrorMessage:@"连接网络超时，请稍后再试"];
+        }];
 }
 
 - (void)Delete:(NSString *)url params:(NSDictionary *)params success:(void (^)(id responseObject))success failure:(void (^)(NSError *))failure
 {
     
     AFHTTPSessionManager *manger = [AFHTTPSessionManager manager];
+    manger.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"text/html",@"application/json",@"text/javascript",@"text/json",@"text/plain", nil];
+    // 设置请求头
+    [manger.requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Accept"];
     manger.requestSerializer = [AFJSONRequestSerializer serializer];
     manger.responseSerializer = [AFHTTPResponseSerializer serializer];
+    manger.requestSerializer.HTTPMethodsEncodingParametersInURI = [NSSet setWithObjects:@"GET", @"HEAD", nil];
+    
     
     [manger DELETE:url parameters:params success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         if (success) {

@@ -38,7 +38,7 @@
     self.title = @"选择X号码";
     // 设置导航控制器的代理为self
     //self.navigationController.delegate = self;
-//    self.navigationController.navigationBar.hidden = YES;
+    //    self.navigationController.navigationBar.hidden = YES;
     self.dataArray = [[NSMutableArray alloc]initWithCapacity:0];
     
     self.curPage = 1;
@@ -49,7 +49,7 @@
 
 
 - (void)viewDidAppear:(BOOL)animated {
- 
+    
 }
 
 -(void)creadTableView{
@@ -58,11 +58,11 @@
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     [self.view addSubview:_tableView];
-
+    
     __weak typeof(self) weakSelf = self;
     //默认block方法：设置下拉刷新
     self.tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingBlock:^{
-          [weakSelf stopPull];
+        [weakSelf stopPull];
     }];
     
     //默认block方法：设置上拉加载更多
@@ -154,7 +154,7 @@
     } progress:^(NSProgress *progress) {
         
     } failure:^(NSURLSessionDataTask *task, NSError *error) {
-       [self endRefresh];
+        [self endRefresh];
         [MBProgressHUD hideHUD];
         [MBProgressHUD showErrorMessage:@"连接网络超时，请稍后再试"];
     }];
@@ -247,30 +247,24 @@
     
     NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
     [dictionary setObject:phoneNumStr forKey:@"a"];
-        [dictionary setObject:companyInfo[@"xs"] forKey:@"x"];
+    [dictionary setObject:companyInfo[@"xs"] forKey:@"x"];
     //[dictionary setObject:@"80246994" forKey:@"x"];
     [dictionary setObject:companyInfo[@"companyid"] forKey:@"companyid"];
     [dictionary setObject:companyInfo[@"companyname"] forKey:@"companyname"];
     
     NSMutableDictionary *dic = [NSMutableDictionary dictionary];
-    [dic setObject:@"15900000794" forKey:@"a"];
-        [dictionary setObject:companyInfo[@"xs"] forKey:@"x"];
-//    [dic setObject:@"80246994" forKey:@"x"];
+    [dic setObject:phoneNumStr forKey:@"a"];
+    [dictionary setObject:companyInfo[@"xs"] forKey:@"x"];
     [dic setObject:companyInfo[@"companyid"] forKey:@"companyid"];
     [dic setObject:companyInfo[@"companyname"] forKey:@"companyname"];
     
     
     NSString *baseUrl = NSStringFormat(@"%@%@",URL_main,URL_AX);
-//    NSDictionary *updateParameters = @{
-//                                       @"newItem": dictionary,
-//                                       @"oldItem": dic,
-//                                       @"type": @"update"
-//                                       } ;
-        NSDictionary *cretateParameters = @{
-                                           @"newItem": dictionary,
-                                           @"oldItem": @{},
-                                           @"type": @"create"
-                                           } ;
+    NSDictionary *cretateParameters = @{
+                                        @"newItem": dictionary,
+                                        @"oldItem": @{},
+                                        @"type": @"create"
+                                        } ;
     DLog(@"parameters>>>%@",cretateParameters);
     [MBProgressHUD showActivityMessageInView:@"请求中..."];
     [[AFNetAPIClient sharedJsonClient].setRequest(baseUrl).RequestType(Put).Parameters(cretateParameters) startRequestWithSuccess:^(NSURLSessionDataTask *task, id responseObject) {
@@ -288,11 +282,13 @@
             if ([[tempJSON objectForKey:@"data"] isKindOfClass:[NSArray class]])
             {
                 [MBProgressHUD showErrorMessage:@"绑定成功"];
-//                [[NSUserDefaults standardUserDefaults] setObject:@"80246994" forKey:VN_X];
-                 [[NSUserDefaults standardUserDefaults] setObject:companyInfo[@"xs"] forKey:VN_X];
+                //                [[NSUserDefaults standardUserDefaults] setObject:@"80246994" forKey:VN_X];
+                [[NSUserDefaults standardUserDefaults] setObject:companyInfo[@"xs"] forKey:VN_X];
                 
                 [[NSUserDefaults standardUserDefaults] setObject:phoneNumStr forKey:VN_PHONE];
                 [[NSUserDefaults standardUserDefaults]setObject:companyInfo[@"companyname"] forKey:VN_COMPANYNAME];
+                
+                [self.navigationController popViewControllerAnimated:YES];
             }
             
         }else{

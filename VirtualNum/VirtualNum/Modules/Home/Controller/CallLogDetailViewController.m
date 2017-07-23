@@ -160,6 +160,7 @@
                         ChooseTransidViewController *ctVC = [[ChooseTransidViewController alloc] init];
                         [self.navigationController pushViewController:ctVC animated:YES];
                     }else{
+                        XNum = [NSString stringWithFormat:@"%@%@",VN_CALLPREFIX,XNum];
                         NSMutableString *str=[[NSMutableString alloc]initWithFormat:@"tel://%@",XNum];
                         [[UIApplication sharedApplication]openURL:[NSURL URLWithString:str]];
                     }

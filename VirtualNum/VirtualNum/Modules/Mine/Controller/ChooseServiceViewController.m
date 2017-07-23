@@ -36,9 +36,9 @@ static NSUInteger selectInt;
     
     self.dataArray = @[@"租车模式", @"中介模式"];
     
-    NSString *callSettingsType = [[NSUserDefaults standardUserDefaults] objectForKey:@"callSettingsType"];
+    NSString *callSettingsType = [[NSUserDefaults standardUserDefaults] objectForKey:VN_SERVICE];
     for (int i = 0; i< self.dataArray.count; i++) {
-        if ([callSettingsType isEqualToString:[self.dataArray objectAtIndex:i]]) {
+        if ([callSettingsType isEqualToString:[NSString stringWithFormat:@"%d",i]]) {
             selectInt = i;
         }
     }

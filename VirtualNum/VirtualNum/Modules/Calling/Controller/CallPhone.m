@@ -85,7 +85,7 @@ static CallPhone *_instance;
     
     [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%@",randomNum] forKey:VN_TRANS];
     
-    xNumStr = [NSString stringWithFormat:@"%@%@",VN_CALLPREFIX,xNumStr];
+   // xNumStr = [NSString stringWithFormat:@"%@%@",VN_CALLPREFIX,xNumStr];
     NSString *mode = [userDefaults objectForKey:VN_SERVICE];
     mode = [mode isEqual:@"0"] ? @"dual" : @"single";
     
@@ -93,11 +93,11 @@ static CallPhone *_instance;
     [dictionary setValue:aNumStr forKey:@"a"];
     [dictionary setValue:xNumStr forKey:@"x"];
     [dictionary setValue:phoneNum forKey:@"b"];
-    if ([mode isEqualToString:@"dual"]) {
-        [dictionary setValue:[NSString stringWithFormat:@"%@",randomNum] forKey:@"trans"];
-    }else{
+//    if ([mode isEqualToString:@"dual"]) {
+//        [dictionary setValue:[NSString stringWithFormat:@"%@",randomNum] forKey:@"trans"];
+//    }else{
         [dictionary setValue:@"" forKey:@"trans"];
-    }
+//    }
     [dictionary setValue:mode forKey:@"mode"];
     [dictionary setValue:companyIDStr forKey:@"companyid"];
     [dictionary setValue:companyNameStr forKey:@"companyname"];
