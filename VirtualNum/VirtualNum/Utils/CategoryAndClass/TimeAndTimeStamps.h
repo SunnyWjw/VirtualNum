@@ -73,4 +73,12 @@
  */
 + (NSString *)getNowDateTimeFoFourteenr;
 
+
+/**
+ 获取当前时间格式串 例:20170727100851324
+
+ @return 返回时间字符串
+ */
++ (NSString *)getNowDateTimeFoMillisecond;
+
 @end

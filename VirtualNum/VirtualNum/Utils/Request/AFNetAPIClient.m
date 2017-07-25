@@ -143,6 +143,8 @@
     manager.requestSerializer = [AFJSONRequestSerializer serializer];
     //设置返回的数据是什么格式
     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
+    
+   // [manager.requestSerializer setValue:VN_APIVERSION forHTTPHeaderField:@"Api-version"];
     /*
      AFHTTPRequestSerializer:   万能解析器/对服务器返回的数据不做任务处理.
      AFJSONResponseSerializer:  JSON解析器.

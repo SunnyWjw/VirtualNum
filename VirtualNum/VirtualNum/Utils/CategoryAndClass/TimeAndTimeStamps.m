@@ -78,5 +78,14 @@
     return dateString;
 }
 
++ (NSString *)getNowDateTimeFoMillisecond{
+    NSDate *date = [NSDate date];
+    NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateStyle:NSDateFormatterMediumStyle];
+    [dateFormatter setDateFormat:@"yyyyMMddHHmmssSSS"];
+    NSString *dateString = [dateFormatter stringFromDate:date];
+    return dateString;
+}
+
 
 @end

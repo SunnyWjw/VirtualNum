@@ -65,7 +65,8 @@
 #define URL_AX @"/api/ax"
 //获取AXB
 #define URL_AXB @"/api/bind"
-
+//激活transid
+#define URL_TRANSACTION @"/api/transaction"
 
 
 #endif /* URLMacros_h */

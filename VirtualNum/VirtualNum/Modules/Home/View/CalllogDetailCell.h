@@ -8,10 +8,13 @@
 
 @interface CalllogDetailCell : UITableViewCell
 
-@property (weak, nonatomic) IBOutlet UILabel *leftLabel;
-
-@property (weak, nonatomic) IBOutlet UILabel *centerLabel;
-
-@property (weak, nonatomic) IBOutlet UILabel *rightLabel;
+///呼出时间
+@property (weak, nonatomic) IBOutlet UILabel *leftTopLabel;
+///通话时长
+@property (weak, nonatomic) IBOutlet UILabel *leftBottomLabel;
+///服务模式
+@property (weak, nonatomic) IBOutlet UILabel *rightTopLabel;
+///随机数
+@property (weak, nonatomic) IBOutlet UILabel *rightBottomLabel;
 
 @end

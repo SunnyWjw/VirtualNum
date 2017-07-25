@@ -46,6 +46,9 @@
 		8A51AC831EFFE1CF00824269 /* ChooseNumViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A51AC821EFFE1CF00824269 /* ChooseNumViewController.m */; };
 		8A51AC871EFFE7C700824269 /* ChooseNumCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A51AC861EFFE7C700824269 /* ChooseNumCell.m */; };
 		8A51D43B1F09E12B009F6B2E /* CalllogCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A51D43A1F09E12B009F6B2E /* CalllogCell.m */; };
+		8A7B946C1F261C970063728C /* ContactDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A7B946B1F261C970063728C /* ContactDetailViewController.m */; };
+		8A7B94701F261F600063728C /* ScrollingNavbarDemoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A7B946F1F261F600063728C /* ScrollingNavbarDemoViewController.m */; };
+		8A7B94731F261F900063728C /* UINavigationBar+Awesome.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A7B94721F261F900063728C /* UINavigationBar+Awesome.m */; };
 		8A83F35F1EFFB6E800F1BB84 /* QCheckBox.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A83F35E1EFFB6E800F1BB84 /* QCheckBox.m */; };
 		8A83F3651EFFD01200F1BB84 /* UserManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A83F3641EFFD01200F1BB84 /* UserManager.m */; };
 		8A86AE101EFD5DDF00C8533F /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A86AE0F1EFD5DDF00C8533F /* main.m */; };
@@ -166,6 +169,12 @@
 		8A51AC861EFFE7C700824269 /* ChooseNumCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChooseNumCell.m; sourceTree = "<group>"; };
 		8A51D4391F09E12B009F6B2E /* CalllogCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CalllogCell.h; sourceTree = "<group>"; };
 		8A51D43A1F09E12B009F6B2E /* CalllogCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CalllogCell.m; sourceTree = "<group>"; };
+		8A7B946A1F261C970063728C /* ContactDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactDetailViewController.h; sourceTree = "<group>"; };
+		8A7B946B1F261C970063728C /* ContactDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactDetailViewController.m; sourceTree = "<group>"; };
+		8A7B946E1F261F600063728C /* ScrollingNavbarDemoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScrollingNavbarDemoViewController.h; sourceTree = "<group>"; };
+		8A7B946F1F261F600063728C /* ScrollingNavbarDemoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScrollingNavbarDemoViewController.m; sourceTree = "<group>"; };
+		8A7B94711F261F900063728C /* UINavigationBar+Awesome.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UINavigationBar+Awesome.h"; sourceTree = "<group>"; };
+		8A7B94721F261F900063728C /* UINavigationBar+Awesome.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UINavigationBar+Awesome.m"; sourceTree = "<group>"; };
 		8A83F35D1EFFB6E800F1BB84 /* QCheckBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QCheckBox.h; sourceTree = "<group>"; };
 		8A83F35E1EFFB6E800F1BB84 /* QCheckBox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QCheckBox.m; sourceTree = "<group>"; };
 		8A83F3631EFFD01200F1BB84 /* UserManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserManager.h; sourceTree = "<group>"; };
@@ -319,6 +328,7 @@
 		8A408C061EFE83DE00C9081F /* Resorce */ = {
 			isa = PBXGroup;
 			children = (
+				8A7B946D1F261F490063728C /* img */,
 			);
 			path = Resorce;
 			sourceTree = "<group>";
@@ -587,6 +597,8 @@
 				8A408C681EFE96A600C9081F /* CallingViewController.m */,
 				8AC740C01F08E53C008F1E0C /* UIAlertController+PPPersonModel.h */,
 				8AC740C11F08E53C008F1E0C /* UIAlertController+PPPersonModel.m */,
+				8A7B946A1F261C970063728C /* ContactDetailViewController.h */,
+				8A7B946B1F261C970063728C /* ContactDetailViewController.m */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -594,6 +606,10 @@
 		8A408C651EFE969000C9081F /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				8A7B94711F261F900063728C /* UINavigationBar+Awesome.h */,
+				8A7B94721F261F900063728C /* UINavigationBar+Awesome.m */,
+				8A7B946E1F261F600063728C /* ScrollingNavbarDemoViewController.h */,
+				8A7B946F1F261F600063728C /* ScrollingNavbarDemoViewController.m */,
 				8AC740D21F090B95008F1E0C /* CallPhone.h */,
 				8AC740D31F090B95008F1E0C /* CallPhone.m */,
 			);
@@ -640,6 +656,13 @@
 				8A48DB031F25024D00118CA6 /* UIImage+EditImage.m */,
 			);
 			path = CategoryAndClass;
+			sourceTree = "<group>";
+		};
+		8A7B946D1F261F490063728C /* img */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = img;
 			sourceTree = "<group>";
 		};
 		8A86AE021EFD5DDF00C8533F = {
@@ -895,6 +918,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8A7B946C1F261C970063728C /* ContactDetailViewController.m in Sources */,
 				8AFF502B1F126D1900A0A0BC /* ContactCell.m in Sources */,
 				8A408C4D1EFE891400C9081F /* AppDelegate+PushService.m in Sources */,
 				8AE211721F0E841F004E52C3 /* GTMBase64.m in Sources */,
@@ -907,6 +931,7 @@
 				8A408C0E1EFE84AE00C9081F /* MainTabBarController.m in Sources */,
 				8A408C501EFE89C900C9081F /* HomeViewController.m in Sources */,
 				8A408C531EFE89E100C9081F /* MineViewController.m in Sources */,
+				8A7B94701F261F600063728C /* ScrollingNavbarDemoViewController.m in Sources */,
 				8A408C691EFE96A600C9081F /* CallingViewController.m in Sources */,
 				8A83F35F1EFFB6E800F1BB84 /* QCheckBox.m in Sources */,
 				8AB7C0051F015DF00027EBFB /* AdPageView.m in Sources */,
@@ -944,6 +969,7 @@
 				8A408C4C1EFE891400C9081F /* AppDelegate+AppService.m in Sources */,
 				8AC740DC1F092229008F1E0C /* DataBase.m in Sources */,
 				8A408C381EFE86E200C9081F /* NJKWebViewProgress.m in Sources */,
+				8A7B94731F261F900063728C /* UINavigationBar+Awesome.m in Sources */,
 				8AC740C51F08F030008F1E0C /* ChooseServiceViewController.m in Sources */,
 				8AB692A81F0543AE0016C3DF /* PPAddressBookHandle.m in Sources */,
 				8A48DB091F25024D00118CA6 /* NSString+checkPhone.m in Sources */,

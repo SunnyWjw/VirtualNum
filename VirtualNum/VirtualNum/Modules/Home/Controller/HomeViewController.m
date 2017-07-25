@@ -80,13 +80,16 @@
 }
 -(void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
-    inputNumber.text = nil;
-    self.navigationItem.title = @"通话记录";
-    [self HiddenORShow:YES];
-    [self.tableView setHidden:NO];
-//    [UIView animateWithDuration:0.3 animations:^{
-//        self.keyboard.frame = CGRectMake(0, kHEIGHT, kWIDTH, 216);}];
-keyboard.hidden = YES;
+    NSString *callSettingsType = [[NSUserDefaults standardUserDefaults] objectForKey:VN_SERVICE];
+    if ([callSettingsType isEqualToString: @"0"]) {
+        inputNumber.text = @"";
+        inputNumber.text = nil;
+        self.navigationItem.title = @"通话记录";
+        [self HiddenORShow:YES];
+        [self.tableView setHidden:NO];
+        
+    }
+    keyboard.hidden = YES;
 }
 
 -(void)initTransID{
@@ -311,14 +314,17 @@ keyboard.hidden = YES;
 #pragma mark 发起呼叫call
 - (void)call {
     
-     CallPhone *callphone = [[CallPhone alloc] init];
+    CallPhone *callphone = [[CallPhone alloc] init];
     [callphone sendCallRequest:inputNumber.text ContactName:@"" Respone:^(NSDictionary *tempJSON, NSString *model, NSString *XNum) {
-        inputNumber.text = @"";
         NSString *successstr = [NSString stringWithFormat:@"%@", tempJSON[@"success"]];
         if ([successstr isEqualToString:@"1"]) {
             if ([model isEqualToString:@"dual"]) {
+                
                 ChooseTransidViewController *ctVC = [[ChooseTransidViewController alloc] init];
                 [self.navigationController pushViewController:ctVC animated:YES];
+                /*
+                 [callphone sendCallRequestToActivationTran];
+                 */
             }else{
                 XNum = [NSString stringWithFormat:@"%@%@",VN_CALLPREFIX,XNum];
                 NSMutableString *str=[[NSMutableString alloc]initWithFormat:@"tel://%@",XNum];
@@ -403,7 +409,7 @@ keyboard.hidden = YES;
                 [self.tableView setHidden:NO];
             }else {
                 [self HiddenORShow:NO];
-//                [self.tableView setHidden:YES];
+                //                [self.tableView setHidden:YES];
             }
         }
     }
@@ -421,17 +427,17 @@ keyboard.hidden = YES;
         }
     }
     
-//    dispatch_async(dispatch_get_main_queue(), ^{
-//        [self seaInputNumber:inputNumber
-//               textDidChange:inputNumber.text];
-//    });
+    //    dispatch_async(dispatch_get_main_queue(), ^{
+    //        [self seaInputNumber:inputNumber
+    //               textDidChange:inputNumber.text];
+    //    });
 }
 
 -(void)HiddenORShow:(BOOL)sh{
     inputNumber.hidden = sh;
     callButton.hidden = sh;
     deleteButton.hidden = sh;
-   downButton.hidden = sh;
+    downButton.hidden = sh;
     SeaResultTable.hidden = sh;
 }
 
@@ -541,12 +547,12 @@ keyboard.hidden = YES;
 - (void)longPress:(UILongPressGestureRecognizer*)recognizer
 {
     [self numberKeyboardStirng:@"2"];
-//    dispatch_async(dispatch_get_main_queue(), ^{
-//        [self seaInputNumber:inputNumber
-//               textDidChange:inputNumber.text];
-//        //[SeaResultTable reloadData];
-//        // [self.tableView reloadData];
-//    });
+    //    dispatch_async(dispatch_get_main_queue(), ^{
+    //        [self seaInputNumber:inputNumber
+    //               textDidChange:inputNumber.text];
+    //        //[SeaResultTable reloadData];
+    //        // [self.tableView reloadData];
+    //    });
 }
 
 #pragma UISearchDisplayDelegate

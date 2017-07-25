@@ -266,11 +266,11 @@
             NSString *XNum = [userDefaults objectForKey:VN_X];
             XNum = XNum.length > 0 ? XNum : 0;
             
-            NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
-            [numberFormatter setNumberStyle:NSNumberFormatterDecimalStyle];
-            NSNumber *numTemp = [numberFormatter numberFromString:XNum];
-            
-            NSNumber *randomNum = [numberFormatter numberFromString:[userDefaults objectForKey:VN_TRANS]];
+//            NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
+//            [numberFormatter setNumberStyle:NSNumberFormatterDecimalStyle];
+//            NSNumber *numTemp = [numberFormatter numberFromString:XNum];
+//            NSNumber *randomNum = [numberFormatter numberFromString:[userDefaults objectForKey:VN_TRANS]];
+            NSString *randomNum =[userDefaults objectForKey:VN_TRANS];
             
             NSString *serviceType = [userDefaults objectForKey:VN_SERVICE];
             serviceType = serviceType.length > 0 ? serviceType : @"";
@@ -280,7 +280,7 @@
             callLog.CallPhoneNum = callPhoneNum;
             callLog.calledName = calledName;
             callLog.CallingName = callingName;
-            callLog.XNum = numTemp;
+            callLog.XNum = XNum;
             callLog.randomNum = randomNum;
             callLog.durationTime = 0;
             callLog.serviceType = serviceType;

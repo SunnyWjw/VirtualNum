@@ -70,17 +70,20 @@
     for (int i= 0; i<phones.count; i++) {
         UIAlertAction * action = [UIAlertAction actionWithTitle:[phones objectAtIndex:i] style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             
-            NSLog(@"点击的号码是>>>%@,>>%@",action.title,name);
-        
 //            [CallPhone sendCallRequest:action.title ContactName:name ViewController:self];
             CallPhone *callphone = [[CallPhone alloc] init];
             [callphone sendCallRequest:action.title ContactName:name  Respone:^(NSDictionary *tempJSON, NSString *model, NSString *XNum) {
                 NSString *successstr = [NSString stringWithFormat:@"%@", tempJSON[@"success"]];
                 if ([successstr isEqualToString:@"1"]) {
                     if ([model isEqualToString:@"dual"]) {
+                        
                         ChooseTransidViewController *ctVC = [[ChooseTransidViewController alloc] init];
                         [viewController.navigationController pushViewController:ctVC animated:YES];
+                         /*
+                         [callphone sendCallRequestToActivationTran];
+                          */
                     }else{
+                        XNum = [NSString stringWithFormat:@"%@%@",VN_CALLPREFIX,XNum];
                         NSMutableString *str=[[NSMutableString alloc]initWithFormat:@"tel://%@",XNum];
                         [[UIApplication sharedApplication]openURL:[NSURL URLWithString:str]];
                     }

@@ -26,15 +26,15 @@
 /*
  X号码
  */
-@property(nonatomic,copy) NSNumber *XNum;
+@property(nonatomic,copy) NSString *XNum;
 /*
  随机数
  */
-@property(nonatomic,copy) NSNumber *randomNum;
+@property(nonatomic,copy) NSString *randomNum;
 /*
  通话时长
  */
-@property(nonatomic,copy) NSNumber *durationTime;
+@property(nonatomic,copy) NSString *durationTime;
 /*
  服务方式
  */

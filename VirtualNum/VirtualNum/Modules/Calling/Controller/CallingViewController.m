@@ -11,6 +11,8 @@
 #import "UIAlertController+PPPersonModel.h"
 #import "CallPhone.h"
 #import "ChooseTransidViewController.h"
+#import "ContactDetailViewController.h"
+
 
 #define START NSDate *startTime = [NSDate date]
 #define END NSLog(@"Time: %f", -[startTime timeIntervalSinceNow])
@@ -128,6 +130,8 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    [tableView deselectRowAtIndexPath:indexPath animated:true];
+    
     NSString *key = _keys[indexPath.section];
     PPPersonModel *people = [_contactPeopleDict[key] objectAtIndex:indexPath.row];
     
@@ -143,9 +147,13 @@
             NSString *successstr = [NSString stringWithFormat:@"%@", tempJSON[@"success"]];
             if ([successstr isEqualToString:@"1"]) {
                 if ([model isEqualToString:@"dual"]) {
+                    
                     ChooseTransidViewController *ctVC = [[ChooseTransidViewController alloc] init];
                     [self.navigationController pushViewController:ctVC animated:YES];
+                     
+                     //[callphone sendCallRequestToActivationTran];
                 }else{
+                    XNum = [NSString stringWithFormat:@"%@%@",VN_CALLPREFIX,XNum];
                     NSMutableString *str=[[NSMutableString alloc]initWithFormat:@"tel://%@",XNum];
                     [[UIApplication sharedApplication]openURL:[NSURL URLWithString:str]];
                 }
@@ -157,7 +165,12 @@
         [MBProgressHUD showErrorMessage:@"该联系人没有添加联系电话，不能进行呼叫"];
     }
     
-    [tableView deselectRowAtIndexPath:indexPath animated:true];
+     
+    
+    /*
+    ContactDetailViewController *cdVC = [[ContactDetailViewController alloc] init];
+    [self.navigationController pushViewController:cdVC animated:YES];
+    */
 }
 
 

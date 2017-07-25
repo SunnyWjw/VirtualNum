@@ -296,9 +296,7 @@
                                  } ;
     DLog(@"解绑AXparameters>>>%@",parameters);
     [MBProgressHUD showActivityMessageInView:@"请求中..."];
-    
-    /*
-    [self Delete:baseUrl params:parameters success:^(id responseObject) {
+    [[AFNetAPIClient sharedJsonClient].setRequest(baseUrl).RequestType(Delete).Parameters(parameters) startRequestWithSuccess:^(NSURLSessionDataTask *task, id responseObject) {
         [MBProgressHUD hideHUD];
         NSString *result = [[NSString alloc] initWithData:responseObject encoding:NSUTF8StringEncoding];
         if([[AFNetAPIClient sharedJsonClient] parseJSONData:result] == nil){
@@ -320,41 +318,12 @@
         }else{
             [MBProgressHUD showErrorMessage:tempJSON[@"message"]];
         }
-    } failure:^(NSError *error) {
+    } progress:^(NSProgress *progress) {
+        
+    } failure:^(NSURLSessionDataTask *task, NSError *error) {
         [MBProgressHUD hideHUD];
         [MBProgressHUD showErrorMessage:@"连接网络超时，请稍后再试"];
-        
     }];
-    */
-    
-        [[AFNetAPIClient sharedJsonClient].setRequest(baseUrl).RequestType(Delete).Parameters(parameters) startRequestWithSuccess:^(NSURLSessionDataTask *task, id responseObject) {
-            [MBProgressHUD hideHUD];
-            NSString *result = [[NSString alloc] initWithData:responseObject encoding:NSUTF8StringEncoding];
-            if([[AFNetAPIClient sharedJsonClient] parseJSONData:result] == nil){
-                [MBProgressHUD showErrorMessage:@"服务器繁忙，请稍后再试"];
-                return;
-            }
-    
-            NSDictionary* tempJSON = [[AFNetAPIClient sharedJsonClient] parseJSONData:result];
-            DLog(@"tempJSON>>>%@",tempJSON);
-            NSString *successstr = [NSString stringWithFormat:@"%@", tempJSON[@"success"]];
-            if ([successstr isEqualToString:@"1"]) {
-                if ([[tempJSON objectForKey:@"data"] isKindOfClass:[NSArray class]])
-                {
-                    [MBProgressHUD showErrorMessage:@"解除绑定成功"];
-                    [[NSUserDefaults standardUserDefaults]removeObjectForKey:VN_X];
-                    [self.personalTableView reloadData];
-                }
-    
-            }else{
-                [MBProgressHUD showErrorMessage:tempJSON[@"message"]];
-            }
-        } progress:^(NSProgress *progress) {
-    
-        } failure:^(NSURLSessionDataTask *task, NSError *error) {
-            [MBProgressHUD hideHUD];
-            [MBProgressHUD showErrorMessage:@"连接网络超时，请稍后再试"];
-        }];
 }
 
 - (void)Delete:(NSString *)url params:(NSDictionary *)params success:(void (^)(id responseObject))success failure:(void (^)(NSError *))failure
