@@ -172,7 +172,7 @@ static DataBase *_DBCtl = nil;
 - (void)updateCallLog:(CallLog *)callLog{
     [_db open];
     
-    [_db executeUpdate:@"UPDATE 'CallLog' SET durationTime = ?  WHERE person_id = ? ",callLog.durationTime,callLog.ID];
+    [_db executeUpdate:@"UPDATE 'CallLog' SET durationTime = ?  WHERE randomNum = ? ",callLog.durationTime,callLog.randomNum];
     
     [_db close];
 }

@@ -234,13 +234,44 @@
         {
             
              DLog(@"挂断了电话咯Call has been disconnected");
+            NSDate *date = [NSDate date];
+            NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
+            [dateFormatter setDateStyle:NSDateFormatterMediumStyle];
+            [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+            NSString *dateString = [dateFormatter stringFromDate:date];
+            NSString *endTime = [[NSUserDefaults standardUserDefaults] objectForKey:@"CallConnected"];
+            
+            if (endTime && endTime.length > 0) {
+                NSDate *date1 = [dateFormatter dateFromString:endTime];
+                NSDate *date2 = [dateFormatter dateFromString:dateString];
+                // 3.创建日历
+                NSCalendar *calendar = [NSCalendar currentCalendar];
+                NSCalendarUnit type = NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond;
+                // 4.利用日历对象比较两个时间的差值
+                NSDateComponents *cmps = [calendar components:type fromDate:date1 toDate:date2 options:0];
+                // 5.输出结果
+                NSLog(@"两个时间相差%ld年%ld月%ld日%ld小时%ld分钟%ld秒", cmps.year, cmps.month, cmps.day, cmps.hour, cmps.minute, cmps.second);
+                
+                NSString *randomNum =[userDefaults objectForKey:VN_TRANS];
+                CallLog *callLog = [[CallLog alloc] init];
+                callLog.durationTime = [NSString stringWithFormat:@"%ld",(long)cmps.second];
+                callLog.randomNum = randomNum;
+                [[DataBase sharedDataBase] updateCallLog:callLog];
+            }else{
+                
+            }
         }
         
         else if ([call.callState isEqualToString:CTCallStateConnected])
             
         {
-            
             DLog(@"电话通了Call has just been connected");
+            NSDate *date = [NSDate date];
+            NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
+            [dateFormatter setDateStyle:NSDateFormatterMediumStyle];
+            [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+            NSString *dateString = [dateFormatter stringFromDate:date];
+            [[NSUserDefaults standardUserDefaults] setObject:dateString forKey:@"CallConnected"];
             
         }
         
@@ -255,7 +286,8 @@
         else if ([call.callState isEqualToString:CTCallStateDialing])
             
         {
-            
+            //呼叫前清空上一次的通话时长
+            [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"CallConnected"];
             DLog(@"正在播出电话call is dialing");
             CallLog *callLog = [[CallLog alloc] init];
             NSString *callPhoneNum = [userDefaults objectForKey:VN_CallPhoneNum];
@@ -265,12 +297,9 @@
             
             NSString *XNum = [userDefaults objectForKey:VN_X];
             XNum = XNum.length > 0 ? XNum : 0;
-            
-//            NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
-//            [numberFormatter setNumberStyle:NSNumberFormatterDecimalStyle];
-//            NSNumber *numTemp = [numberFormatter numberFromString:XNum];
-//            NSNumber *randomNum = [numberFormatter numberFromString:[userDefaults objectForKey:VN_TRANS]];
+
             NSString *randomNum =[userDefaults objectForKey:VN_TRANS];
+            [[NSUserDefaults standardUserDefaults]setObject:randomNum forKey:@"OldTrans"];
             
             NSString *serviceType = [userDefaults objectForKey:VN_SERVICE];
             serviceType = serviceType.length > 0 ? serviceType : @"";

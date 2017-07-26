@@ -102,18 +102,21 @@
         return;
     }
     
+    
     NSString *baseUrl = NSStringFormat(@"%@%@",URL_main,URL_AXB);
     NSDictionary *parameters = @{
                                  @"page": [NSString stringWithFormat:@"%d",page],
                                  @"pageSize": @"10"
                                  } ;
+    
+    
     /*
      NSString *strX = [[NSUserDefaults standardUserDefaults] objectForKey:VN_X];
      NSString *baseUrl = NSStringFormat(@"%@%@",URL_main,URL_TRANSACTION);
      NSDictionary *parameters = @{
      @"x":strX
      } ;
-     */
+    */
     
     DLog(@"URL>>>%@ \n parameters>>%@",baseUrl,parameters);
     //    NSDictionary *newParam = [SBAPIurl TextCodeBase64:parameters];

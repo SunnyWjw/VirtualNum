@@ -128,34 +128,81 @@ static CallPhone *_instance;
 
 
 - (void) sendCallRequestToActivationTran:(NSString *)transid{
-    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    NSString *strX = [userDefaults objectForKey:VN_X];
-    if (!strX) {
-        [MBProgressHUD showErrorMessage:@"请先绑定X号码"];
-        return;
-    }
-    NSString *strCompany = [userDefaults objectForKey:VN_COMPANYID];
-    if (!strCompany) {
-        [MBProgressHUD showErrorMessage:@"请输入companyid"];
-        return;
-    }
-    /*
-    NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
-    [numberFormatter setNumberStyle:NSNumberFormatterDecimalStyle];
-    NSNumber *randomNum = [numberFormatter numberFromString:[TimeAndTimeStamps getNowDateTimeFoFourteenr]];
     
-    NSString * strTransid =[NSString stringWithFormat:@"%@%@",strCompany,randomNum] ;
-    [[NSUserDefaults standardUserDefaults] setObject:strTransid forKey:VN_TRANS];
-    */
+    if([self DelResult]){
+        
+        NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+        NSString *strX = [userDefaults objectForKey:VN_X];
+        if (!strX) {
+            [MBProgressHUD showErrorMessage:@"请先绑定X号码"];
+            return;
+        }
+        NSString *strCompany = [userDefaults objectForKey:VN_COMPANYID];
+        if (!strCompany) {
+            [MBProgressHUD showErrorMessage:@"请输入companyid"];
+            return;
+        }
+        /*
+         NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
+         [numberFormatter setNumberStyle:NSNumberFormatterDecimalStyle];
+         NSNumber *randomNum = [numberFormatter numberFromString:[TimeAndTimeStamps getNowDateTimeFoFourteenr]];
+         
+         NSString * strTransid =[NSString stringWithFormat:@"%@%@",strCompany,randomNum] ;
+         [[NSUserDefaults standardUserDefaults] setObject:strTransid forKey:VN_TRANS];
+         */
+        NSString *baseUrl = NSStringFormat(@"%@%@",URL_main,URL_TRANSACTION);
+        NSDictionary *parameters = @{
+                                     @"x":strX,
+                                     @"transid":transid
+                                     } ;
+        DLog(@"激活transid>>>%@",parameters);
+        [MBProgressHUD showActivityMessageInView:@"请求中..."];
+        
+        [[AFNetAPIClient sharedJsonClient].setRequest(baseUrl).RequestType(Put).Parameters(parameters) startRequestWithSuccess:^(NSURLSessionDataTask *task, id responseObject) {
+            [MBProgressHUD hideHUD];
+            NSString *result = [[NSString alloc] initWithData:responseObject encoding:NSUTF8StringEncoding];
+            if([[AFNetAPIClient sharedJsonClient] parseJSONData:result] == nil){
+                [MBProgressHUD showErrorMessage:@"服务器繁忙，请稍后再试"];
+                return;
+            }
+            
+            NSDictionary* tempJSON = [[AFNetAPIClient sharedJsonClient] parseJSONData:result];
+            DLog(@"tempJSON>>>%@",tempJSON);
+            NSString *successstr = [NSString stringWithFormat:@"%@", tempJSON[@"success"]];
+            if ([successstr isEqualToString:@"1"]) {
+                NSString * xNumStr = [NSString stringWithFormat:@"%@%@",VN_CALLPREFIX,strX];
+                NSMutableString *str=[[NSMutableString alloc]initWithFormat:@"tel://%@",xNumStr];
+                [[UIApplication sharedApplication]openURL:[NSURL URLWithString:str]];
+            }else{
+                [MBProgressHUD showErrorMessage:tempJSON[@"message"]];
+            }
+        } progress:^(NSProgress *progress) {
+            
+        } failure:^(NSURLSessionDataTask *task, NSError *error) {
+            [MBProgressHUD hideHUD];
+            [MBProgressHUD showErrorMessage:@"连接网络超时，请稍后再试"];
+        }];
+    }
+}
+
+-(BOOL) DelResult{
+    static BOOL resultBool = false;
+    
+    NSString *xNumStr = [[NSUserDefaults standardUserDefaults] objectForKey:VN_X];
+    NSString *oldTrans =[[NSUserDefaults standardUserDefaults] objectForKey:@"OldTrans"];
+    if (!oldTrans) {
+        resultBool = true;
+        return resultBool;
+    }
+    
     NSString *baseUrl = NSStringFormat(@"%@%@",URL_main,URL_TRANSACTION);
     NSDictionary *parameters = @{
-                                 @"x":strX,
-                                 @"transid":transid
+                                 @"x": xNumStr,
+                                 @"transid":oldTrans
                                  } ;
-    DLog(@"绑定AXBparameters>>>%@",parameters);
+    DLog(@"解绑Trans>>>%@",parameters);
     [MBProgressHUD showActivityMessageInView:@"请求中..."];
-    
-    [[AFNetAPIClient sharedJsonClient].setRequest(baseUrl).RequestType(Put).Parameters(parameters) startRequestWithSuccess:^(NSURLSessionDataTask *task, id responseObject) {
+    [[AFNetAPIClient sharedJsonClient].setRequest(baseUrl).RequestType(Delete).Parameters(parameters) startRequestWithSuccess:^(NSURLSessionDataTask *task, id responseObject) {
         [MBProgressHUD hideHUD];
         NSString *result = [[NSString alloc] initWithData:responseObject encoding:NSUTF8StringEncoding];
         if([[AFNetAPIClient sharedJsonClient] parseJSONData:result] == nil){
@@ -167,9 +214,11 @@ static CallPhone *_instance;
         DLog(@"tempJSON>>>%@",tempJSON);
         NSString *successstr = [NSString stringWithFormat:@"%@", tempJSON[@"success"]];
         if ([successstr isEqualToString:@"1"]) {
-            NSString * xNumStr = [NSString stringWithFormat:@"%@%@",VN_CALLPREFIX,strX];
-            NSMutableString *str=[[NSMutableString alloc]initWithFormat:@"tel://%@",xNumStr];
-            [[UIApplication sharedApplication]openURL:[NSURL URLWithString:str]];
+            if ([[tempJSON objectForKey:@"data"] isKindOfClass:[NSArray class]])
+            {
+                resultBool = true;
+            }
+            
         }else{
             [MBProgressHUD showErrorMessage:tempJSON[@"message"]];
         }
@@ -179,6 +228,8 @@ static CallPhone *_instance;
         [MBProgressHUD hideHUD];
         [MBProgressHUD showErrorMessage:@"连接网络超时，请稍后再试"];
     }];
+    
+    return resultBool;
 }
 
 @end

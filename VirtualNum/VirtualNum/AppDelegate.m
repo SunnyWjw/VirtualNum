@@ -22,8 +22,6 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
-    //[[NSUserDefaults standardUserDefaults]setObject:@"2180246994" forKey:VN_X];
-    
     //初始化window
     [self initWindow];
     

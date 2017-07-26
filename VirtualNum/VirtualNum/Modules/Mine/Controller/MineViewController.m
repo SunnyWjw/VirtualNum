@@ -26,7 +26,7 @@
     self.title=@"个人中心";
     [self creadTableView];
     
-    //self.dataArray = @[@"设置一", @"设置二", @"设置三", @"设置四"];
+    self.dataArray = @[@"绑定X号码", @"解绑X", @"服务模式"];//, @"去激活Trans"];
     
 }
 
@@ -72,7 +72,7 @@
             num = 4;
             break;
         case 1:
-            num = 3;
+            num = self.dataArray.count;
             break;
     }
     return num;
@@ -178,7 +178,7 @@
             switch (indexPath.row) {
                 case 0:
                 {
-                    cell2.textLabel.text = @"绑定X号码";
+                    cell2.textLabel.text =[self.dataArray objectAtIndex:indexPath.row];
                     NSString * phoneNumStr = [[NSUserDefaults standardUserDefaults] objectForKey:VN_X];
                     if (!phoneNumStr) {
                         phoneNumStr = @"--";
@@ -188,11 +188,12 @@
                     break;
                 case 1:
                 {
-                    cell2.textLabel.text = @"解绑X";
+                    cell2.textLabel.text =[self.dataArray objectAtIndex:indexPath.row];
                 }
                     break;
-                default:
-                    cell2.textLabel.text = @"服务模式";
+                case 2:
+                {
+                    cell2.textLabel.text =[self.dataArray objectAtIndex:indexPath.row];
                     
                     NSString *callSettingsType = [[NSUserDefaults standardUserDefaults] objectForKey:VN_SERVICE];
                     NSString *callType=@"";
@@ -202,6 +203,12 @@
                         callType=@"中介模式";
                     }
                     cell2.detailTextLabel.text = callType;
+                }
+                    break;
+
+                default:
+                     cell2.textLabel.text =[self.dataArray objectAtIndex:indexPath.row];
+                    
                     break;
             }
         }
@@ -249,16 +256,28 @@
                         [MBProgressHUD showErrorMessage:@"请先绑定手机号码"];
                         return;
                     }
-                    NSString *msg = [NSString stringWithFormat:@"您确定在解绑 %@ ?",xNumStr];
+                    NSString *msg = [NSString stringWithFormat:@"您确定要解绑 %@ ?",xNumStr];
                     UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:nil message:msg delegate:self cancelButtonTitle:@"确定" otherButtonTitles:@"取消", nil];
                     alertView.tag=10086;
                     [alertView show];
                 }
                     break;
-                default:
+                case 2:
                 {
                     ChooseServiceViewController * chooseVc = [[ChooseServiceViewController alloc]init];
                     [self.navigationController pushViewController:chooseVc animated:NO];
+                   
+                }
+                    break;
+                default:
+                {
+                    NSString *xNumStr = [[NSUserDefaults standardUserDefaults] objectForKey:VN_X];
+                    if (!xNumStr) {
+                        [MBProgressHUD showErrorMessage:@"请先绑定X号码"];
+                        return;
+                    }
+                    
+                    [self sendRequestDelToTrans];
                 }
                     break;
             }
@@ -311,7 +330,8 @@
             if ([[tempJSON objectForKey:@"data"] isKindOfClass:[NSArray class]])
             {
                 [MBProgressHUD showErrorMessage:@"解除绑定成功"];
-                [[NSUserDefaults standardUserDefaults]removeObjectForKey:VN_X];
+                [[NSUserDefaults standardUserDefaults] removeObjectForKey:VN_X];
+                [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"OldTrans"];
                 [self.personalTableView reloadData];
             }
             
@@ -325,6 +345,52 @@
         [MBProgressHUD showErrorMessage:@"连接网络超时，请稍后再试"];
     }];
 }
+
+
+/**
+ 去激活Trans
+ */
+-(void) sendRequestDelToTrans{
+    
+    NSString *xNumStr = [[NSUserDefaults standardUserDefaults] objectForKey:VN_X];
+    
+    NSString *baseUrl = NSStringFormat(@"%@%@",URL_main,URL_TRANSACTION);
+    NSDictionary *parameters = @{
+                                 @"x": xNumStr,
+                                @"transid": @"110120170726230335339"
+                                 } ;
+    DLog(@"解绑Trans>>>%@",parameters);
+    [MBProgressHUD showActivityMessageInView:@"请求中..."];
+    [[AFNetAPIClient sharedJsonClient].setRequest(baseUrl).RequestType(Delete).Parameters(parameters) startRequestWithSuccess:^(NSURLSessionDataTask *task, id responseObject) {
+        [MBProgressHUD hideHUD];
+        NSString *result = [[NSString alloc] initWithData:responseObject encoding:NSUTF8StringEncoding];
+        if([[AFNetAPIClient sharedJsonClient] parseJSONData:result] == nil){
+            [MBProgressHUD showErrorMessage:@"服务器繁忙，请稍后再试"];
+            return;
+        }
+        
+        NSDictionary* tempJSON = [[AFNetAPIClient sharedJsonClient] parseJSONData:result];
+        DLog(@"tempJSON>>>%@",tempJSON);
+        NSString *successstr = [NSString stringWithFormat:@"%@", tempJSON[@"success"]];
+        if ([successstr isEqualToString:@"1"]) {
+            if ([[tempJSON objectForKey:@"data"] isKindOfClass:[NSArray class]])
+            {
+                [MBProgressHUD showErrorMessage:@"解除绑定成功"];
+               // [[NSUserDefaults standardUserDefaults]removeObjectForKey:VN_X];
+                [self.personalTableView reloadData];
+            }
+            
+        }else{
+            [MBProgressHUD showErrorMessage:tempJSON[@"message"]];
+        }
+    } progress:^(NSProgress *progress) {
+        
+    } failure:^(NSURLSessionDataTask *task, NSError *error) {
+        [MBProgressHUD hideHUD];
+        [MBProgressHUD showErrorMessage:@"连接网络超时，请稍后再试"];
+    }];
+}
+
 
 - (void)Delete:(NSString *)url params:(NSDictionary *)params success:(void (^)(id responseObject))success failure:(void (^)(NSError *))failure
 {

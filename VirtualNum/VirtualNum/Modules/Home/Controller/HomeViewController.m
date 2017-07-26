@@ -363,8 +363,8 @@
     CallLog *callLog = self.dataArray[indexPath.row];
     cell.calledNameLab.text = [NSString stringWithFormat:@"x号码: %@",callLog.XNum];
     cell.callPhoneNumLab.text = [NSString stringWithFormat:@"被叫号码: %@ (%@)",callLog.CallPhoneNum,callLog.callCount];
-    cell.generateTimeLab.text = [NSString stringWithFormat:@"%@",callLog.generateTime];
-    cell.xLab.text =[NSString stringWithFormat:@"%@",callLog.randomNum];
+    cell.generateTimeLab.text = [NSString stringWithFormat:@"%@",callLog.randomNum];
+    cell.xLab.text =[NSString stringWithFormat:@"%@",callLog.generateTime];
     
     return cell;
 }
