@@ -48,8 +48,12 @@ SINGLETON_FOR_CLASS(UserManager);
 -(void)loginToServer:(NSDictionary *)params completion:(loginBlock)completion{
     [MBProgressHUD showActivityMessageInView:@"登录中..."];
     
-    NSString *baseUrl = NSStringFormat(@"%@%@",URL_main,URL_user_info);
-    [[AFNetAPIClient sharedJsonClient].setRequest(baseUrl).RequestType(Post).Parameters(params) startRequestWithSuccess:^(NSURLSessionDataTask *task, id responseObject) {
+    NSString *baseUrl = NSStringFormat(@"%@%@",URL_main,URL_user_login);
+    NSDictionary *dic =@{
+                         @"version":VN_APIVERSION
+                    };
+    DLog(@"手动登录到服务器>>>%@",params);
+    [[AFNetAPIClient sharedJsonClient].setRequest(baseUrl).RequestType(Post).HTTPHeader(dic).Parameters(params)startRequestWithSuccess:^(NSURLSessionDataTask *task, id responseObject) {
         [MBProgressHUD hideHUD];
          [self LoginSuccess:responseObject completion:completion];
     } progress:^(NSProgress *progress) {
@@ -69,8 +73,10 @@ SINGLETON_FOR_CLASS(UserManager);
                                  @"username": [[NSUserDefaults standardUserDefaults] objectForKey:VN_USERNAME],
                                  @"password": [[NSUserDefaults standardUserDefaults] objectForKey:VN_PASSWORD]
                                  } ;
-    
-    [[AFNetAPIClient sharedJsonClient].setRequest(baseUrl).RequestType(Post).Parameters(parameters) startRequestWithSuccess:^(NSURLSessionDataTask *task, id responseObject) {
+    NSDictionary *dic =@{
+                         @"version":VN_APIVERSION
+                         };
+    [[AFNetAPIClient sharedJsonClient].setRequest(baseUrl).RequestType(Post).HTTPHeader(dic).Parameters(parameters) startRequestWithSuccess:^(NSURLSessionDataTask *task, id responseObject) {
         [self LoginSuccess:responseObject completion:completion];
     } progress:^(NSProgress *progress) {
         
@@ -95,7 +101,7 @@ SINGLETON_FOR_CLASS(UserManager);
     if ([successstr isEqualToString:@"1"]) {
         [MBProgressHUD showErrorMessage:@"登录成功"];
         [self SaveInfo:tempJSON];
-        DLog(@"tempJSON>>%@",tempJSON);
+        DLog(@"登录成功tempJSON>>%@",tempJSON);
         if (completion) {
             completion(YES,nil);
         }
@@ -132,8 +138,8 @@ SINGLETON_FOR_CLASS(UserManager);
 
 #pragma mark ————— 保存/删除用户信息 —————
 -(void)SaveInfo:(NSDictionary *)userDic{
-    [[NSUserDefaults standardUserDefaults] setObject:userDic[@"user"][@"permissions"] forKey:permissions];
-    [[NSUserDefaults standardUserDefaults] setObject:userDic[@"user"][@"_id"] forKey:VN_USERID];
+    DLog(@"token>>>>>%@",userDic[@"data"][@"token"]);
+    [[NSUserDefaults standardUserDefaults] setObject:userDic[@"data"][@"token"] forKey:VN_TOKEN];
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 

@@ -114,20 +114,36 @@
         return;
     }
     
-    NSString *baseUrl = NSStringFormat(@"%@%@",URL_main,URL_phone);
-    //    NSDictionary *parameters = @{
-    //                                 @"companyid": comPanyIDStr,
-    //                                 } ;
+    NSString *token = [[NSUserDefaults standardUserDefaults] objectForKey:VN_TOKEN];
+    if (!token) {
+        
+        UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:nil message:@"获取信息失败，请重新登录" delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+        [alertView show];
+        
+        [userManager DelInfo];
+        KPostNotification(KNotificationLoginStateChange, @NO);
+        return;
+    }
+    NSDictionary *headerDic = @{
+                                @"token":token,
+                                @"version":VN_APIVERSION
+                                };
     
+    NSString *baseUrl = NSStringFormat(@"%@%@",URL_main,URL_phone);
+//        NSDictionary *parameters = @{
+//                                     @"companyid": comPanyIDStr,
+//                                     } ;
     NSDictionary *parameters = @{
                                  @"page": [NSString stringWithFormat:@"%d",page],
                                  @"pageSize": @"15"
                                  } ;
     
+ 
+    
     DLog(@"URL>>>%@ \n parameters>>%@",baseUrl,parameters);
     //    NSDictionary *newParam = [SBAPIurl TextCodeBase64:parameters];
     [MBProgressHUD showActivityMessageInView:@"请求中..."];
-    [[AFNetAPIClient sharedJsonClient].setRequest(baseUrl).RequestType(Post).Parameters(parameters) startRequestWithSuccess:^(NSURLSessionDataTask *task, id responseObject) {
+    [[AFNetAPIClient sharedJsonClient].setRequest(baseUrl).RequestType(Post).HTTPHeader(headerDic).Parameters(parameters) startRequestWithSuccess:^(NSURLSessionDataTask *task, id responseObject) {
         [MBProgressHUD hideHUD];
         
         [self endRefresh];
@@ -258,6 +274,21 @@
     [dic setObject:companyInfo[@"companyid"] forKey:@"companyid"];
     [dic setObject:companyInfo[@"companyname"] forKey:@"companyname"];
     
+    NSString *token = [[NSUserDefaults standardUserDefaults] objectForKey:VN_TOKEN];
+    if (!token) {
+        
+        UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:nil message:@"获取信息失败，请重新登录" delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+        [alertView show];
+        
+        [userManager DelInfo];
+        KPostNotification(KNotificationLoginStateChange, @NO);
+        return;
+    }
+    NSDictionary *headerDic = @{
+                                @"token":token,
+                                @"version":VN_APIVERSION
+                                };
+    
     
     NSString *baseUrl = NSStringFormat(@"%@%@",URL_main,URL_AX);
     NSDictionary *cretateParameters = @{
@@ -267,7 +298,7 @@
                                         } ;
     DLog(@"parameters>>>%@",cretateParameters);
     [MBProgressHUD showActivityMessageInView:@"请求中..."];
-    [[AFNetAPIClient sharedJsonClient].setRequest(baseUrl).RequestType(Put).Parameters(cretateParameters) startRequestWithSuccess:^(NSURLSessionDataTask *task, id responseObject) {
+    [[AFNetAPIClient sharedJsonClient].setRequest(baseUrl).RequestType(Put).HTTPHeader(headerDic).Parameters(cretateParameters) startRequestWithSuccess:^(NSURLSessionDataTask *task, id responseObject) {
         [MBProgressHUD hideHUD];
         NSString *result = [[NSString alloc] initWithData:responseObject encoding:NSUTF8StringEncoding];
         if([[AFNetAPIClient sharedJsonClient] parseJSONData:result] == nil){

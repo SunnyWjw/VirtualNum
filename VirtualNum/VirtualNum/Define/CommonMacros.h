@@ -38,6 +38,7 @@
 
 /**基本信息**/
 #define permissions @"PERMISSIONS"          //权限
+#define VN_TOKEN      @"TOKEN"
 #define VN_USERID      @"_ID"
 #define VN_USERNAME  @"USERNAME"            //用户名
 #define VN_PASSWORD  @"PASSWORD"            //密码

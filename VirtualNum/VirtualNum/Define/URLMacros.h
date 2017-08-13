@@ -56,7 +56,7 @@
 #pragma mark - ——————— 用户相关 ————————
 
 //管理员登录
-#define URL_user_login @"/api/user/login"
+#define URL_user_login @"/api/login"
 //获取用户信息
 #define URL_user_info @"/api/userInfo"
 //号码段配置相关

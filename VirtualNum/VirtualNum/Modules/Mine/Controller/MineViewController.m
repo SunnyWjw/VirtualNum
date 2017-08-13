@@ -306,6 +306,21 @@
     NSString *xNumStr = [[NSUserDefaults standardUserDefaults] objectForKey:VN_X];
     NSString *phoneNum = [[NSUserDefaults standardUserDefaults] objectForKey:VN_PHONE];
     
+    NSString *token = [[NSUserDefaults standardUserDefaults] objectForKey:VN_TOKEN];
+    if (!token) {
+        
+        UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:nil message:@"获取信息失败，请重新登录" delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+        [alertView show];
+        
+        [userManager DelInfo];
+        KPostNotification(KNotificationLoginStateChange, @NO);
+        return;
+    }
+    NSDictionary *headerDic = @{
+                                @"token":token,
+                                @"version":VN_APIVERSION
+                                };
+    
     NSString *baseUrl = NSStringFormat(@"%@%@",URL_main,URL_AX);
     NSDictionary *parameters = @{
                                  @"a": phoneNum,
@@ -315,7 +330,7 @@
                                  } ;
     DLog(@"解绑AXparameters>>>%@",parameters);
     [MBProgressHUD showActivityMessageInView:@"请求中..."];
-    [[AFNetAPIClient sharedJsonClient].setRequest(baseUrl).RequestType(Delete).Parameters(parameters) startRequestWithSuccess:^(NSURLSessionDataTask *task, id responseObject) {
+    [[AFNetAPIClient sharedJsonClient].setRequest(baseUrl).RequestType(Delete).HTTPHeader(headerDic).Parameters(parameters) startRequestWithSuccess:^(NSURLSessionDataTask *task, id responseObject) {
         [MBProgressHUD hideHUD];
         NSString *result = [[NSString alloc] initWithData:responseObject encoding:NSUTF8StringEncoding];
         if([[AFNetAPIClient sharedJsonClient] parseJSONData:result] == nil){
@@ -352,6 +367,21 @@
  */
 -(void) sendRequestDelToTrans{
     
+    NSString *token = [[NSUserDefaults standardUserDefaults] objectForKey:VN_TOKEN];
+    if (!token) {
+        
+        UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:nil message:@"获取信息失败，请重新登录" delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+        [alertView show];
+        
+        [userManager DelInfo];
+        KPostNotification(KNotificationLoginStateChange, @NO);
+        return;
+    }
+    NSDictionary *headerDic = @{
+                                @"token":token,
+                                @"version":VN_APIVERSION
+                                };
+    
     NSString *xNumStr = [[NSUserDefaults standardUserDefaults] objectForKey:VN_X];
     
     NSString *baseUrl = NSStringFormat(@"%@%@",URL_main,URL_TRANSACTION);
@@ -361,7 +391,7 @@
                                  } ;
     DLog(@"解绑Trans>>>%@",parameters);
     [MBProgressHUD showActivityMessageInView:@"请求中..."];
-    [[AFNetAPIClient sharedJsonClient].setRequest(baseUrl).RequestType(Delete).Parameters(parameters) startRequestWithSuccess:^(NSURLSessionDataTask *task, id responseObject) {
+    [[AFNetAPIClient sharedJsonClient].setRequest(baseUrl).RequestType(Delete).HTTPHeader(headerDic).Parameters(parameters) startRequestWithSuccess:^(NSURLSessionDataTask *task, id responseObject) {
         [MBProgressHUD hideHUD];
         NSString *result = [[NSString alloc] initWithData:responseObject encoding:NSUTF8StringEncoding];
         if([[AFNetAPIClient sharedJsonClient] parseJSONData:result] == nil){

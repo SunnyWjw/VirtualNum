@@ -8,11 +8,13 @@
 
 #import "LoginViewController.h"
 #import "QCheckBox.h"
+#import "MyMd5.h"
 
 @interface LoginViewController ()<UITextFieldDelegate,UIAlertViewDelegate>
 
 @property(strong,nonatomic) UITextField *userNameTf;
 @property(strong,nonatomic) UITextField *passwordTf;
+@property(strong,nonatomic) UITextField *companyTf;
 @property(strong,nonatomic) QCheckBox *recordPswBox;
 @property(strong,nonatomic) QCheckBox *autoLoginBox;
 
@@ -120,16 +122,51 @@
         make.bottom.equalTo(pswImgView).with.offset(-TFLandR);
     }];
     
+    
+    
+    UIImageView *companyImgView = [[UIImageView alloc]init];
+    companyImgView.image = [UIImage imageNamed:@"password0"];
+    companyImgView.layer.borderColor = BorderColor;
+    companyImgView.layer.borderWidth = 0.5;
+    //pswImgView.layer.cornerRadius = 3.0;
+    companyImgView.clipsToBounds = YES;
+    companyImgView.userInteractionEnabled = YES;
+    [self.view addSubview:companyImgView];
+    [companyImgView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(pswImgView.mas_bottom).with.offset(ImgLandR);
+        make.left.equalTo(self.view).with.offset(ImgLandR);
+        make.right.equalTo(self.view).with.offset(-ImgLandR);
+        make.height.mas_equalTo(Width);
+    }];
+    
+    self.companyTf = [[UITextField alloc]init];
+    self.companyTf.placeholder = @"请输入企业ID";
+    self.companyTf.font = [UIFont systemFontOfSize:16.0];
+    self.companyTf.clearButtonMode = UITextFieldViewModeWhileEditing;
+    self.companyTf.tag = 501;
+    // 密码格式
+    self.companyTf.secureTextEntry = YES;
+    self.companyTf.delegate = self;
+    [companyImgView addSubview:self.companyTf];
+    
+    [self.companyTf mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(companyImgView).with.offset(Width);
+        make.right.equalTo(companyImgView).with.offset(-TFLandR);
+        make.top.equalTo(companyImgView).with.offset(TFLandR);
+        make.bottom.equalTo(companyImgView).with.offset(-TFLandR);
+    }];
+    
+    
     //记住密码
     self.recordPswBox = [[QCheckBox alloc]initWithDelegate:self];
-    self.recordPswBox.frame = CGRectMake(userImgView.frame.origin.x, (pswImgView.frame.origin.y+55), 100, 20);
+    self.recordPswBox.frame = CGRectMake(userImgView.frame.origin.x, (companyImgView.frame.origin.y+55), 100, 20);
     [self.recordPswBox setTitle:@"自动登录" forState:UIControlStateNormal];
     self.recordPswBox.tag = 1001;
     [self.recordPswBox setTitleColor:[UIColor colorWithHexString:@"#919191"] forState:UIControlStateNormal];
     [self.view addSubview:self.recordPswBox];
     
     [self.recordPswBox mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(pswImgView.mas_bottom).with.offset(ImgLandR);
+        make.top.equalTo(companyImgView.mas_bottom).with.offset(ImgLandR);
         make.left.equalTo(self.view).with.offset(ImgLandR);
         make.size.mas_equalTo(CGSizeMake(100, 32));
     }];
@@ -168,6 +205,7 @@
     
     self.userNameTf.text = [self.userNameTf.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     self.passwordTf.text = [self.passwordTf.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    self.companyTf.text = [self.companyTf.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     
     // 判断用户名
     if ([self.userNameTf.text length]<2)
@@ -181,10 +219,16 @@
         [MBProgressHUD showErrorMessage:@"请输入正确的密码"];
         return;
     }
+    if (self.companyTf.text.length < 1) {
+        [MBProgressHUD showErrorMessage:@"请输入企业ID"];
+        return;
+    }
     
     NSDictionary *parameters = @{
-                                 @"username": self.userNameTf.text,
-                                 @"password": self.passwordTf.text} ;
+                                 @"companyId": self.companyTf.text,
+                                 @"username":self.userNameTf.text,
+                                 @"password": [MyMd5 md5_lowerStr:self.passwordTf.text],
+                                 } ;
     
     [userManager login:kUserLoginTypePwd params:parameters completion:^(BOOL success, NSString *des) {
         if (success) {
@@ -204,16 +248,22 @@
     [alertView show];
 }
 
+
+/**
+ 保存用户名密码
+ */
 -(void)saveUserInfo{
     
-    self.userNameTf.text = [self.userNameTf.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-    self.passwordTf.text = [self.passwordTf.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+   NSString *userName = [self.userNameTf.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+   NSString *psw = [MyMd5 md5_lowerStr:[self.passwordTf.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]];
+    NSString *companyID = [self.companyTf.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     
     //    保存用户名
-    [[NSUserDefaults standardUserDefaults] setObject:self.userNameTf.text forKey:VN_USERNAME];
-    
+    [[NSUserDefaults standardUserDefaults] setObject:userName forKey:VN_USERNAME];
     //    保存密码
-    [[NSUserDefaults standardUserDefaults] setObject:self.passwordTf.text forKey:VN_PASSWORD];
+    [[NSUserDefaults standardUserDefaults] setObject:[MyMd5 md5_lowerStr:psw] forKey:VN_PASSWORD];
+    //    保存企业ID
+    [[NSUserDefaults standardUserDefaults] setObject:companyID forKey:VN_COMPANYID];
     
     //    自动登录
     if(self.recordPswBox.checked ==YES){
