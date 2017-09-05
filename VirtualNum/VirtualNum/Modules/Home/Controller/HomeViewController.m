@@ -61,11 +61,11 @@
     
     self.tabBarController.delegate = self;
     
-    //[self judgeAX];
-    [self initCompanyID];
+    [self judgeAX];
+//    [self initCompanyID];
     [self intKeyboard];
-    //[self initAddressBook];
-    // [self initTransID];
+    [self initAddressBook];
+     //[self initTransID];
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -99,17 +99,18 @@
 
 #pragma mark - 初始化CompanyID
 -(void)initCompanyID{
-    __block HomeViewController/*主控制器*/ *weakSelf = self;
-    NSString *companyidStr =[[NSUserDefaults standardUserDefaults] objectForKey:VN_COMPANYID];
-    if (!companyidStr) {
-        [weakSelf popViewShow];
-    }
-    else{
-        NSString *xStr =[[NSUserDefaults standardUserDefaults] objectForKey:VN_X];
-        if (!xStr) {
-            [self judgeAX];
-        }
-    }
+[self judgeAX];
+//    __block HomeViewController/*主控制器*/ *weakSelf = self;
+//    NSString *companyidStr =[[NSUserDefaults standardUserDefaults] objectForKey:VN_COMPANYID];
+//    if (!companyidStr) {
+//        [weakSelf popViewShow];
+//    }
+//    else{
+//        NSString *xStr =[[NSUserDefaults standardUserDefaults] objectForKey:VN_X];
+//        if (!xStr) {
+//            [self judgeAX];
+//        }
+//    }
 }
 
 #pragma mark 初始化拔号键盘
@@ -172,7 +173,7 @@
         self.contactPeopleDict = addressBookDict;
         //联系人分组按拼音分组的Key值
         self.keys = nameKeys;
-        DLog("keys>>>%@",self.keys);
+       // DLog("keys>>>%@",self.keys);
         [self ChangeContact:self.keys ContactDic:self.contactPeopleDict];
         // [SeaResultTable reloadData];
     } authorizationFailure:^{
@@ -301,7 +302,11 @@
 }
 
 -(void)judgeAX{
-    NSString *axStr = [[NSUserDefaults standardUserDefaults] objectForKey:@"AX"];
+//    [[NSUserDefaults standardUserDefaults] setObject:@"2180246994" forKey:VN_X];
+//    [[NSUserDefaults standardUserDefaults] setObject:@"13062501506" forKey:VN_PHONE];
+//    [[NSUserDefaults standardUserDefaults]setObject:@"爱讯达" forKey:VN_COMPANYNAME];
+    
+    NSString *axStr = [[NSUserDefaults standardUserDefaults] objectForKey:VN_X];
     if (axStr) {
         DLog(@"已经绑定号码");
     }else{
@@ -309,6 +314,7 @@
         alertView.tag=1001;
         [alertView show];
     }
+    
 }
 
 #pragma mark 发起呼叫call

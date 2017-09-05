@@ -15,6 +15,7 @@
 
 @property (nonatomic,strong) NSArray * dataArray;
 @property (nonatomic,strong) UITableView *personalTableView;
+@property (nonatomic,strong)UIButton *SiginOutBtn;
 
 @end
 
@@ -41,8 +42,25 @@
         make.right.equalTo(self.view).with.offset(0);
         make.bottom.equalTo(self.view).with.offset(0);
     }];
+    self.personalTableView.tableFooterView = [self CreateFootView];
+    //    [self setExtraCellLineHidden:self.personalTableView];
+}
+
+-(UIView *)CreateFootView{
+    UIView *tablefootView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 70)];
+    //    tablefootView.backgroundColor = [UIColor colorWithRed:247.0/255.0 green:247.0/255.0 blue:247.0/255.0 alpha:1];
+    self.SiginOutBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [self.SiginOutBtn.layer setMasksToBounds:YES];
+    [self.SiginOutBtn.layer setCornerRadius:3.0];//设置矩形四个圆角半径
+    self.SiginOutBtn.frame =CGRectMake(20, 0, [UIScreen mainScreen].bounds.size.width-40, 45);
+    self.SiginOutBtn.backgroundColor =[UIColor colorWithHexString:@"EF271A"];
+    [self.SiginOutBtn setTintColor:[UIColor whiteColor]];
+    self.SiginOutBtn.titleLabel.font = [UIFont systemFontOfSize:18.0];
+    [self.SiginOutBtn setTitle:@"退出" forState:UIControlStateNormal];
+    [self.SiginOutBtn addTarget:self action:@selector(sginOutButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+    [tablefootView addSubview:self.SiginOutBtn];
     
-    [self setExtraCellLineHidden:self.personalTableView];
+    return tablefootView;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -61,7 +79,7 @@
 #pragma mark - Table view data source
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 2;
+    return 3;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -83,6 +101,9 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+    if (section == 2) {
+        return 30;
+    }
     return 30;
 }
 
@@ -205,9 +226,9 @@
                     cell2.detailTextLabel.text = callType;
                 }
                     break;
-
+                    
                 default:
-                     cell2.textLabel.text =[self.dataArray objectAtIndex:indexPath.row];
+                    cell2.textLabel.text =[self.dataArray objectAtIndex:indexPath.row];
                     
                     break;
             }
@@ -266,7 +287,7 @@
                 {
                     ChooseServiceViewController * chooseVc = [[ChooseServiceViewController alloc]init];
                     [self.navigationController pushViewController:chooseVc animated:NO];
-                   
+                    
                 }
                     break;
                 default:
@@ -293,6 +314,11 @@
         if (alertView.tag == 10086)
         {
             [self sendUnBindRequest];
+        }else if (alertView.tag == 122) {
+            if (buttonIndex == 0) {
+                [userManager DelInfo];
+                KPostNotification(KNotificationLoginStateChange, @NO)
+            }
         }
     }
 }
@@ -387,7 +413,7 @@
     NSString *baseUrl = NSStringFormat(@"%@%@",URL_main,URL_TRANSACTION);
     NSDictionary *parameters = @{
                                  @"x": xNumStr,
-                                @"transid": @"110120170726230335339"
+                                 @"transid": @"110120170726230335339"
                                  } ;
     DLog(@"解绑Trans>>>%@",parameters);
     [MBProgressHUD showActivityMessageInView:@"请求中..."];
@@ -406,7 +432,7 @@
             if ([[tempJSON objectForKey:@"data"] isKindOfClass:[NSArray class]])
             {
                 [MBProgressHUD showErrorMessage:@"解除绑定成功"];
-               // [[NSUserDefaults standardUserDefaults]removeObjectForKey:VN_X];
+                // [[NSUserDefaults standardUserDefaults]removeObjectForKey:VN_X];
                 [self.personalTableView reloadData];
             }
             
@@ -445,6 +471,13 @@
         }
         
     }];
+}
+
+- (void)sginOutButtonClicked:(id)sender {
+    UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:@"提示" message:@"退出当前账号？" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:@"取消", nil];
+    alertView.tag = 122;
+    [alertView show];
+    
 }
 
 

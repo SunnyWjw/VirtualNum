@@ -147,6 +147,7 @@ SINGLETON_FOR_CLASS(UserManager);
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:VN_USERNAME];
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:VN_PASSWORD];
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:VN_AUTOLOGIN];
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:VN_OLDTRANS];
     KPostNotification(KNotificationLoginStateChange, @NO);
 }
 

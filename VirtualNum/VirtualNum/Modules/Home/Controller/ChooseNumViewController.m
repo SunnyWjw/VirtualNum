@@ -102,6 +102,7 @@
     [self.tableView.mj_footer endRefreshing];
 }
 
+///获取可选择的X
 -(void)SendRequestWithPage:(int)page{
     NSString *comPanyIDStr = [[NSUserDefaults standardUserDefaults] objectForKey:VN_COMPANYID];
     if (!comPanyIDStr) {
@@ -124,22 +125,21 @@
         KPostNotification(KNotificationLoginStateChange, @NO);
         return;
     }
+    NSString *strPhone = [[NSUserDefaults standardUserDefaults] objectForKey:VN_PHONE];
+    
     NSDictionary *headerDic = @{
                                 @"token":token,
                                 @"version":VN_APIVERSION
                                 };
-    
     NSString *baseUrl = NSStringFormat(@"%@%@",URL_main,URL_phone);
 //        NSDictionary *parameters = @{
 //                                     @"companyid": comPanyIDStr,
 //                                     } ;
     NSDictionary *parameters = @{
                                  @"page": [NSString stringWithFormat:@"%d",page],
-                                 @"pageSize": @"15"
+                                 @"pageSize": @"10",
+                                 @"a":strPhone
                                  } ;
-    
- 
-    
     DLog(@"URL>>>%@ \n parameters>>%@",baseUrl,parameters);
     //    NSDictionary *newParam = [SBAPIurl TextCodeBase64:parameters];
     [MBProgressHUD showActivityMessageInView:@"请求中..."];
@@ -203,8 +203,8 @@
         
     }
     NSDictionary *dic = [self.dataArray objectAtIndex:indexPath.row];
-    cell.TopLab.text=dic[@"companyid"];//dic[@"companyname"];
-    cell.BottomLab.text=[NSString stringWithFormat:@"X: %@,companyid: %@",dic[@"xs"],dic[@"companyid"]]; //dic[@"xs"];
+    cell.TopLab.text = dic[@"xs"];//dic[@"companyname"];
+    cell.BottomLab.text = [NSString stringWithFormat:@"companyname: %@,companyid: %@",dic[@"companyname"],dic[@"companyid"]]; //dic[@"xs"];
     
     return cell;
 }
@@ -268,15 +268,14 @@
     [dictionary setObject:companyInfo[@"companyid"] forKey:@"companyid"];
     [dictionary setObject:companyInfo[@"companyname"] forKey:@"companyname"];
     
-    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
-    [dic setObject:phoneNumStr forKey:@"a"];
-    [dictionary setObject:companyInfo[@"xs"] forKey:@"x"];
-    [dic setObject:companyInfo[@"companyid"] forKey:@"companyid"];
-    [dic setObject:companyInfo[@"companyname"] forKey:@"companyname"];
+//    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+//    [dic setObject:phoneNumStr forKey:@"a"];
+//    [dictionary setObject:companyInfo[@"xs"] forKey:@"x"];
+//    [dic setObject:companyInfo[@"companyid"] forKey:@"companyid"];
+//    [dic setObject:companyInfo[@"companyname"] forKey:@"companyname"];
     
     NSString *token = [[NSUserDefaults standardUserDefaults] objectForKey:VN_TOKEN];
     if (!token) {
-        
         UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:nil message:@"获取信息失败，请重新登录" delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
         [alertView show];
         
@@ -288,14 +287,13 @@
                                 @"token":token,
                                 @"version":VN_APIVERSION
                                 };
-    
-    
     NSString *baseUrl = NSStringFormat(@"%@%@",URL_main,URL_AX);
     NSDictionary *cretateParameters = @{
                                         @"newItem": dictionary,
                                         @"oldItem": @{},
                                         @"type": @"create"
-                                        } ;
+                                        };
+    DLog(@"baseUrl>>>%@",baseUrl);
     DLog(@"parameters>>>%@",cretateParameters);
     [MBProgressHUD showActivityMessageInView:@"请求中..."];
     [[AFNetAPIClient sharedJsonClient].setRequest(baseUrl).RequestType(Put).HTTPHeader(headerDic).Parameters(cretateParameters) startRequestWithSuccess:^(NSURLSessionDataTask *task, id responseObject) {
@@ -328,6 +326,7 @@
     } progress:^(NSProgress *progress) {
         
     } failure:^(NSURLSessionDataTask *task, NSError *error) {
+        DLog(@"error>>>%@",error);
         [MBProgressHUD hideHUD];
         [MBProgressHUD showErrorMessage:@"连接网络超时，请稍后再试"];
     }];

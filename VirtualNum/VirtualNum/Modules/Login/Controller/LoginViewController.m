@@ -36,21 +36,21 @@
     
     kWeakSelf(self);
     
-    YYLabel *skipBtn = [[YYLabel alloc] initWithFrame:CGRectMake(0, 400, 150, 60)];
-    skipBtn.text = @"跳过登录";
-    skipBtn.font = SYSTEMFONT(20);
-    skipBtn.textColor = KBlueColor;
-    skipBtn.backgroundColor = KClearColor;
-    skipBtn.textAlignment = NSTextAlignmentCenter;
-    skipBtn.textVerticalAlignment = YYTextVerticalAlignmentCenter;
-    skipBtn.centerX = KScreenWidth/2;
-    
-    skipBtn.textTapAction = ^(UIView * _Nonnull containerView, NSAttributedString * _Nonnull text, NSRange range, CGRect rect) {
-        //        [MBProgressHUD showTopTipMessage:NSStringFormat(@"%@马上开始",str) isWindow:YES];
-        
-        [weakself skipAction];
-    };
-    [self.view addSubview:skipBtn];
+//    YYLabel *skipBtn = [[YYLabel alloc] initWithFrame:CGRectMake(0, 400, 150, 60)];
+//    skipBtn.text = @"跳过登录";
+//    skipBtn.font = SYSTEMFONT(20);
+//    skipBtn.textColor = KBlueColor;
+//    skipBtn.backgroundColor = KClearColor;
+//    skipBtn.textAlignment = NSTextAlignmentCenter;
+//    skipBtn.textVerticalAlignment = YYTextVerticalAlignmentCenter;
+//    skipBtn.centerX = KScreenWidth/2;
+//    
+//    skipBtn.textTapAction = ^(UIView * _Nonnull containerView, NSAttributedString * _Nonnull text, NSRange range, CGRect rect) {
+//        //        [MBProgressHUD showTopTipMessage:NSStringFormat(@"%@马上开始",str) isWindow:YES];
+//        
+//        [weakself skipAction];
+//    };
+//    [self.view addSubview:skipBtn];
     
     [self createLoginView];
 }

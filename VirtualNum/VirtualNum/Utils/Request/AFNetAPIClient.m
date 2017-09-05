@@ -148,8 +148,8 @@
 //    NSDictionary *headerDic = @{
 //                                @"token":token,
 //                                @"version":VN_APIVERSION
-//                                };t
-//   [manager.requestSerializer setValue:VN_APIVERSION forHTTPHeaderField:@"Api-version"];
+//                                };
+  // [manager.requestSerializer setValue:VN_APIVERSION forHTTPHeaderField:@"Api-version"];
     
     /*
      AFHTTPRequestSerializer:   万能解析器/对服务器返回的数据不做任务处理.

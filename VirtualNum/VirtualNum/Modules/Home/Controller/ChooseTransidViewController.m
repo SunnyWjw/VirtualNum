@@ -63,7 +63,7 @@
 - (void)stopInfinite
 {
     self.curPage = self.curPage+1;
-    int pageCount = ceil(self.totalCount / 15.0);
+    int pageCount = ceil(self.totalCount / 10.0);
     if (self.curPage > pageCount) {
         [self endRefresh];
         [MBProgressHUD showErrorMessage:@"这是最后一页了！"];
@@ -102,12 +102,14 @@
         return;
     }
     
+    NSString *strPhone = [[NSUserDefaults standardUserDefaults] objectForKey:VN_PHONE];
     
-//    NSString *baseUrl = NSStringFormat(@"%@%@",URL_main,URL_AXB);
-//    NSDictionary *parameters = @{
-//                                 @"page": [NSString stringWithFormat:@"%d",page],
-//                                 @"pageSize": [NSString stringWithFormat:@"%d",10 * page],
-//                                 } ;
+    NSString *baseUrl = NSStringFormat(@"%@%@",URL_main,URL_AXB);
+    NSDictionary *parameters = @{
+                                 @"page": [NSString stringWithFormat:@"%d",page],
+                                 @"pageSize": @"10",//[NSString stringWithFormat:@"%d",10 * page],
+                                 @"a":strPhone
+                                 } ;
     NSString *token = [[NSUserDefaults standardUserDefaults] objectForKey:VN_TOKEN];
     if (!token) {
         
@@ -122,19 +124,11 @@
                                 @"token":token,
                                 @"version":VN_APIVERSION
                                 };
-    
-    
-     NSString *strX = [[NSUserDefaults standardUserDefaults] objectForKey:VN_X];
-     NSString *baseUrl = NSStringFormat(@"%@%@",URL_main,URL_TRANSACTION);
-     NSDictionary *parameters = @{
-     @"x":@"2180246995"
-     } ;
-    
-    
+
     DLog(@" 获取AXB.... URL>>>%@ \n parameters>>%@",baseUrl,parameters);
     //    NSDictionary *newParam = [SBAPIurl TextCodeBase64:parameters];
     [MBProgressHUD showActivityMessageInView:@"请求中..."];
-    [[AFNetAPIClient sharedJsonClient].setRequest(baseUrl).RequestType(Get).HTTPHeader(headerDic).Parameters(parameters) startRequestWithSuccess:^(NSURLSessionDataTask *task, id responseObject) {
+    [[AFNetAPIClient sharedJsonClient].setRequest(baseUrl).RequestType(Post).HTTPHeader(headerDic).Parameters(parameters) startRequestWithSuccess:^(NSURLSessionDataTask *task, id responseObject) {
         [MBProgressHUD hideHUD];
         
         [self endRefresh];
@@ -195,7 +189,7 @@
     }
     NSDictionary *dic = [self.dataArray objectAtIndex:indexPath.row];
     cell.TopLab.text = [NSString stringWithFormat:@"B: %@,   MODE: %@",dic[@"b"],dic[@"mode"]];
-    cell.BottomLab.text = [NSString stringWithFormat:@"X: %@,   Trans: %@",dic[@"x"],dic[@"trans"]];
+    cell.BottomLab.text = [NSString stringWithFormat:@"X: %@,   Trans: %@",dic[@"x"],dic[@"t"]];
     
     return cell;
 }
@@ -205,7 +199,7 @@
     [tableView deselectRowAtIndexPath:indexPath animated:NO];
     NSDictionary * dic = [self.dataArray objectAtIndex:indexPath.row];
     NSString *mode =dic[@"mode"];
-    NSString *trans =dic[@"trans"];
+    NSString *trans =dic[@"t"];
     
     if (mode.length == 0 || ![mode isEqualToString:@"dual"]) {
         [MBProgressHUD showErrorMessage:@"请选择MODE为dual的数据！"];
@@ -215,12 +209,10 @@
         [MBProgressHUD showErrorMessage:@"请选择trans不为空的数据！"];
         return;
     }
-    DLog(@"trans>>%@",dic[@"trans"]);
-    
-    // [self sendDualCallWithOldDic:dic];
+     //[self sendDualCallWithOldDic:dic];
     
     CallPhone *callphone = [[CallPhone alloc] init];
-    [callphone sendCallRequestToActivationTran:dic[@"trans"]];
+    [callphone sendCallRequestToActivationTran:trans];
 }
 
 
@@ -234,10 +226,10 @@
     [dictionary setValue:oldDic[@"a"] forKey:@"a"];
     [dictionary setValue:oldDic[@"x"] forKey:@"x"];
     [dictionary setValue:oldDic[@"b"] forKey:@"b"];
-    [dictionary setValue:[NSString stringWithFormat:@"%@",randomNum] forKey:@"trans"];
+    [dictionary setValue:[NSString stringWithFormat:@"%@",randomNum] forKey:@"t"];
     [dictionary setValue:oldDic[@"mode"] forKey:@"mode"];
-    [dictionary setValue:oldDic[@"companyid"] forKey:@"companyid"];
-    [dictionary setValue:oldDic[@"companyname"] forKey:@"companyname"];
+//    [dictionary setValue:oldDic[@"companyid"] forKey:@"companyid"];
+//    [dictionary setValue:oldDic[@"companyname"] forKey:@"companyname"];
     
     
     NSString *token = [[NSUserDefaults standardUserDefaults] objectForKey:VN_TOKEN];
