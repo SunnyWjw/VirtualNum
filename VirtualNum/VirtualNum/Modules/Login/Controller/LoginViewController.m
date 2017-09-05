@@ -52,7 +52,13 @@
 //    };
 //    [self.view addSubview:skipBtn];
     
-    [self createLoginView];
+//    if ([[[NSUserDefaults standardUserDefaults] objectForKey:VN_AUTOLOGIN] isEqualToString:@"1"]) {
+//        [userManager autoLoginToServer:^(BOOL success, NSString *des) {
+//            KPostNotification(KNotificationLoginStateChange, @YES);
+//        }];
+//    }else{
+        [self createLoginView];
+//    }
 }
 
 - (void)createLoginView
@@ -157,19 +163,19 @@
     }];
     
     
-    //记住密码
-    self.recordPswBox = [[QCheckBox alloc]initWithDelegate:self];
-    self.recordPswBox.frame = CGRectMake(userImgView.frame.origin.x, (companyImgView.frame.origin.y+55), 100, 20);
-    [self.recordPswBox setTitle:@"自动登录" forState:UIControlStateNormal];
-    self.recordPswBox.tag = 1001;
-    [self.recordPswBox setTitleColor:[UIColor colorWithHexString:@"#919191"] forState:UIControlStateNormal];
-    [self.view addSubview:self.recordPswBox];
-    
-    [self.recordPswBox mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(companyImgView.mas_bottom).with.offset(ImgLandR);
-        make.left.equalTo(self.view).with.offset(ImgLandR);
-        make.size.mas_equalTo(CGSizeMake(100, 32));
-    }];
+//    //记住密码
+//    self.recordPswBox = [[QCheckBox alloc]initWithDelegate:self];
+//    self.recordPswBox.frame = CGRectMake(userImgView.frame.origin.x, (companyImgView.frame.origin.y+55), 100, 20);
+//    [self.recordPswBox setTitle:@"自动登录" forState:UIControlStateNormal];
+//    self.recordPswBox.tag = 1001;
+//    [self.recordPswBox setTitleColor:[UIColor colorWithHexString:@"#919191"] forState:UIControlStateNormal];
+//    [self.view addSubview:self.recordPswBox];
+//    
+//    [self.recordPswBox mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.top.equalTo(companyImgView.mas_bottom).with.offset(ImgLandR);
+//        make.left.equalTo(self.view).with.offset(ImgLandR);
+//        make.size.mas_equalTo(CGSizeMake(100, 32));
+//    }];
     
     //loginBtn
     UIButton *loginBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
@@ -182,7 +188,7 @@
     loginBtn.layer.cornerRadius = 3.0;
     [self.view addSubview:loginBtn];
     [loginBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.recordPswBox.mas_bottom).with.offset(ImgLandR);
+        make.top.equalTo(companyImgView.mas_bottom).with.offset(ImgLandR);
         make.left.equalTo(self.view).with.offset(ImgLandR);
         make.right.equalTo(self.view).with.offset(-ImgLandR);
         make.height.mas_equalTo(Width);
