@@ -171,7 +171,7 @@
 //            [self.tableView reloadData];
             [MBProgressHUD showErrorMessage:@"请求成功"];
             
-        }else{Ω
+        }else{
             [MBProgressHUD showErrorMessage:tempJSON[@"message"]];
         }
     } progress:^(NSProgress *progress) {
