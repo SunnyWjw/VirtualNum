@@ -26,7 +26,7 @@
     // Do any additional setup after loading the view.
     self.title=@"设置";
   //[self createView];
-    [self CreateExit];
+   // [self CreateExit];
 }
 
 -(void) CreateExit{
