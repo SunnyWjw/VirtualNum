@@ -78,7 +78,7 @@
                     if ([model isEqualToString:@"dual"]) {
                         
                         ChooseTransidViewController *ctVC = [[ChooseTransidViewController alloc] init];
-                        [viewController.navigationController pushViewController:ctVC animated:YES];
+                        [viewController.navigationController pushViewController:ctVC animated:NO];
                          /*
                          [callphone sendCallRequestToActivationTran];
                           */

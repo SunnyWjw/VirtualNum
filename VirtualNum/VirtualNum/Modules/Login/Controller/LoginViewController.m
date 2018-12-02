@@ -35,30 +35,26 @@
     self.title = @"登录";
     
     kWeakSelf(self);
+	
+	/*
+    YYLabel *skipBtn = [[YYLabel alloc] initWithFrame:CGRectMake(0, 400, 150, 60)];
+    skipBtn.text = @"跳过登录";
+    skipBtn.font = SYSTEMFONT(20);
+    skipBtn.textColor = KBlueColor;
+    skipBtn.backgroundColor = KClearColor;
+    skipBtn.textAlignment = NSTextAlignmentCenter;
+    skipBtn.textVerticalAlignment = YYTextVerticalAlignmentCenter;
+    skipBtn.centerX = KScreenWidth/2;
     
-//    YYLabel *skipBtn = [[YYLabel alloc] initWithFrame:CGRectMake(0, 400, 150, 60)];
-//    skipBtn.text = @"跳过登录";
-//    skipBtn.font = SYSTEMFONT(20);
-//    skipBtn.textColor = KBlueColor;
-//    skipBtn.backgroundColor = KClearColor;
-//    skipBtn.textAlignment = NSTextAlignmentCenter;
-//    skipBtn.textVerticalAlignment = YYTextVerticalAlignmentCenter;
-//    skipBtn.centerX = KScreenWidth/2;
-//    
-//    skipBtn.textTapAction = ^(UIView * _Nonnull containerView, NSAttributedString * _Nonnull text, NSRange range, CGRect rect) {
-//        //        [MBProgressHUD showTopTipMessage:NSStringFormat(@"%@马上开始",str) isWindow:YES];
-//        
-//        [weakself skipAction];
-//    };
-//    [self.view addSubview:skipBtn];
+    skipBtn.textTapAction = ^(UIView * _Nonnull containerView, NSAttributedString * _Nonnull text, NSRange range, CGRect rect) {
+        //        [MBProgressHUD showTopTipMessage:NSStringFormat(@"%@马上开始",str) isWindow:YES];
+        
+        [weakself skipAction];
+    };
+    [self.view addSubview:skipBtn];
+	 */
     
-//    if ([[[NSUserDefaults standardUserDefaults] objectForKey:VN_AUTOLOGIN] isEqualToString:@"1"]) {
-//        [userManager autoLoginToServer:^(BOOL success, NSString *des) {
-//            KPostNotification(KNotificationLoginStateChange, @YES);
-//        }];
-//    }else{
-        [self createLoginView];
-//    }
+    [self createLoginView];
 }
 
 - (void)createLoginView
@@ -69,7 +65,7 @@
     [userImgView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.view).with.offset(ImgLandR);
         make.right.equalTo(self.view).with.offset(-ImgLandR);
-        make.top.equalTo(self.view).with.offset(ImgTop);
+        make.top.equalTo(self.view).with.offset(kTopHeight+20);
         make.height.mas_equalTo(Width);
     }];
     userImgView.image = [UIImage imageNamed:@"username0"];
@@ -87,6 +83,7 @@
     self.userNameTf.tag = 500;
     self.userNameTf.delegate = self;
     self.userNameTf.font = [UIFont systemFontOfSize:16.0];
+	self.userNameTf.text = @"admin";
     
     [self.userNameTf mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(userImgView).with.offset(Width);
@@ -119,6 +116,7 @@
     // 密码格式
     self.passwordTf.secureTextEntry = YES;
     self.passwordTf.delegate = self;
+	self.passwordTf.text = @"888888";
     [pswImgView addSubview:self.passwordTf];
     
     [self.passwordTf mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -153,6 +151,7 @@
     // 密码格式
     self.companyTf.secureTextEntry = YES;
     self.companyTf.delegate = self;
+	self.companyTf.text = @"1101";
     [companyImgView addSubview:self.companyTf];
     
     [self.companyTf mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -163,19 +162,19 @@
     }];
     
     
-//    //记住密码
-//    self.recordPswBox = [[QCheckBox alloc]initWithDelegate:self];
-//    self.recordPswBox.frame = CGRectMake(userImgView.frame.origin.x, (companyImgView.frame.origin.y+55), 100, 20);
-//    [self.recordPswBox setTitle:@"自动登录" forState:UIControlStateNormal];
-//    self.recordPswBox.tag = 1001;
-//    [self.recordPswBox setTitleColor:[UIColor colorWithHexString:@"#919191"] forState:UIControlStateNormal];
-//    [self.view addSubview:self.recordPswBox];
-//    
-//    [self.recordPswBox mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.top.equalTo(companyImgView.mas_bottom).with.offset(ImgLandR);
-//        make.left.equalTo(self.view).with.offset(ImgLandR);
-//        make.size.mas_equalTo(CGSizeMake(100, 32));
-//    }];
+    //记住密码
+    self.recordPswBox = [[QCheckBox alloc]initWithDelegate:self];
+    self.recordPswBox.frame = CGRectMake(userImgView.frame.origin.x, (companyImgView.frame.origin.y+55), 100, 20);
+    [self.recordPswBox setTitle:@"自动登录" forState:UIControlStateNormal];
+    self.recordPswBox.tag = 1001;
+    [self.recordPswBox setTitleColor:[UIColor colorWithHexString:@"#919191"] forState:UIControlStateNormal];
+    [self.view addSubview:self.recordPswBox];
+    
+    [self.recordPswBox mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(companyImgView.mas_bottom).with.offset(ImgLandR);
+        make.left.equalTo(self.view).with.offset(ImgLandR);
+        make.size.mas_equalTo(CGSizeMake(100, 32));
+    }];
     
     //loginBtn
     UIButton *loginBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
@@ -188,7 +187,7 @@
     loginBtn.layer.cornerRadius = 3.0;
     [self.view addSubview:loginBtn];
     [loginBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(companyImgView.mas_bottom).with.offset(ImgLandR);
+        make.top.equalTo(self.recordPswBox.mas_bottom).with.offset(ImgLandR);
         make.left.equalTo(self.view).with.offset(ImgLandR);
         make.right.equalTo(self.view).with.offset(-ImgLandR);
         make.height.mas_equalTo(Width);
@@ -240,6 +239,7 @@
         if (success) {
             DLog(@"登录成功");
             [self saveUserInfo];
+            KPostNotification(KNotificationLoginStateChange, @YES);
         }else{
             DLog(@"登录失败：%@", des);
             [self showErrorLog:des];
@@ -267,7 +267,7 @@
     //    保存用户名
     [[NSUserDefaults standardUserDefaults] setObject:userName forKey:VN_USERNAME];
     //    保存密码
-    [[NSUserDefaults standardUserDefaults] setObject:[MyMd5 md5_lowerStr:psw] forKey:VN_PASSWORD];
+    [[NSUserDefaults standardUserDefaults] setObject:psw forKey:VN_PASSWORD];
     //    保存企业ID
     [[NSUserDefaults standardUserDefaults] setObject:companyID forKey:VN_COMPANYID];
     

@@ -21,7 +21,14 @@ const NSInteger hideTime = 2;
         [hud showAnimated:YES];
     }
     hud.minSize = CGSizeMake(100, 100);
-    hud.label.text=message?message:@"加载中...";
+	if ([message isKindOfClass:[NSArray class]]) {
+		hud.label.text= @"加载中...";//@"加载中...";//
+	}else if ( [message isKindOfClass:[NSMutableArray class]]) {
+		hud.label.text= @"加载中...";//@"加载中...";//
+	}else{
+		hud.label.text= message.length > 0 ? message : @"加载中...";//@"加载中...";//
+	}
+	
     hud.label.font=[UIFont systemFontOfSize:15];
     hud.label.textColor= KWhiteColor;
     hud.label.numberOfLines = 0;

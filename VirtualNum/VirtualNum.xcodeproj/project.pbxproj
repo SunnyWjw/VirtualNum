@@ -73,6 +73,9 @@
 		8AE211721F0E841F004E52C3 /* GTMBase64.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AE211701F0E841F004E52C3 /* GTMBase64.m */; };
 		8AE211751F0E9BBF004E52C3 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 8AE211771F0E9BBF004E52C3 /* InfoPlist.strings */; };
 		8AE2117B1F0E9C71004E52C3 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 8AE2117D1F0E9C71004E52C3 /* Localizable.strings */; };
+		8AED0A1621A78B6900B104C0 /* SWNumericKeyboard.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AED0A1521A78B6800B104C0 /* SWNumericKeyboard.m */; };
+		8AED0A1921A7936300B104C0 /* NSString+Handle.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AED0A1721A7936200B104C0 /* NSString+Handle.m */; };
+		8AF9BF86200206F60062C925 /* NSArray+MyLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AF9BF85200206F60062C925 /* NSArray+MyLog.m */; };
 		8AFF50211F12661400A0A0BC /* CallLogDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AFF50201F12661400A0A0BC /* CallLogDetailViewController.m */; };
 		8AFF50261F126CCA00A0A0BC /* CalllogDetailCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AFF50241F126CCA00A0A0BC /* CalllogDetailCell.m */; };
 		8AFF50271F126CCA00A0A0BC /* CalllogDetailCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8AFF50251F126CCA00A0A0BC /* CalllogDetailCell.xib */; };
@@ -223,6 +226,12 @@
 		8AE211781F0E9BEC004E52C3 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		8AE2117C1F0E9C71004E52C3 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		8AE2117E1F0E9C87004E52C3 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		8AED0A1421A78B6800B104C0 /* SWNumericKeyboard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWNumericKeyboard.h; sourceTree = "<group>"; };
+		8AED0A1521A78B6800B104C0 /* SWNumericKeyboard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWNumericKeyboard.m; sourceTree = "<group>"; };
+		8AED0A1721A7936200B104C0 /* NSString+Handle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Handle.m"; sourceTree = "<group>"; };
+		8AED0A1821A7936200B104C0 /* NSString+Handle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Handle.h"; sourceTree = "<group>"; };
+		8AF9BF84200206F60062C925 /* NSArray+MyLog.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSArray+MyLog.h"; sourceTree = "<group>"; };
+		8AF9BF85200206F60062C925 /* NSArray+MyLog.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSArray+MyLog.m"; sourceTree = "<group>"; };
 		8AFF501F1F12661400A0A0BC /* CallLogDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CallLogDetailViewController.h; sourceTree = "<group>"; };
 		8AFF50201F12661400A0A0BC /* CallLogDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CallLogDetailViewController.m; sourceTree = "<group>"; };
 		8AFF50231F126CCA00A0A0BC /* CalllogDetailCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CalllogDetailCell.h; sourceTree = "<group>"; };
@@ -258,6 +267,8 @@
 		8A12FD4F1F0FD53500BFF962 /* NumericKeyboard */ = {
 			isa = PBXGroup;
 			children = (
+				8AED0A1421A78B6800B104C0 /* SWNumericKeyboard.h */,
+				8AED0A1521A78B6800B104C0 /* SWNumericKeyboard.m */,
 				8A12FD501F0FD53500BFF962 /* AFFNumericKeyboard.h */,
 				8A12FD511F0FD53500BFF962 /* AFFNumericKeyboard.m */,
 				8A12FD521F0FD53500BFF962 /* AFFNumericKeyboardDtmf.h */,
@@ -654,6 +665,8 @@
 				8A48DB011F25024D00118CA6 /* UIImage+CutCircleImage.m */,
 				8A48DB021F25024D00118CA6 /* UIImage+EditImage.h */,
 				8A48DB031F25024D00118CA6 /* UIImage+EditImage.m */,
+				8AF9BF84200206F60062C925 /* NSArray+MyLog.h */,
+				8AF9BF85200206F60062C925 /* NSArray+MyLog.m */,
 			);
 			path = CategoryAndClass;
 			sourceTree = "<group>";
@@ -717,6 +730,8 @@
 		8AB7BFFF1F015DDB0027EBFB /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				8AED0A1821A7936200B104C0 /* NSString+Handle.h */,
+				8AED0A1721A7936200B104C0 /* NSString+Handle.m */,
 				8A48DAE71F25024D00118CA6 /* CategoryAndClass */,
 				8AE2116E1F0E841F004E52C3 /* GTMBase64 */,
 				8AB7C00C1F015E440027EBFB /* ShowPopView */,
@@ -826,7 +841,7 @@
 					8A86AE0A1EFD5DDF00C8533F = {
 						CreatedOnToolsVersion = 8.3.3;
 						DevelopmentTeam = M8GQEVATHK;
-						ProvisioningStyle = Automatic;
+						ProvisioningStyle = Manual;
 					};
 				};
 			};
@@ -920,6 +935,7 @@
 			files = (
 				8A7B946C1F261C970063728C /* ContactDetailViewController.m in Sources */,
 				8AFF502B1F126D1900A0A0BC /* ContactCell.m in Sources */,
+				8AED0A1921A7936300B104C0 /* NSString+Handle.m in Sources */,
 				8A408C4D1EFE891400C9081F /* AppDelegate+PushService.m in Sources */,
 				8AE211721F0E841F004E52C3 /* GTMBase64.m in Sources */,
 				8AC740D81F091FAD008F1E0C /* CallLog.m in Sources */,
@@ -938,6 +954,7 @@
 				8A48DB0C1F25024D00118CA6 /* UIButton+FillColor.m in Sources */,
 				8A51D43B1F09E12B009F6B2E /* CalllogCell.m in Sources */,
 				8A12FD541F0FD53500BFF962 /* AFFNumericKeyboard.m in Sources */,
+				8AED0A1621A78B6900B104C0 /* SWNumericKeyboard.m in Sources */,
 				8A83F3651EFFD01200F1BB84 /* UserManager.m in Sources */,
 				8A48DB051F25024D00118CA6 /* Common.m in Sources */,
 				8A408C2B1EFE867500C9081F /* RootViewController.m in Sources */,
@@ -965,6 +982,7 @@
 				8A408C171EFE855F00C9081F /* TabBarItem.m in Sources */,
 				8AC740CD1F08F23C008F1E0C /* CallSettingsCell.m in Sources */,
 				8A48DB0E1F25024D00118CA6 /* UIColor+MyColor.m in Sources */,
+				8AF9BF86200206F60062C925 /* NSArray+MyLog.m in Sources */,
 				8A48DB101F25024D00118CA6 /* UIImage+CutCircleImage.m in Sources */,
 				8A408C4C1EFE891400C9081F /* AppDelegate+AppService.m in Sources */,
 				8AC740DC1F092229008F1E0C /* DataBase.m in Sources */,
@@ -1107,8 +1125,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = "";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = M8GQEVATHK;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/VirtualNum/Supporting Flies/PrefixHeader.pch";
 				INFOPLIST_FILE = VirtualNum/Info.plist;
@@ -1117,7 +1137,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.axd.VirtualNum;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE_SPECIFIER = "VirtualNum-test";
 				USER_HEADER_SEARCH_PATHS = "${SRCROOT} /**";
 			};
 			name = Debug;
@@ -1128,8 +1148,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = "";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = M8GQEVATHK;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/VirtualNum/Supporting Flies/PrefixHeader.pch";
 				INFOPLIST_FILE = VirtualNum/Info.plist;
@@ -1138,7 +1160,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.axd.VirtualNum;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE_SPECIFIER = VirtualNum;
 				USER_HEADER_SEARCH_PATHS = "${SRCROOT} /**";
 			};
 			name = Release;

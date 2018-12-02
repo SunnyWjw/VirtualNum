@@ -39,7 +39,7 @@
     // 设置导航控制器的代理为self
     //self.navigationController.delegate = self;
     //    self.navigationController.navigationBar.hidden = YES;
-    self.dataArray = [[NSMutableArray alloc]initWithCapacity:0];
+    self.dataArray = [[NSMutableArray alloc]init];
     
     self.curPage = 1;
     [self creadTableView];
@@ -69,7 +69,8 @@
     self.tableView.mj_footer = [MJRefreshAutoNormalFooter footerWithRefreshingBlock:^{
         //Call this Block When enter the refresh status automatically
         [weakSelf stopInfinite];
-    }];}
+    }];
+}
 
 #pragma mark -
 #pragma mark 上拉加载
@@ -142,7 +143,7 @@
                                  } ;
     DLog(@"URL>>>%@ \n parameters>>%@",baseUrl,parameters);
     //    NSDictionary *newParam = [SBAPIurl TextCodeBase64:parameters];
-    [MBProgressHUD showActivityMessageInView:@"请求中..."];
+    [MBProgressHUD showActivityMessageInView:@""];
     [[AFNetAPIClient sharedJsonClient].setRequest(baseUrl).RequestType(Post).HTTPHeader(headerDic).Parameters(parameters) startRequestWithSuccess:^(NSURLSessionDataTask *task, id responseObject) {
         [MBProgressHUD hideHUD];
         
@@ -213,13 +214,17 @@
 {
     [tableView deselectRowAtIndexPath:indexPath animated:NO];
     _dictionary = [self.dataArray objectAtIndex:indexPath.row];
-    NSString * xNumStr = [[NSUserDefaults standardUserDefaults] objectForKey:VN_X];
-    if (!xNumStr) {
-        [self showPopView:_dictionary];
-    }else{
-        [MBProgressHUD showErrorMessage:@"已绑定号码，不可修改"];
-        return;
-    }
+    NSString *msgStr =[NSString stringWithFormat:@"您确定绑定 ‘%@’ 号码",_dictionary[@"xs"]];
+     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:msgStr delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定",nil, nil];
+    alert.tag = 10009;
+    [alert show];
+    //NSString * xNumStr = [[NSUserDefaults standardUserDefaults] objectForKey:VN_X];
+//    if (!xNumStr) {
+//        [self showPopView:_dictionary];
+//    }else{
+//        [MBProgressHUD showErrorMessage:@"已绑定号码，不可修改"];
+//        return;
+//    }
 }
 
 -(void)showPopView:(NSDictionary *)dic{
@@ -234,7 +239,20 @@
 }
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
-    
+    if (alertView.tag == 10009) {
+        if (buttonIndex == 1) {
+            [self sendBingRequest:[[NSUserDefaults standardUserDefaults]objectForKey:VN_PHONE] OtherDic:self.dictionary];
+			return;
+        }
+    }
+	if (alertView.tag == 122)
+	{
+		if (buttonIndex == 0) {
+			[self.navigationController popViewControllerAnimated:NO];
+			return;
+		}
+	}
+	
     if (buttonIndex == alertView.firstOtherButtonIndex) {
         UITextField *phoneField = [alertView textFieldAtIndex:0];
         //TODO
@@ -249,13 +267,13 @@
             return;
         }
         [self sendBingRequest:phoneField.text OtherDic:self.dictionary];
+		return;
     }
 }
 
 
 /**
  绑定AX
- 
  @param phoneNumStr 需要绑定的手机号码
  @param companyInfo 企业相关信息
  */
@@ -267,13 +285,7 @@
     //[dictionary setObject:@"80246994" forKey:@"x"];
     [dictionary setObject:companyInfo[@"companyid"] forKey:@"companyid"];
     [dictionary setObject:companyInfo[@"companyname"] forKey:@"companyname"];
-    
-//    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
-//    [dic setObject:phoneNumStr forKey:@"a"];
-//    [dictionary setObject:companyInfo[@"xs"] forKey:@"x"];
-//    [dic setObject:companyInfo[@"companyid"] forKey:@"companyid"];
-//    [dic setObject:companyInfo[@"companyname"] forKey:@"companyname"];
-    
+
     NSString *token = [[NSUserDefaults standardUserDefaults] objectForKey:VN_TOKEN];
     if (!token) {
         UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:nil message:@"获取信息失败，请重新登录" delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
@@ -310,14 +322,15 @@
         if ([successstr isEqualToString:@"1"]) {
             if ([[tempJSON objectForKey:@"data"] isKindOfClass:[NSArray class]])
             {
-                [MBProgressHUD showErrorMessage:@"绑定成功"];
+//                [MBProgressHUD showErrorMessage:@"绑定成功"];
                 //                [[NSUserDefaults standardUserDefaults] setObject:@"80246994" forKey:VN_X];
                 [[NSUserDefaults standardUserDefaults] setObject:companyInfo[@"xs"] forKey:VN_X];
                 
                 [[NSUserDefaults standardUserDefaults] setObject:phoneNumStr forKey:VN_PHONE];
                 [[NSUserDefaults standardUserDefaults]setObject:companyInfo[@"companyname"] forKey:VN_COMPANYNAME];
                 
-                [self.navigationController popViewControllerAnimated:YES];
+//                [self.navigationController popViewControllerAnimated:NO];
+				[self showAlertForTitle:@"绑定成功" Message:@""];
             }
             
         }else{
@@ -332,6 +345,12 @@
     }];
 }
 
+
+-(void)showAlertForTitle:(NSString *)title Message:(NSString *)Msgstr{
+	UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:title message:Msgstr delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+	alertView.tag = 122;
+	[alertView show];
+}
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

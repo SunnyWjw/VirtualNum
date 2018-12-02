@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12121" systemVersion="16G29" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
-        <capability name="Alignment constraints to the first baseline" minToolsVersion="6.0"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -17,11 +15,11 @@
             <rect key="frame" x="0.0" y="0.0" width="320" height="70"/>
             <autoresizingMask key="autoresizingMask"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="sbC-HA-IAX" id="25l-Ru-dir">
-                <rect key="frame" x="0.0" y="0.0" width="320" height="70"/>
+                <rect key="frame" x="0.0" y="0.0" width="320" height="69.5"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="3000分钟" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="8" translatesAutoresizingMaskIntoConstraints="NO" id="qsr-Pm-vsi">
-                        <rect key="frame" x="236" y="8" width="76" height="25"/>
+                        <rect key="frame" x="228" y="11" width="76" height="19.5"/>
                         <constraints>
                             <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="40" id="Vq3-4R-CPL"/>
                         </constraints>
@@ -30,22 +28,22 @@
                         <nil key="highlightedColor"/>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" text="呼出 2015-04-02 04:12:59" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="8" translatesAutoresizingMaskIntoConstraints="NO" id="far-20-h6A">
-                        <rect key="frame" x="8" y="8" width="153" height="25"/>
+                        <rect key="frame" x="16" y="11" width="137" height="19.5"/>
                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                         <color key="textColor" red="0.43529411764705883" green="0.44313725490196076" blue="0.47450980392156861" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1101020170721192113" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="8" translatesAutoresizingMaskIntoConstraints="NO" id="6uJ-1K-FaC">
-                        <rect key="frame" x="151" y="40" width="161" height="25"/>
+                        <rect key="frame" x="159" y="37.5" width="145" height="25"/>
                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                         <color key="textColor" red="0.43529411759999997" green="0.4431372549" blue="0.47450980390000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="租车模式" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="8" translatesAutoresizingMaskIntoConstraints="NO" id="tBh-vd-vqX">
-                        <rect key="frame" x="8" y="40" width="78" height="25"/>
+                        <rect key="frame" x="16" y="38" width="118" height="25"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="25" id="5CN-7F-rJW"/>
-                            <constraint firstAttribute="width" constant="78" id="xwL-OH-CZm"/>
+                            <constraint firstAttribute="width" constant="118" id="xwL-OH-CZm"/>
                         </constraints>
                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
                         <color key="textColor" red="0.43529411759999997" green="0.4431372549" blue="0.47450980390000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -58,7 +56,7 @@
                     <constraint firstItem="tBh-vd-vqX" firstAttribute="top" secondItem="far-20-h6A" secondAttribute="bottom" constant="7" id="KKs-Cb-u8x"/>
                     <constraint firstItem="far-20-h6A" firstAttribute="baseline" secondItem="qsr-Pm-vsi" secondAttribute="baseline" id="POF-en-FpI"/>
                     <constraint firstItem="far-20-h6A" firstAttribute="leading" secondItem="tBh-vd-vqX" secondAttribute="leading" id="So1-SA-rSG"/>
-                    <constraint firstItem="6uJ-1K-FaC" firstAttribute="leading" secondItem="tBh-vd-vqX" secondAttribute="trailing" constant="65" id="Wk2-8C-f5D"/>
+                    <constraint firstItem="6uJ-1K-FaC" firstAttribute="leading" secondItem="tBh-vd-vqX" secondAttribute="trailing" constant="25" id="Wk2-8C-f5D"/>
                     <constraint firstItem="qsr-Pm-vsi" firstAttribute="leading" secondItem="far-20-h6A" secondAttribute="trailing" constant="75" id="ZFR-bS-9t8"/>
                     <constraint firstItem="far-20-h6A" firstAttribute="firstBaseline" secondItem="qsr-Pm-vsi" secondAttribute="firstBaseline" id="bsB-zR-mMb"/>
                     <constraint firstAttribute="bottomMargin" secondItem="tBh-vd-vqX" secondAttribute="bottom" constant="-3.5" id="ccw-Zr-7nF"/>
@@ -76,7 +74,7 @@
                 <outlet property="rightBottomLabel" destination="6uJ-1K-FaC" id="Zmh-2b-Vxd"/>
                 <outlet property="rightTopLabel" destination="qsr-Pm-vsi" id="s72-wj-lb4"/>
             </connections>
-            <point key="canvasLocation" x="79" y="154"/>
+            <point key="canvasLocation" x="78.400000000000006" y="153.82308845577214"/>
         </tableViewCell>
     </objects>
 </document>

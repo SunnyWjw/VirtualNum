@@ -64,9 +64,9 @@ PropertyNSMutableArray(VCS);//tabbar root VC
     MineViewController *mineVC = [[MineViewController alloc]init];
     [self setupChildViewController:mineVC title:@"个人中心" imageName:@"center" seleceImageName:@"center_sel"];
     
-    SettingViewController *setvc = [[SettingViewController alloc]init];
-    [self setupChildViewController:setvc title:@"设置" imageName:@"setting" seleceImageName:@"setting_sel"];
-    
+//    SettingViewController *setvc = [[SettingViewController alloc]init];
+//    [self setupChildViewController:setvc title:@"设置" imageName:@"setting" seleceImageName:@"setting_sel"];
+	
      self.viewControllers = _VCS;
 }
 

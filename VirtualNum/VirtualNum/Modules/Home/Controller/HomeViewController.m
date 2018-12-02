@@ -18,19 +18,21 @@
 #import "CallPhone.h"
 #import "CallLogDetailViewController.h"
 #import "ChooseTransidViewController.h"
+#import "BindPhoneViewController.h"
+#import "SWNumericKeyboard.h"
 
 
-@interface HomeViewController ()<UIAlertViewDelegate,UITextFieldDelegate,UITableViewDelegate,UITableViewDataSource,UITabBarControllerDelegate,AFFNumericKeyboardDelegate>{
-    UILabel *inputNumber;
+@interface HomeViewController ()<UIAlertViewDelegate,UITextFieldDelegate,UITableViewDelegate,UITableViewDataSource,UITabBarControllerDelegate,SYNumericKeyboardDelegate>{
     UIButton *callButton;
     UIButton *deleteButton;
     UIButton *downButton;
     BOOL isKeyBoard;
-    UITableView *SeaResultTable;  //输入数字后出现的搜索tableview
+//    UITableView *SeaResultTable;  //输入数字后出现的搜索tableview
     NSMutableArray *searchResults;
     NSMutableDictionary *contactMutableDic;//联系人字典
 }
-
+@property (nonatomic, strong) SWNumericKeyboard *keyboard;
+@property (nonatomic, strong) UILabel *inputNumber;
 @property (strong, nonatomic) UITableView *tableView;
 @property (strong, nonatomic) UIView *contentView;
 @property (strong, nonatomic) UIButton *popBtn;
@@ -48,6 +50,8 @@
 
 @end
 
+#define SWNumericKeyboardHEIGHT 270
+
 @implementation HomeViewController
 
 @synthesize keyboard;
@@ -56,22 +60,33 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    self.title=@"呼叫记录";
-    [self creadTableView];
-    
+    self.title=@"通话记录";
     self.tabBarController.delegate = self;
     
-    [self judgeAX];
-//    [self initCompanyID];
-    [self intKeyboard];
-    [self initAddressBook];
-     //[self initTransID];
+    //自动登录
+    [userManager autoLoginToServer:^(BOOL success, NSString *des) {
+        if (success) {
+            [self creadTableView];
+            NSString *phoneStr = [[NSUserDefaults standardUserDefaults] objectForKey:VN_PHONE];
+            if (phoneStr) {
+                [self judgeAX];
+            }
+            [self intKeyboard];
+            [self initAddressBook];
+        }else{
+            [MBProgressHUD showErrorMessage:NSStringFormat(@"自动登录失败：%@",des)];
+            KPostNotification(KNotificationLoginStateChange, @NO)
+            return ;
+        }
+    }];
 }
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
-    
-    self.dataArray = [[DataBase sharedDataBase] getAllCallLog];
+    [self BindPhone];
+	if (self.dataArray.count == 0) {
+		  self.dataArray = [[DataBase sharedDataBase] getAllCallLog];
+	}
 }
 
 -(void)viewDidAppear:(BOOL)animated{
@@ -82,10 +97,9 @@
     [super viewWillDisappear:animated];
     NSString *callSettingsType = [[NSUserDefaults standardUserDefaults] objectForKey:VN_SERVICE];
     if ([callSettingsType isEqualToString: @"0"]) {
-        inputNumber.text = @"";
-        inputNumber.text = nil;
+        self.inputNumber.text = @"";
         self.navigationItem.title = @"通话记录";
-        [self HiddenORShow:YES];
+//        [self HiddenORShow:YES];
         [self.tableView setHidden:NO];
         
     }
@@ -94,62 +108,38 @@
 
 -(void)initTransID{
     ChooseTransidViewController *ctVC = [[ChooseTransidViewController alloc] init];
-    [self.navigationController pushViewController:ctVC animated:YES];
-}
-
-#pragma mark - 初始化CompanyID
--(void)initCompanyID{
-[self judgeAX];
-//    __block HomeViewController/*主控制器*/ *weakSelf = self;
-//    NSString *companyidStr =[[NSUserDefaults standardUserDefaults] objectForKey:VN_COMPANYID];
-//    if (!companyidStr) {
-//        [weakSelf popViewShow];
-//    }
-//    else{
-//        NSString *xStr =[[NSUserDefaults standardUserDefaults] objectForKey:VN_X];
-//        if (!xStr) {
-//            [self judgeAX];
-//        }
-//    }
+    [self.navigationController pushViewController:ctVC animated:NO];
 }
 
 #pragma mark 初始化拔号键盘
 -(void)intKeyboard{
-    isKeyBoard = YES;
-    
-    inputNumber = [[UILabel alloc] initWithFrame:CGRectMake(50, 0, kWIDTH-100, 44)];
-    inputNumber.frame = CGRectMake(50, 0, kWIDTH-100, 44);
-    inputNumber.textAlignment = NSTextAlignmentCenter;
-    inputNumber.textColor = [UIColor whiteColor];
-    inputNumber.backgroundColor = [UIColor redColor];
-    inputNumber.font = [UIFont systemFontOfSize:34.0f];
-    inputNumber.adjustsFontSizeToFitWidth = YES;
-    inputNumber.backgroundColor = [UIColor clearColor];
-    [self.navigationController.navigationBar addSubview:inputNumber];
-    inputNumber.hidden = YES;
-    
-    keyboard = [[AFFNumericKeyboard alloc]init];
-    keyboard.delegate = self;
-    [[UIApplication sharedApplication].delegate.window addSubview:keyboard];
-    [keyboard mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(kAppWindow).with.offset(kHEIGHT-216-49);
-        make.left.equalTo(kAppWindow).with.offset(0);
-        make.right.equalTo(kAppWindow).with.offset(0);
-        make.height.mas_equalTo(216);
-    }];
-    
-    SeaResultTable = [[UITableView alloc] initWithFrame:CGRectMake(0, 64, kWIDTH, kHEIGHT-113)];
-    SeaResultTable.delegate = self;
-    SeaResultTable.dataSource = self;
-    [self.view addSubview:SeaResultTable];
-    [SeaResultTable mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.view).with.offset(0);
-        make.left.equalTo(self.view).with.offset(0);
-        make.right.equalTo(self.view).with.offset(0);
-        make.bottom.equalTo(self.view).with.offset(0);
-    }];
-    [Common setExtraCellLineHidden:SeaResultTable];
-    SeaResultTable.hidden = YES;
+	isKeyBoard = YES;
+//	self.inputNumber = [[UILabel alloc] init];
+//	self.inputNumber.frame = CGRectMake(50, 0, kWIDTH-100, 44);
+//	self.inputNumber.textAlignment = NSTextAlignmentCenter;
+//	self.inputNumber.textColor = [UIColor whiteColor];
+//	self.inputNumber.font = [UIFont systemFontOfSize:34.0f];
+//	self.inputNumber.adjustsFontSizeToFitWidth = YES;
+//	self.inputNumber.text = @"";
+//	[self.navigationController.navigationBar addSubview:self.inputNumber];
+	
+	self.keyboard = [[SWNumericKeyboard alloc] initWithFrame:CGRectMake(0, kHEIGHT-SWNumericKeyboardHEIGHT-SafeAreaTabbarHeight, kWIDTH, SWNumericKeyboardHEIGHT)];
+	self.keyboard.delegate = self;
+	[self.view addSubview:self.keyboard];
+}
+
+-(UILabel *)inputNumber{
+	if (!_inputNumber) {
+		_inputNumber = [[UILabel alloc] init];
+		_inputNumber.frame = CGRectMake(50, 0, kWIDTH-100, 44);
+		_inputNumber.textAlignment = NSTextAlignmentCenter;
+		_inputNumber.textColor = [UIColor whiteColor];
+		_inputNumber.font = [UIFont systemFontOfSize:34.0f];
+		_inputNumber.adjustsFontSizeToFitWidth = YES;
+		_inputNumber.text = @"";
+		[self.navigationController.navigationBar addSubview:_inputNumber];
+	}
+	return _inputNumber;
 }
 
 #pragma mark 初始化通讯录
@@ -162,20 +152,15 @@
     indicator.layer.cornerRadius = 6;
     [indicator startAnimating];
     [self.view addSubview:indicator];
-    
-    
+	
     //获取按联系人姓名首字拼音A~Z排序(已经对姓名的第二个字做了处理)
     [PPGetAddressBook getOrderAddressBook:^(NSDictionary<NSString *,NSArray *> *addressBookDict, NSArray *nameKeys) {
-        
         [indicator stopAnimating];
-        
         //装着所有联系人的字典
         self.contactPeopleDict = addressBookDict;
         //联系人分组按拼音分组的Key值
         self.keys = nameKeys;
-       // DLog("keys>>>%@",self.keys);
         [self ChangeContact:self.keys ContactDic:self.contactPeopleDict];
-        // [SeaResultTable reloadData];
     } authorizationFailure:^{
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示"
                                                         message:@"请在iPhone的“设置-隐私-通讯录”选项中，允许虚拟号访问您的通讯录"
@@ -184,8 +169,6 @@
                                               otherButtonTitles:nil];
         [alert show];
     }];
-    
-    SeaResultTable.rowHeight = 60;
 }
 
 -(void)ChangeContact:(NSArray *)nameKeys ContactDic:(NSDictionary *) contactDic{
@@ -278,7 +261,7 @@
 #pragma mark -
 - (void)closeAndBack {
     [[HWPopTool sharedInstance] closeWithBlcok:^{
-        [self.navigationController popViewControllerAnimated:YES];
+        [self.navigationController popViewControllerAnimated:NO];
     }];
     NSString *xStr =[[NSUserDefaults standardUserDefaults] objectForKey:VN_X];
     if (!xStr) {
@@ -286,26 +269,19 @@
     }
 }
 -(void)sureAndBack{
-    
     self.idTF.text = [self.idTF.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-    
     // 判断用户名
     if ([self.idTF.text length] == 0)
     {
         _promptLab.text =@"请输入您的CompanyID";
         return;
     }
-    
     [[NSUserDefaults standardUserDefaults] setObject:self.idTF.text forKey:VN_COMPANYID];
     [[NSUserDefaults standardUserDefaults] synchronize];
     [self closeAndBack];
 }
 
 -(void)judgeAX{
-//    [[NSUserDefaults standardUserDefaults] setObject:@"2180246994" forKey:VN_X];
-//    [[NSUserDefaults standardUserDefaults] setObject:@"13062501506" forKey:VN_PHONE];
-//    [[NSUserDefaults standardUserDefaults]setObject:@"爱讯达" forKey:VN_COMPANYNAME];
-    
     NSString *axStr = [[NSUserDefaults standardUserDefaults] objectForKey:VN_X];
     if (axStr) {
         DLog(@"已经绑定号码");
@@ -314,20 +290,32 @@
         alertView.tag=1001;
         [alertView show];
     }
-    
+}
+
+
+/**
+  判断是否绑定手机号码
+ */
+- (void) BindPhone {
+    NSString *phoneStr = [[NSUserDefaults standardUserDefaults] objectForKey:VN_PHONE];
+    if (phoneStr) {
+        DLog(@"已经绑定号码");
+    }else{
+        BindPhoneViewController * BindVc = [[BindPhoneViewController alloc]init];
+        [self.navigationController pushViewController:BindVc animated:NO];
+    }
 }
 
 #pragma mark 发起呼叫call
 - (void)call {
     
     CallPhone *callphone = [[CallPhone alloc] init];
-    [callphone sendCallRequest:inputNumber.text ContactName:@"" Respone:^(NSDictionary *tempJSON, NSString *model, NSString *XNum) {
+    [callphone sendCallRequest:self.inputNumber.text ContactName:@"" Respone:^(NSDictionary *tempJSON, NSString *model, NSString *XNum) {
         NSString *successstr = [NSString stringWithFormat:@"%@", tempJSON[@"success"]];
         if ([successstr isEqualToString:@"1"]) {
             if ([model isEqualToString:@"dual"]) {
-                
                 ChooseTransidViewController *ctVC = [[ChooseTransidViewController alloc] init];
-                [self.navigationController pushViewController:ctVC animated:YES];
+                [self.navigationController pushViewController:ctVC animated:NO];
                 /*
                  [callphone sendCallRequestToActivationTran];
                  */
@@ -346,26 +334,17 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     return 60;
 }
-
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    
     return self.dataArray.count;
-    
 }
-
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-    
     static NSString *identity = @"detail" ;
-    
     CalllogCell *cell = [tableView dequeueReusableCellWithIdentifier:identity];
-    
     if (cell == nil)
     {
         cell = [[CalllogCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identity];
         cell.selectionStyle = UITableViewCellSelectionStyleGray;
-        
     }
-    
     CallLog *callLog = self.dataArray[indexPath.row];
     cell.calledNameLab.text = [NSString stringWithFormat:@"x号码: %@",callLog.XNum];
     cell.callPhoneNumLab.text = [NSString stringWithFormat:@"被叫号码: %@ (%@)",callLog.CallPhoneNum,callLog.callCount];
@@ -383,7 +362,7 @@
     CallLog *callLog = self.dataArray[indexPath.row];
     CallLogDetailViewController * detailVc = [[CallLogDetailViewController alloc]init];
     detailVc.callLog = callLog;
-    [self.navigationController pushViewController:detailVc animated:YES];
+    [self.navigationController pushViewController:detailVc animated:NO];
 }
 
 #pragma mark - UIAlertView delegate
@@ -392,14 +371,51 @@
     if (buttonIndex == 1) {
         if (alertView.tag == 1001)
         {
+			//选择X号码
             ChooseNumViewController * chooseVc = [[ChooseNumViewController alloc]init];
             [self.navigationController pushViewController:chooseVc animated:NO];
+            return;
+        }
+        if (alertView.tag == 1002)
+        {
+            BindPhoneViewController * BindVc = [[BindPhoneViewController alloc]init];
+            [self.navigationController pushViewController:BindVc animated:NO];
+            return;
         }
     }
 }
 
 
 #pragma mark -
+
+#pragma mark - SWNumericKeyboard代理
+//获取键盘输入的内容
+- (void) numberKeyboardInput:(NSString*)number{
+//	self.inputNumber.hidden = NO;
+	self.navigationItem.title = @"";
+	self.inputNumber.text = [self.inputNumber.text stringByAppendingString:number];
+	
+}
+//点击了删除按钮
+- (void) numberKeyboardDelete:(NSString*) number{
+	if([number isEqualToString:@"1"]){
+		//删除单个字符
+		if (self.inputNumber.text.length !=0) {
+			self.inputNumber.text = [self.inputNumber.text substringToIndex:self.inputNumber.text.length -1];
+		}
+	}else{
+		//删除全部字符
+		self.inputNumber.text = @"";
+	}
+}
+- (void) BeginCallPhone{
+	[self call];
+}
+-(void)GoSettingModule{
+	  [MBProgressHUD showErrorMessage:NSStringFormat(@"该功能暂未开放")];
+}
+
+/*
 #pragma mark 键盘输入和删除
 //后退键
 -(void)numberKeyboardStirng:(NSString *)str {
@@ -469,50 +485,9 @@
         //[SeaResultTable reloadData];
     });
 }
+ */
 
-#pragma mark  创建tabbarView
-- (void)createBelowView {
-    
-    downButton =  [UIButton buttonWithType:UIButtonTypeCustom];
-    downButton.frame =CGRectMake(0, 0, self.view.bounds.size.width/4, 50);
-    [downButton setImage:[UIImage imageNamed:@"tab_dial_ic_close"] withTitle:@"收起键盘" forState:UIControlStateNormal];
-    [downButton setTitleColor:[UIColor colorWithHexString:@"#3F9AEE"] forState:UIControlStateNormal];
-    downButton.titleLabel.font = [UIFont systemFontOfSize:11];
-    downButton.backgroundColor = [UIColor groupTableViewBackgroundColor];
-    [downButton addTarget:self action:@selector(downKeyboard:) forControlEvents:UIControlEventTouchUpInside];
-    [self.tabBarController.tabBar addSubview:downButton];
-    
-    //呼叫键
-    callButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    CGRect tempFrame = [(UIButton *)self.tabBarController.tabBar.subviews[1] frame];
-    CGRect tempFrameSec = [(UIButton *)self.tabBarController.tabBar.subviews[2] frame];
-    callButton.frame = CGRectMake(self.view.bounds.size.width/4, 0, tempFrame.size.width+tempFrameSec.size.width+6, 50);
-    [callButton setTitle:@"发起呼叫" forState:UIControlStateNormal];
-    [callButton setTitleColor:[UIColor whiteColor]forState:UIControlStateNormal];
-    callButton.backgroundColor = [UIColor colorWithRed:73/255.0 green:199/255.0 blue:127/255.0 alpha:1];
-    [callButton.layer setMasksToBounds:YES];
-    [callButton.layer setCornerRadius:10.0f];
-    [self.tabBarController.tabBar addSubview:callButton];
-    [callButton addTarget:self action:@selector(call) forControlEvents:UIControlEventTouchUpInside];
-    
-    //后退删除键
-    deleteButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    deleteButton.frame = [(UIButton *)self.tabBarController.tabBar.subviews[3] frame];
-    [deleteButton setImage:[UIImage imageNamed:@"btn_delet"] withTitle:@"后退" forState:UIControlStateNormal];
-    deleteButton.backgroundColor = [UIColor groupTableViewBackgroundColor];
-    [self.tabBarController.tabBar addSubview:deleteButton];
-    
-    // 单击的 Recognizer
-    UITapGestureRecognizer* singleRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(singleTap:)];
-    //点击的次数
-    singleRecognizer.numberOfTapsRequired = 1; // 单击
-    [deleteButton addGestureRecognizer:singleRecognizer];
-    // 双击的 Recognizer
-    UILongPressGestureRecognizer* longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPress:)];
-    [deleteButton addGestureRecognizer:longPress];
-}
-
-#pragma mark 显示或收起键盘
+#pragma mark - 显示或收起键盘
 -(void)downKeyboard:(UIButton*)sender{
     if ([sender.titleLabel.text isEqualToString:@"收起键盘"]) {
         [downButton setImage:[UIImage imageNamed:@"tab_dial_ic_open"] withTitle:@"显示键盘" forState:UIControlStateNormal];
@@ -521,7 +496,7 @@
                 make.top.equalTo(self.view).with.offset(kHEIGHT);
                 make.left.equalTo(self.view).with.offset(0);
                 make.right.equalTo(self.view).with.offset(0);
-                make.height.mas_equalTo(216);
+                make.height.mas_equalTo(SWNumericKeyboardHEIGHT);
             }];
         } completion:^(BOOL finished) {
             self.keyboard.hidden = YES;
@@ -534,7 +509,7 @@
                 make.top.equalTo(self.view).with.offset(kHEIGHT-265);
                 make.left.equalTo(self.view).with.offset(0);
                 make.right.equalTo(self.view).with.offset(0);
-                make.height.mas_equalTo(216);
+                make.height.mas_equalTo(SWNumericKeyboardHEIGHT);
             }];
         } completion:^(BOOL finished) {
             self.keyboard.hidden = NO;
@@ -544,48 +519,27 @@
     sender.titleLabel.font = [UIFont systemFontOfSize:11];
 }
 
-#pragma mark 点击后退删除一个字符
-- (void)singleTap:(UITapGestureRecognizer*)recognizer
-{
-    [self numberKeyboardStirng:@"1"];
-}
-#pragma mark 点击后退删除全部字符
-- (void)longPress:(UILongPressGestureRecognizer*)recognizer
-{
-    [self numberKeyboardStirng:@"2"];
-    //    dispatch_async(dispatch_get_main_queue(), ^{
-    //        [self seaInputNumber:inputNumber
-    //               textDidChange:inputNumber.text];
-    //        //[SeaResultTable reloadData];
-    //        // [self.tableView reloadData];
-    //    });
-}
-
 #pragma UISearchDisplayDelegate
 - (void)seaInputNumber:(UILabel *)seaInputNumber
          textDidChange:(NSString *)searchText {
     
-    //    searchResults = [[NSMutableArray alloc] init];
-    //
-    //    if (inputNumber.text.length>0){
-    //        for(NSString *phone in _contactPeopleDict) {
-    //            NSString *tempPhone = [[[phone description] stringByReplacingOccurrencesOfString:@"-" withString:@""] stringByReplacingOccurrencesOfString:@" " withString:@""];
-    //            NSRange range = [tempPhone rangeOfString:inputNumber.text];
-    //            NSInteger location = range.location;
-    //            NSDictionary *temp = _contactPeopleDict[phone];
-    //            if(location == 0){
-    //                NSDictionary *myClassDict;
-    //                myClassDict = [NSDictionary dictionaryWithObjectsAndKeys:
-    //                               temp[@"name"], @"name",
-    //                               phone, @"phone",
-    //                               nil];
-    ////                [searchResults addObject:myClassDict];
-    //            }
-    //        }
-    //    }
-    
-    //    NSString *key = _keys[section];
-    //    return [_contactPeopleDict[key] count];
+        searchResults = [[NSMutableArray alloc] init];
+	
+        if (seaInputNumber.text.length>0){
+            for(NSString *phone in _contactPeopleDict) {
+                NSString *tempPhone = [[[phone description] stringByReplacingOccurrencesOfString:@"-" withString:@""] stringByReplacingOccurrencesOfString:@" " withString:@""];
+                NSRange range = [tempPhone rangeOfString:seaInputNumber.text];
+                NSInteger location = range.location;
+                NSDictionary *temp = _contactPeopleDict[phone];
+                if(location == 0){
+                    NSDictionary *myClassDict;
+                    myClassDict = [NSDictionary dictionaryWithObjectsAndKeys:
+                                   temp[@"name"], @"name",
+                                   phone, @"phone",
+                                   nil];
+                }
+            }
+        }
 }
 
 #pragma mark - tabBar代理
@@ -594,7 +548,7 @@
     UITabBarItem *callItem = self.tabBarController.tabBar.items[0];
     
     if (tabBarController.selectedIndex == 0 && isKeyBoard) {
-        
+//		self.inputNumber.hidden = NO;
         tabBarController.selectedIndex = 0;
         if (self.keyboard.hidden) {
             UIImage* imageSelected = [UIImage imageNamed:@"tab_dial_ic_close"];
@@ -602,7 +556,7 @@
             callItem.title = @"收起键盘";
             self.keyboard.hidden = NO;
             [UIView animateWithDuration:0.3 animations:^{
-                self.keyboard.frame = CGRectMake(0, kHEIGHT-265, kWIDTH, 216);}];
+                self.keyboard.frame = CGRectMake(0, kHEIGHT-SWNumericKeyboardHEIGHT-SafeAreaTabbarHeight, kWIDTH, SWNumericKeyboardHEIGHT);}];
             
         } else {
             
@@ -611,7 +565,7 @@
             callItem.title = @"显示键盘";
             
             [UIView animateWithDuration:0.3 animations:^{
-                self.keyboard.frame = CGRectMake(0, kHEIGHT, kWIDTH, 216);
+                self.keyboard.frame = CGRectMake(0, kHEIGHT, kWIDTH, SWNumericKeyboardHEIGHT);
             } completion:^(BOOL finished) {
                 self.keyboard.hidden = YES;
             }];
@@ -637,4 +591,5 @@
  }
  */
 
-@end
+   @end
+   

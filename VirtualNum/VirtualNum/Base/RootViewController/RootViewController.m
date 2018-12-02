@@ -110,7 +110,7 @@
     if (self.presentingViewController) {
         [self dismissViewControllerAnimated:YES completion:nil];
     }else{
-        [self.navigationController popViewControllerAnimated:YES];
+        [self.navigationController popViewControllerAnimated:NO];
     }
 }
 

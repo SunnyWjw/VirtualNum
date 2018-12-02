@@ -68,15 +68,17 @@ SINGLETON_FOR_CLASS(UserManager);
 
 #pragma mark ————— 自动登录到服务器 —————
 -(void)autoLoginToServer:(loginBlock)completion{
-    NSString *baseUrl = NSStringFormat(@"%@%@",URL_main,URL_user_info);
+    NSString *baseUrl = NSStringFormat(@"%@%@",URL_main,URL_user_login);
     NSDictionary *parameters = @{
                                  @"username": [[NSUserDefaults standardUserDefaults] objectForKey:VN_USERNAME],
-                                 @"password": [[NSUserDefaults standardUserDefaults] objectForKey:VN_PASSWORD]
+                                 @"password": [[NSUserDefaults standardUserDefaults] objectForKey:VN_PASSWORD],
+                                 @"companyId": [[NSUserDefaults standardUserDefaults] objectForKey:VN_COMPANYID],
                                  } ;
     NSDictionary *dic =@{
                          @"version":VN_APIVERSION
                          };
     [[AFNetAPIClient sharedJsonClient].setRequest(baseUrl).RequestType(Post).HTTPHeader(dic).Parameters(parameters) startRequestWithSuccess:^(NSURLSessionDataTask *task, id responseObject) {
+         DLog(@"自动登录到服务器>>>>>>>成功,处理返回信息");
         [self LoginSuccess:responseObject completion:completion];
     } progress:^(NSProgress *progress) {
         
@@ -105,12 +107,12 @@ SINGLETON_FOR_CLASS(UserManager);
         if (completion) {
             completion(YES,nil);
         }
-        KPostNotification(KNotificationLoginStateChange, @YES);
+        //KPostNotification(KNotificationLoginStateChange, @YES);
     }else{
         if (completion) {
             completion(NO,tempJSON[@"message"]);
         }
-        KPostNotification(KNotificationLoginStateChange, @NO);
+        //KPostNotification(KNotificationLoginStateChange, @NO);
     }
 }
 #pragma mark ————— 储存用户信息 —————

@@ -59,23 +59,23 @@
     
     
     if([self loadUserDefaults]){
-        
         //如果有本地数据，先展示TabBar 随后异步自动登录
         self.mainTabBar = [MainTabBarController new];
         self.window.rootViewController = self.mainTabBar;
-        
-        //自动登录
-        [userManager autoLoginToServer:^(BOOL success, NSString *des) {
-            if (success) {
-                DLog(@"自动登录成功");
-                //                    [MBProgressHUD showSuccessMessage:@"自动登录成功"];
-                KPostNotification(KNotificationAutoLoginSuccess, nil);
-            }else{
-                [MBProgressHUD showErrorMessage:NSStringFormat(@"自动登录失败：%@",des)];
-            }
-        }];
-        
+         //KPostNotification(KNotificationAutoLoginSuccess, @YES);
+//        //自动登录
+//        [userManager autoLoginToServer:^(BOOL success, NSString *des) {
+//            if (success) {
+//                DLog(@"自动登录成功");
+//                //[MBProgressHUD showSuccessMessage:@"自动登录成功"];
+//                KPostNotification(KNotificationAutoLoginSuccess, @YES);
+//            }else{
+//                [MBProgressHUD showErrorMessage:NSStringFormat(@"自动登录失败：%@",des)];
+//                KPostNotification(KNotificationLoginStateChange, @NO)
+//            }
+//        }];
     }else{
+         DLog(@"没有登录过，展示登录页面");
         //没有登录过，展示登录页面
         KPostNotification(KNotificationLoginStateChange, @NO)
     }
@@ -83,18 +83,17 @@
 
 
 -(BOOL)loadUserDefaults{
-    NSString * usernameStr = [[NSUserDefaults standardUserDefaults] objectForKey:@"USERNAME"];
-    NSString * pwdStr = [[NSUserDefaults standardUserDefaults] objectForKey:@"PASSWORD"];
-    NSString * checkBoxBool = [[NSUserDefaults standardUserDefaults] objectForKey:@"zidongdenglu"];
-     DLog(@"checkBoxBool>>>%@",checkBoxBool);
+    
+    NSString * usernameStr = [[NSUserDefaults standardUserDefaults] objectForKey:VN_USERNAME];
+    NSString * pwdStr = [[NSUserDefaults standardUserDefaults] objectForKey:VN_PASSWORD];
+    NSString * checkBoxBool = [[NSUserDefaults standardUserDefaults] objectForKey:VN_AUTOLOGIN];
     if ([checkBoxBool isEqual: @"1"]) {
-        DLog(@"YES>>>");
-    }else{
-        DLog(@"NO>>>>");
-    }
-   
-    if(usernameStr && pwdStr && [checkBoxBool isEqual: @"1"]){
-        return YES;
+        if(usernameStr && pwdStr ){
+            //自动登录
+            return YES;
+        }else{
+            return NO;
+        }
     }else{
         return NO;
     }
@@ -106,15 +105,13 @@
     BOOL loginSuccess = [notification.object boolValue];
     
     if (loginSuccess) {//登陆成功加载主窗口控制器
-        
+        DLog(@"登陆成功加载主窗口控制器");
         //为避免自动登录成功刷新tabbar
         if (!self.mainTabBar || ![self.window.rootViewController isKindOfClass:[MainTabBarController class]]) {
             self.mainTabBar = [MainTabBarController new];
             self.window.rootViewController = self.mainTabBar;
-        }
-        
-    }else {//登陆失败加载登陆页面控制器
-        
+        }    }else {//登陆失败加载登陆页面控制器
+        DLog(@"登陆失败加载登陆页面控制器");
         self.mainTabBar = nil;
         RootNavigationController *loginNavi =[[RootNavigationController alloc] initWithRootViewController:[LoginViewController new]];
         self.window.rootViewController = loginNavi;
@@ -158,8 +155,6 @@
     
     /* 设置友盟appkey */
     //[[UMSocialManager defaultManager] setUmSocialAppkey:UMengKey];
-    
-    
     
    // [self configUSharePlatforms];
 }

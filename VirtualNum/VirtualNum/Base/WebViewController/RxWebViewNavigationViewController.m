@@ -64,11 +64,11 @@
             [[self.navigationBar subviews] lastObject].alpha = 1;
             return NO;
         }else{
-            [self popViewControllerAnimated:YES];
+            [self popViewControllerAnimated:NO];
             return NO;
         }
     }else{
-        [self popViewControllerAnimated:YES];
+        [self popViewControllerAnimated:NO];
         return NO;
     }
 }

@@ -93,9 +93,14 @@ static NSUInteger selectInt;
         //                cell2.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         //                cell.selectionStyle = UITableViewCellStyleDefault;
     }
-    cell.textNameLab.text = [self.dataArray objectAtIndex:indexPath.row];
-    cell.detailTextLab.text = @"说明";
-    
+
+	NSString *callType = [NSString stringWithFormat:@"%@",[self.dataArray objectAtIndex:indexPath.row]];
+	    cell.textNameLab.text = callType;
+	if([callType isEqualToString:@"中介模式"]){
+		   cell.detailTextLab.text = @"single";
+	}else{
+		cell.detailTextLab.text = @"dual";
+	}
     if (selectInt == indexPath.row) {
         cell.selectImg.image = [UIImage imageNamed:@"radio_select"];
     }else {

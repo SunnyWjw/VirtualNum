@@ -67,7 +67,7 @@
     if (self.viewControllers.count > 0) {
         viewController.hidesBottomBarWhenPushed = YES;
     }
-    [super pushViewController:viewController animated:animated];
+    [super pushViewController:viewController animated:NO];
 }
 
 -(void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated{
@@ -93,7 +93,7 @@
     id vc = [self getCurrentViewControllerClass:ClassName];
     if(vc != nil && [vc isKindOfClass:[UIViewController class]])
     {
-        [self popToViewController:vc animated:animated];
+        [self popToViewController:vc animated:NO];
         return YES;
     }
     

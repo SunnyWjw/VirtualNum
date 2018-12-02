@@ -20,6 +20,20 @@
 #define kUserDefaults       [NSUserDefaults standardUserDefaults]
 #define kNotificationCenter [NSNotificationCenter defaultCenter]
 
+#define kStatusBarHeight [[UIApplication sharedApplication] statusBarFrame].size.height
+#define kNavBarHeight 44.0
+#define kTabBarHeight ([[UIApplication sharedApplication] statusBarFrame].size.height>20?83:49)
+#define kTopHeight (kStatusBarHeight + kNavBarHeight)
+#define SafeAreaTopHeight (kHEIGHT == 812.0 ? 88 : 64)
+#define SafeAreaTabbarHeight (kHEIGHT == 812.0 ? 83 : 49)
+
+#define IS_IPHONE_4_SCREEN [[UIScreen mainScreen] bounds].size.height == 480.0f && [[UIScreen mainScreen] bounds].size.width == 320.0f
+
+#define KIsiPhoneX ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(1125, 2436), [[UIScreen mainScreen] currentMode].size) : NO)
+#define kIsMaxBigScreen ([[UIScreen mainScreen] bounds].size.height >= 812.0f ? YES :NO)
+#define kIsBigScreen ([[UIScreen mainScreen] bounds].size.height >= 667.0f ? YES :NO)
+#define kIsBigScreen2 ([[UIScreen mainScreen] bounds].size.height > 667.0f ? YES :NO)
+
 //获取屏幕宽高
 #define KScreenWidth ([[UIScreen mainScreen] bounds].size.width)
 #define KScreenHeight [[UIScreen mainScreen] bounds].size.height
@@ -59,6 +73,12 @@
 
 ///IOS 版本判断
 #define IOSAVAILABLEVERSION(version) ([[UIDevice currentDevice] availableVersion:version] < 0)
+#define IOS10_OR_LATER ([[[UIDevice currentDevice] systemVersion] floatValue] >= 10.0)
+#define IOS9_OR_LATER ([[[UIDevice currentDevice] systemVersion] floatValue] >= 9.0)
+#define IOS8_OR_LATER ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0)
+#define IOS7_OR_LATER ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0)
+
+
 // 当前系统版本
 #define CurrentSystemVersion [[UIDevice currentDevice].systemVersion doubleValue]
 //当前语言

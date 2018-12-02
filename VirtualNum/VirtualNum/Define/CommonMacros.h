@@ -54,3 +54,6 @@
 #define VN_CALLPREFIX   @"0"    //呼叫前缀，例：呼叫x为80246994时，实际呼叫02180246994
 #define VN_APIVERSION   @"1"    //Api版本号
 #define VN_OLDTRANS      @"OldTrans"
+
+
+#define PLANSYSTEMSOUND @"playSystemSound"  //是否播放按键音

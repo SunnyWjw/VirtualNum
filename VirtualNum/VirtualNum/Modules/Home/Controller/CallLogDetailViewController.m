@@ -133,7 +133,7 @@
                 strDurationTime = detailCallLog.durationTime;
             }
             cell2.rightTopLabel.text = [NSString stringWithFormat:@"%@秒",strDurationTime];
-            NSString *mode = [detailCallLog.serviceType isEqual:@"0" ] ? @"租车模式" : @"中介模式";
+            NSString *mode = [detailCallLog.serviceType isEqual:@"0" ] ? @"租车模式-dual" : @"中介模式-single";
             cell2.leftBottomLabel.text = [NSString stringWithFormat:@"%@",mode];
             cell2.rightBottomLabel.text = [NSString stringWithFormat:@"%@",detailCallLog.randomNum];
             
@@ -160,7 +160,7 @@
                     if ([model isEqualToString:@"dual"]) {
                         
                         ChooseTransidViewController *ctVC = [[ChooseTransidViewController alloc] init];
-                        [self.navigationController pushViewController:ctVC animated:YES];
+                        [self.navigationController pushViewController:ctVC animated:NO];
                         /*
                         [callphone sendCallRequestToActivationTran];
                          */
