@@ -31,7 +31,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-     self.title=@"联系人";
+     self.title=NSLocalizedString(@"联系人",nil);
     [self creadTableView];
     [self initAddressBook];
 }
@@ -72,10 +72,10 @@
         
         [self.tableView reloadData];
     } authorizationFailure:^{
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示"
-                                                        message:@"请在iPhone的“设置-隐私-通讯录”选项中，允许虚拟号访问您的通讯录"
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"提示",nil)
+                                                        message:NSLocalizedString(@"请在iPhone的“设置-隐私-通讯录”选项中，允许虚拟号访问您的通讯录",nil)
                                                        delegate:nil
-                                              cancelButtonTitle:@"知道了"
+                                              cancelButtonTitle:NSLocalizedString(@"知道了",nil)
                                               otherButtonTitles:nil];
         [alert show];
     }];
@@ -151,7 +151,6 @@
                     ChooseTransidViewController *ctVC = [[ChooseTransidViewController alloc] init];
                     [self.navigationController pushViewController:ctVC animated:NO];
                      
-                     //[callphone sendCallRequestToActivationTran];
                 }else{
                     XNum = [NSString stringWithFormat:@"%@%@",VN_CALLPREFIX,XNum];
                     NSMutableString *str=[[NSMutableString alloc]initWithFormat:@"tel://%@",XNum];
@@ -162,7 +161,7 @@
             }
         }];
     }else{
-        [MBProgressHUD showErrorMessage:@"该联系人没有添加联系电话，不能进行呼叫"];
+        [MBProgressHUD showErrorMessage:NSLocalizedString(@"该联系人没有添加联系电话，不能进行呼叫",nil)];
     }
     
      

@@ -137,7 +137,7 @@
     {
         UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 19, frameW, 17)];
         
-        label.text = @"粘贴";
+        label.text = NSLocalizedString(@"粘贴",nil);
         label.font = [UIFont systemFontOfSize:16.0];
         label.textColor = [UIColor blackColor];
         label.textAlignment = NSTextAlignmentCenter;

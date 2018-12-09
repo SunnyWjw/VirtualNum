@@ -30,7 +30,7 @@
         //修改
         [self updatePhoneNum];
     }else{
-        self.title = @"绑定手机号码";
+        self.title = NSLocalizedString(@"绑定手机号码",nil);
         //绑定
         [self bindPhoneNum];
     }
@@ -61,7 +61,7 @@
     self.userNameTf.layer.masksToBounds = YES;
     self.userNameTf.layer.cornerRadius = 3.0;
     [self.view addSubview:self.userNameTf];
-    self.userNameTf.placeholder = @"请输入手机号码";
+    self.userNameTf.placeholder = NSLocalizedString(@"请输入手机号码",nil);
     self.userNameTf.clearButtonMode = UITextFieldViewModeWhileEditing;
     self.userNameTf.tag = 500;
     self.userNameTf.font = [UIFont systemFontOfSize:16.0];
@@ -80,7 +80,7 @@
     //loginBtn
     UIButton *loginBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     loginBtn.backgroundColor =CNavBgColor;
-    [loginBtn setTitle:@"绑  定" forState:UIControlStateNormal];
+    [loginBtn setTitle:NSLocalizedString(@"绑  定",nil) forState:UIControlStateNormal];
     loginBtn.titleLabel.font = [UIFont boldSystemFontOfSize:16.0];
     [loginBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [loginBtn addTarget:self action:@selector(BindClick) forControlEvents:UIControlEventTouchUpInside];
@@ -97,21 +97,21 @@
 
 - (void)BindClick{
     if(self.userNameTf.text.length == 0){
-        [MBProgressHUD showErrorMessage:@"请输入手机号完成绑定"];
+        [MBProgressHUD showErrorMessage:NSLocalizedString(@"请输入手机号完成绑定",nil)];
         return;
     }
-    if (![self.userNameTf.text checkPhoneNumInput:self.userNameTf.text]) {
-        [MBProgressHUD showErrorMessage:@"请输入正确的手机号"];
-        return;
-    }
+//    if (![self.userNameTf.text checkPhoneNumInput:self.userNameTf.text]) {
+//        [MBProgressHUD showErrorMessage:NSLocalizedString(@"请输入正确的手机号",nil)];
+//        return;
+//    }
      [[NSUserDefaults standardUserDefaults] setObject:self.userNameTf.text forKey:VN_PHONE];
 //     [MBProgressHUD showErrorMessage:@"绑定成功!"];
-	[self showAlertForTitle:@"绑定成功" Message:@""];
+	[self showAlertForTitle:NSLocalizedString(@"绑定成功",nil) Message:@""];
 	
 }
 
 -(void)showAlertForTitle:(NSString *)title Message:(NSString *)Msgstr{
-	UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:title message:Msgstr delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+	UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:title message:Msgstr delegate:self cancelButtonTitle:NSLocalizedString(@"确定",nil) otherButtonTitles:nil, nil];
 	alertView.tag = 122;
 	[alertView show];
 }

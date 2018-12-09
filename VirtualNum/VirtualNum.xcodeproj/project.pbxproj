@@ -10,6 +10,10 @@
 		8A12FD541F0FD53500BFF962 /* AFFNumericKeyboard.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A12FD511F0FD53500BFF962 /* AFFNumericKeyboard.m */; };
 		8A12FD551F0FD53500BFF962 /* AFFNumericKeyboardDtmf.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A12FD531F0FD53500BFF962 /* AFFNumericKeyboardDtmf.m */; };
 		8A2E27901F1CF38700E7C4A5 /* ChooseTransidViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A2E278F1F1CF38700E7C4A5 /* ChooseTransidViewController.m */; };
+		8A4056EC21BA319500DCE883 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 8A4056EE21BA319500DCE883 /* Localizable.strings */; };
+		8A4056F421BA5FEF00DCE883 /* SetLanguageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A4056F321BA5FEF00DCE883 /* SetLanguageViewController.m */; };
+		8A4056F921BA604200DCE883 /* NSBundle+DAUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A4056F721BA604200DCE883 /* NSBundle+DAUtils.m */; };
+		8A4056FA21BA604200DCE883 /* DAConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A4056F821BA604200DCE883 /* DAConfig.m */; };
 		8A408C0E1EFE84AE00C9081F /* MainTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A408C0D1EFE84AE00C9081F /* MainTabBarController.m */; };
 		8A408C161EFE855F00C9081F /* TabBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A408C111EFE855F00C9081F /* TabBar.m */; };
 		8A408C171EFE855F00C9081F /* TabBarItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A408C131EFE855F00C9081F /* TabBarItem.m */; };
@@ -72,7 +76,6 @@
 		8AC740DE1F0929E1008F1E0C /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8AC740DD1F0929E1008F1E0C /* CoreTelephony.framework */; };
 		8AE211721F0E841F004E52C3 /* GTMBase64.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AE211701F0E841F004E52C3 /* GTMBase64.m */; };
 		8AE211751F0E9BBF004E52C3 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 8AE211771F0E9BBF004E52C3 /* InfoPlist.strings */; };
-		8AE2117B1F0E9C71004E52C3 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 8AE2117D1F0E9C71004E52C3 /* Localizable.strings */; };
 		8AED0A1621A78B6900B104C0 /* SWNumericKeyboard.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AED0A1521A78B6800B104C0 /* SWNumericKeyboard.m */; };
 		8AED0A1921A7936300B104C0 /* NSString+Handle.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AED0A1721A7936200B104C0 /* NSString+Handle.m */; };
 		8AF9BF86200206F60062C925 /* NSArray+MyLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AF9BF85200206F60062C925 /* NSArray+MyLog.m */; };
@@ -94,6 +97,15 @@
 		8A12FD531F0FD53500BFF962 /* AFFNumericKeyboardDtmf.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFFNumericKeyboardDtmf.m; sourceTree = "<group>"; };
 		8A2E278E1F1CF38700E7C4A5 /* ChooseTransidViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChooseTransidViewController.h; sourceTree = "<group>"; };
 		8A2E278F1F1CF38700E7C4A5 /* ChooseTransidViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChooseTransidViewController.m; sourceTree = "<group>"; };
+		8A4056ED21BA319500DCE883 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		8A4056F021BA320800DCE883 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		8A4056F121BA320800DCE883 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		8A4056F221BA5FEF00DCE883 /* SetLanguageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetLanguageViewController.h; sourceTree = "<group>"; };
+		8A4056F321BA5FEF00DCE883 /* SetLanguageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SetLanguageViewController.m; sourceTree = "<group>"; };
+		8A4056F521BA604200DCE883 /* DAConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DAConfig.h; sourceTree = "<group>"; };
+		8A4056F621BA604200DCE883 /* NSBundle+DAUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSBundle+DAUtils.h"; sourceTree = "<group>"; };
+		8A4056F721BA604200DCE883 /* NSBundle+DAUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSBundle+DAUtils.m"; sourceTree = "<group>"; };
+		8A4056F821BA604200DCE883 /* DAConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DAConfig.m; sourceTree = "<group>"; };
 		8A408C0C1EFE84AE00C9081F /* MainTabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainTabBarController.h; sourceTree = "<group>"; };
 		8A408C0D1EFE84AE00C9081F /* MainTabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainTabBarController.m; sourceTree = "<group>"; };
 		8A408C101EFE855F00C9081F /* TabBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TabBar.h; sourceTree = "<group>"; };
@@ -222,10 +234,7 @@
 		8AE2116F1F0E841F004E52C3 /* GTMBase64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTMBase64.h; sourceTree = "<group>"; };
 		8AE211701F0E841F004E52C3 /* GTMBase64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTMBase64.m; sourceTree = "<group>"; };
 		8AE211711F0E841F004E52C3 /* GTMDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTMDefines.h; sourceTree = "<group>"; };
-		8AE211761F0E9BBF004E52C3 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		8AE211781F0E9BEC004E52C3 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
-		8AE2117C1F0E9C71004E52C3 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
-		8AE2117E1F0E9C87004E52C3 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		8AED0A1421A78B6800B104C0 /* SWNumericKeyboard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWNumericKeyboard.h; sourceTree = "<group>"; };
 		8AED0A1521A78B6800B104C0 /* SWNumericKeyboard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWNumericKeyboard.m; sourceTree = "<group>"; };
 		8AED0A1721A7936200B104C0 /* NSString+Handle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Handle.m"; sourceTree = "<group>"; };
@@ -500,6 +509,12 @@
 				8AC740C41F08F030008F1E0C /* ChooseServiceViewController.m */,
 				8AC740CF1F08F9AA008F1E0C /* BindPhoneViewController.h */,
 				8AC740D01F08F9AA008F1E0C /* BindPhoneViewController.m */,
+				8A4056F221BA5FEF00DCE883 /* SetLanguageViewController.h */,
+				8A4056F321BA5FEF00DCE883 /* SetLanguageViewController.m */,
+				8A4056F521BA604200DCE883 /* DAConfig.h */,
+				8A4056F821BA604200DCE883 /* DAConfig.m */,
+				8A4056F621BA604200DCE883 /* NSBundle+DAUtils.h */,
+				8A4056F721BA604200DCE883 /* NSBundle+DAUtils.m */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -586,7 +601,7 @@
 				8A86AE1F1EFD5DDF00C8533F /* Info.plist */,
 				8A86AE0F1EFD5DDF00C8533F /* main.m */,
 				8AE211771F0E9BBF004E52C3 /* InfoPlist.strings */,
-				8AE2117D1F0E9C71004E52C3 /* Localizable.strings */,
+				8A4056EE21BA319500DCE883 /* Localizable.strings */,
 			);
 			path = "Supporting Flies";
 			sourceTree = "<group>";
@@ -850,9 +865,9 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
-				en,
 				Base,
 				"zh-Hans",
+				en,
 			);
 			mainGroup = 8A86AE021EFD5DDF00C8533F;
 			productRefGroup = 8A86AE0C1EFD5DDF00C8533F /* Products */;
@@ -870,8 +885,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				8AFF502C1F126D1900A0A0BC /* ContactCell.xib in Resources */,
+				8A4056EC21BA319500DCE883 /* Localizable.strings in Resources */,
 				8AC740CE1F08F23C008F1E0C /* CallSettingsCell.xib in Resources */,
-				8AE2117B1F0E9C71004E52C3 /* Localizable.strings in Resources */,
 				8AFF50271F126CCA00A0A0BC /* CalllogDetailCell.xib in Resources */,
 				8AE211751F0E9BBF004E52C3 /* InfoPlist.strings in Resources */,
 				8A86AE1B1EFD5DDF00C8533F /* Assets.xcassets in Resources */,
@@ -938,8 +953,10 @@
 				8AED0A1921A7936300B104C0 /* NSString+Handle.m in Sources */,
 				8A408C4D1EFE891400C9081F /* AppDelegate+PushService.m in Sources */,
 				8AE211721F0E841F004E52C3 /* GTMBase64.m in Sources */,
+				8A4056F421BA5FEF00DCE883 /* SetLanguageViewController.m in Sources */,
 				8AC740D81F091FAD008F1E0C /* CallLog.m in Sources */,
 				8A48DB0A1F25024D00118CA6 /* SBAPIurl.m in Sources */,
+				8A4056FA21BA604200DCE883 /* DAConfig.m in Sources */,
 				8A51AC871EFFE7C700824269 /* ChooseNumCell.m in Sources */,
 				8A408C161EFE855F00C9081F /* TabBar.m in Sources */,
 				8A408C3A1EFE86E200C9081F /* RootWebViewController.m in Sources */,
@@ -983,6 +1000,7 @@
 				8AC740CD1F08F23C008F1E0C /* CallSettingsCell.m in Sources */,
 				8A48DB0E1F25024D00118CA6 /* UIColor+MyColor.m in Sources */,
 				8AF9BF86200206F60062C925 /* NSArray+MyLog.m in Sources */,
+				8A4056F921BA604200DCE883 /* NSBundle+DAUtils.m in Sources */,
 				8A48DB101F25024D00118CA6 /* UIImage+CutCircleImage.m in Sources */,
 				8A408C4C1EFE891400C9081F /* AppDelegate+AppService.m in Sources */,
 				8AC740DC1F092229008F1E0C /* DataBase.m in Sources */,
@@ -1006,22 +1024,22 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
+		8A4056EE21BA319500DCE883 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				8A4056ED21BA319500DCE883 /* zh-Hans */,
+				8A4056F121BA320800DCE883 /* en */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
 		8AE211771F0E9BBF004E52C3 /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
-				8AE211761F0E9BBF004E52C3 /* en */,
 				8AE211781F0E9BEC004E52C3 /* zh-Hans */,
+				8A4056F021BA320800DCE883 /* en */,
 			);
 			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-		8AE2117D1F0E9C71004E52C3 /* Localizable.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				8AE2117C1F0E9C71004E52C3 /* en */,
-				8AE2117E1F0E9C87004E52C3 /* zh-Hans */,
-			);
-			name = Localizable.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -1151,6 +1169,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
+				DEPLOYMENT_POSTPROCESSING = YES;
 				DEVELOPMENT_TEAM = M8GQEVATHK;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/VirtualNum/Supporting Flies/PrefixHeader.pch";

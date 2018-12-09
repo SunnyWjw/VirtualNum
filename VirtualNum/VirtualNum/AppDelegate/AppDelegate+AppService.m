@@ -87,16 +87,22 @@
     NSString * usernameStr = [[NSUserDefaults standardUserDefaults] objectForKey:VN_USERNAME];
     NSString * pwdStr = [[NSUserDefaults standardUserDefaults] objectForKey:VN_PASSWORD];
     NSString * checkBoxBool = [[NSUserDefaults standardUserDefaults] objectForKey:VN_AUTOLOGIN];
-    if ([checkBoxBool isEqual: @"1"]) {
-        if(usernameStr && pwdStr ){
-            //自动登录
-            return YES;
-        }else{
-            return NO;
-        }
-    }else{
-        return NO;
-    }
+//    if ([checkBoxBool isEqual: @"1"]) {
+//        if(usernameStr && pwdStr ){
+//            //自动登录
+//            return YES;
+//        }else{
+//            return NO;
+//        }
+//    }else{
+//        return NO;
+//    }
+	
+	NSString * companyIDStr = [[NSUserDefaults standardUserDefaults] objectForKey:VN_COMPANYID];
+	if (usernameStr.length > 0 && pwdStr.length > 0 && companyIDStr.length > 0) {
+		return YES;
+	}
+	return NO;
 }
 
 #pragma mark ————— 登录状态处理 —————

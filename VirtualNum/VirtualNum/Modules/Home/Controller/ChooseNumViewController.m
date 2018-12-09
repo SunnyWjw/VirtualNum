@@ -35,7 +35,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.title = @"选择X号码";
+    self.title = NSLocalizedString(@"选择X号码",nil);
     // 设置导航控制器的代理为self
     //self.navigationController.delegate = self;
     //    self.navigationController.navigationBar.hidden = YES;
@@ -80,7 +80,7 @@
     int pageCount = ceil(self.totalCount / 15.0);
     if (self.curPage > pageCount) {
         [self endRefresh];
-        [MBProgressHUD showErrorMessage:@"这是最后一页了！"];
+        [MBProgressHUD showErrorMessage:NSLocalizedString(@"这是最后一页了！",nil)];
         return;
     }
     //    //开始刷新数据
@@ -108,7 +108,7 @@
     NSString *comPanyIDStr = [[NSUserDefaults standardUserDefaults] objectForKey:VN_COMPANYID];
     if (!comPanyIDStr) {
         
-        UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:nil message:@"获取信息失败，请重新登录" delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+        UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:nil message:NSLocalizedString(@"获取信息失败，请重新登录",nil) delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
         [alertView show];
         
         [userManager DelInfo];
@@ -119,7 +119,7 @@
     NSString *token = [[NSUserDefaults standardUserDefaults] objectForKey:VN_TOKEN];
     if (!token) {
         
-        UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:nil message:@"获取信息失败，请重新登录" delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+        UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:nil message:NSLocalizedString(@"获取信息失败，请重新登录",nil) delegate:self cancelButtonTitle:nil otherButtonTitles:NSLocalizedString(@"确定",nil), nil];
         [alertView show];
         
         [userManager DelInfo];
@@ -150,7 +150,7 @@
         [self endRefresh];
         NSString *result = [[NSString alloc] initWithData:responseObject encoding:NSUTF8StringEncoding];
         if([[AFNetAPIClient sharedJsonClient] parseJSONData:result] == nil){
-            [MBProgressHUD showErrorMessage:@"服务器繁忙，请稍后再试"];
+            [MBProgressHUD showErrorMessage:NSLocalizedString(@"服务器繁忙，请稍后再试",nil)];
             return;
         }
         
@@ -173,7 +173,7 @@
     } failure:^(NSURLSessionDataTask *task, NSError *error) {
         [self endRefresh];
         [MBProgressHUD hideHUD];
-        [MBProgressHUD showErrorMessage:@"连接网络超时，请稍后再试"];
+        [MBProgressHUD showErrorMessage:NSLocalizedString(@"连接网络超时，请稍后再试",nil)];
     }];
 }
 
@@ -214,8 +214,8 @@
 {
     [tableView deselectRowAtIndexPath:indexPath animated:NO];
     _dictionary = [self.dataArray objectAtIndex:indexPath.row];
-    NSString *msgStr =[NSString stringWithFormat:@"您确定绑定 ‘%@’ 号码",_dictionary[@"xs"]];
-     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:msgStr delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定",nil, nil];
+    NSString *msgStr =[NSString stringWithFormat:@"%@ ‘%@’ %@",NSLocalizedString(@"您确定绑定",nil),_dictionary[@"xs"],NSLocalizedString(@"号码",nil)];
+     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:msgStr delegate:self cancelButtonTitle:NSLocalizedString(@"取消",nil) otherButtonTitles:NSLocalizedString(@"确定",nil),nil, nil];
     alert.tag = 10009;
     [alert show];
     //NSString * xNumStr = [[NSUserDefaults standardUserDefaults] objectForKey:VN_X];
@@ -228,12 +228,12 @@
 }
 
 -(void)showPopView:(NSDictionary *)dic{
-    NSString *msgStr =[NSString stringWithFormat:@"您确定绑定 ‘%@’ 号码",dic[@"xs"]];
+    NSString *msgStr = [NSString stringWithFormat:@"%@ ‘%@’ %@",NSLocalizedString(@"您确定绑定",nil),dic[@"xs"],NSLocalizedString(@"号码",nil)];
     
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:msgStr delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定",nil, nil];
+     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:msgStr delegate:self cancelButtonTitle:NSLocalizedString(@"取消",nil) otherButtonTitles:NSLocalizedString(@"确定",nil),nil, nil];
     [alert setAlertViewStyle:UIAlertViewStylePlainTextInput];//UIAlertViewStyleLoginAndPasswordInput];
     UITextField *nameField = [alert textFieldAtIndex:0];
-    nameField.placeholder = @"请输入需要绑定的手机号码";
+    nameField.placeholder = NSLocalizedString(@"请输入需要绑定的手机号码",nil);
     
     [alert show];
 }
@@ -258,14 +258,14 @@
         //TODO
         DLog(@"phoneField>>%@",phoneField.text);
         if (phoneField.text.length == 0) {
-            [MBProgressHUD showErrorMessage:@"手机号不能为空"];
+            [MBProgressHUD showErrorMessage:NSLocalizedString(@"手机号不能为空",nil)];
             return;
         }
         
-        if (![phoneField.text checkPhoneNumInput:phoneField.text]) {
-            [MBProgressHUD showErrorMessage:@"请输入正确的手机号"];
-            return;
-        }
+//        if (![phoneField.text checkPhoneNumInput:phoneField.text]) {
+//            [MBProgressHUD showErrorMessage:NSLocalizedString(@"请输入正确的手机号",nil)];
+//            return;
+//        }
         [self sendBingRequest:phoneField.text OtherDic:self.dictionary];
 		return;
     }
@@ -288,7 +288,7 @@
 
     NSString *token = [[NSUserDefaults standardUserDefaults] objectForKey:VN_TOKEN];
     if (!token) {
-        UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:nil message:@"获取信息失败，请重新登录" delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+        UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:nil message:NSLocalizedString(@"获取信息失败，请重新登录",nil) delegate:self cancelButtonTitle:nil otherButtonTitles:NSLocalizedString(@"确定",nil), nil];
         [alertView show];
         
         [userManager DelInfo];
@@ -307,12 +307,12 @@
                                         };
     DLog(@"baseUrl>>>%@",baseUrl);
     DLog(@"parameters>>>%@",cretateParameters);
-    [MBProgressHUD showActivityMessageInView:@"请求中..."];
+    [MBProgressHUD showActivityMessageInView:NSLocalizedString(@"请求中...",nil)];
     [[AFNetAPIClient sharedJsonClient].setRequest(baseUrl).RequestType(Put).HTTPHeader(headerDic).Parameters(cretateParameters) startRequestWithSuccess:^(NSURLSessionDataTask *task, id responseObject) {
         [MBProgressHUD hideHUD];
         NSString *result = [[NSString alloc] initWithData:responseObject encoding:NSUTF8StringEncoding];
         if([[AFNetAPIClient sharedJsonClient] parseJSONData:result] == nil){
-            [MBProgressHUD showErrorMessage:@"服务器繁忙，请稍后再试"];
+            [MBProgressHUD showErrorMessage:NSLocalizedString(@"服务器繁忙，请稍后再试",nil)];
             return;
         }
         
@@ -330,7 +330,7 @@
                 [[NSUserDefaults standardUserDefaults]setObject:companyInfo[@"companyname"] forKey:VN_COMPANYNAME];
                 
 //                [self.navigationController popViewControllerAnimated:NO];
-				[self showAlertForTitle:@"绑定成功" Message:@""];
+				[self showAlertForTitle:NSLocalizedString(@"绑定成功",nil) Message:@""];
             }
             
         }else{
@@ -341,13 +341,13 @@
     } failure:^(NSURLSessionDataTask *task, NSError *error) {
         DLog(@"error>>>%@",error);
         [MBProgressHUD hideHUD];
-        [MBProgressHUD showErrorMessage:@"连接网络超时，请稍后再试"];
+        [MBProgressHUD showErrorMessage:NSLocalizedString(@"连接网络超时，请稍后再试",nil)];
     }];
 }
 
 
 -(void)showAlertForTitle:(NSString *)title Message:(NSString *)Msgstr{
-	UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:title message:Msgstr delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+	UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:title message:Msgstr delegate:self cancelButtonTitle:NSLocalizedString(@"确定",nil) otherButtonTitles:nil, nil];
 	alertView.tag = 122;
 	[alertView show];
 }

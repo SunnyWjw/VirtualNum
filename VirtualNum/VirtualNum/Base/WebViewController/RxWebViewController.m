@@ -227,11 +227,11 @@
         
         self.navigationController.interactivePopGestureRecognizer.enabled = NO;
 
-        [self addNavigationItemWithTitles:@[@"返回",@"关闭"] isLeft:YES target:self action:@selector(leftBtnClick:) tags:@[@2000,@2001]];
+        [self addNavigationItemWithTitles:@[NSLocalizedString(@"返回",nil),NSLocalizedString(@"关闭",nil)] isLeft:YES target:self action:@selector(leftBtnClick:) tags:@[@2000,@2001]];
         
     }else{
         self.navigationController.interactivePopGestureRecognizer.enabled = YES;
-        [self addNavigationItemWithTitles:@[@"返回"] isLeft:YES target:self action:@selector(leftBtnClick:) tags:@[@2001]];
+        [self addNavigationItemWithTitles:@[NSLocalizedString(@"返回",nil)] isLeft:YES target:self action:@selector(leftBtnClick:) tags:@[@2001]];
     }
     
     
@@ -359,7 +359,7 @@
         UIImage* backItemHlImage = [[UIImage imageNamed:@"backItemImage-hl"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
         
         UIButton* backButton = [[UIButton alloc] init];
-        [backButton setTitle:@"返回" forState:UIControlStateNormal];
+        [backButton setTitle:NSLocalizedString(@"返回",nil) forState:UIControlStateNormal];
         [backButton setTitleColor:self.navigationController.navigationBar.tintColor forState:UIControlStateNormal];
         [backButton setTitleColor:[self.navigationController.navigationBar.tintColor colorWithAlphaComponent:0.5] forState:UIControlStateHighlighted];
         [backButton.titleLabel setFont:[UIFont systemFontOfSize:17]];
@@ -375,7 +375,7 @@
 
 -(UIBarButtonItem*)closeButtonItem{
     if (!_closeButtonItem) {
-        _closeButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"关闭" style:UIBarButtonItemStylePlain target:self action:@selector(closeItemClicked)];
+        _closeButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"关闭",nil) style:UIBarButtonItemStylePlain target:self action:@selector(closeItemClicked)];
     }
     return _closeButtonItem;
 }

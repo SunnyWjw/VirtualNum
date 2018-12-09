@@ -23,7 +23,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.title = @"联系人详情";
+    self.title = NSLocalizedString(@"联系人详情",nil);
     
     [self creadTableView];
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"Cell"];

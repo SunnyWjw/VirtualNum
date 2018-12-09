@@ -22,11 +22,11 @@ const NSInteger hideTime = 2;
     }
     hud.minSize = CGSizeMake(100, 100);
 	if ([message isKindOfClass:[NSArray class]]) {
-		hud.label.text= @"加载中...";//@"加载中...";//
+		hud.label.text= NSLocalizedString(@"加载中...",nil);//@"加载中...";//
 	}else if ( [message isKindOfClass:[NSMutableArray class]]) {
-		hud.label.text= @"加载中...";//@"加载中...";//
+		hud.label.text= NSLocalizedString(@"加载中...",nil);//@"加载中...";//
 	}else{
-		hud.label.text= message.length > 0 ? message : @"加载中...";//@"加载中...";//
+		hud.label.text= message.length > 0 ? message : NSLocalizedString(@"加载中...",nil);//@"加载中...";//
 	}
 	
     hud.label.font=[UIFont systemFontOfSize:15];

@@ -32,7 +32,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.title = @"登录";
+    self.title = NSLocalizedString(@"登录",nil);
     
     kWeakSelf(self);
 	
@@ -78,7 +78,7 @@
     
     self.userNameTf = [[UITextField alloc]init];
     [userImgView addSubview:self.userNameTf];
-    self.userNameTf.placeholder = @"请输入用户名";
+    self.userNameTf.placeholder = NSLocalizedString(@"请输入用户名",nil);
     self.userNameTf.clearButtonMode = UITextFieldViewModeWhileEditing;
     self.userNameTf.tag = 500;
     self.userNameTf.delegate = self;
@@ -109,14 +109,14 @@
     }];
     
     self.passwordTf = [[UITextField alloc]init];
-    self.passwordTf.placeholder = @"请输入密码";
+    self.passwordTf.placeholder = NSLocalizedString(@"请输入密码",nil);
     self.passwordTf.font = [UIFont systemFontOfSize:16.0];
     self.passwordTf.clearButtonMode = UITextFieldViewModeWhileEditing;
     self.passwordTf.tag = 501;
     // 密码格式
     self.passwordTf.secureTextEntry = YES;
     self.passwordTf.delegate = self;
-	self.passwordTf.text = @"888888";
+	self.passwordTf.text = @"livecom";
     [pswImgView addSubview:self.passwordTf];
     
     [self.passwordTf mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -144,12 +144,12 @@
     }];
     
     self.companyTf = [[UITextField alloc]init];
-    self.companyTf.placeholder = @"请输入企业ID";
+    self.companyTf.placeholder = NSLocalizedString(@"请输入企业ID",nil);
     self.companyTf.font = [UIFont systemFontOfSize:16.0];
     self.companyTf.clearButtonMode = UITextFieldViewModeWhileEditing;
     self.companyTf.tag = 501;
     // 密码格式
-    self.companyTf.secureTextEntry = YES;
+//    self.companyTf.secureTextEntry = YES;
     self.companyTf.delegate = self;
 	self.companyTf.text = @"1101";
     [companyImgView addSubview:self.companyTf];
@@ -165,7 +165,8 @@
     //记住密码
     self.recordPswBox = [[QCheckBox alloc]initWithDelegate:self];
     self.recordPswBox.frame = CGRectMake(userImgView.frame.origin.x, (companyImgView.frame.origin.y+55), 100, 20);
-    [self.recordPswBox setTitle:@"自动登录" forState:UIControlStateNormal];
+    [self.recordPswBox setTitle:NSLocalizedString(@"自动登录",nil) forState:UIControlStateNormal];
+	self.recordPswBox.titleLabel.font = [UIFont systemFontOfSize:13];
     self.recordPswBox.tag = 1001;
     [self.recordPswBox setTitleColor:[UIColor colorWithHexString:@"#919191"] forState:UIControlStateNormal];
     [self.view addSubview:self.recordPswBox];
@@ -179,7 +180,7 @@
     //loginBtn
     UIButton *loginBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     loginBtn.backgroundColor =CNavBgColor;
-    [loginBtn setTitle:@"登  录" forState:UIControlStateNormal];
+    [loginBtn setTitle:NSLocalizedString(@"登  录",nil) forState:UIControlStateNormal];
     loginBtn.titleLabel.font = [UIFont boldSystemFontOfSize:16.0];
     [loginBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [loginBtn addTarget:self action:@selector(loginClick) forControlEvents:UIControlEventTouchUpInside];
@@ -215,17 +216,17 @@
     // 判断用户名
     if ([self.userNameTf.text length]<2)
     {
-        [MBProgressHUD showErrorMessage:@"请输入正确的用户名"];
+        [MBProgressHUD showErrorMessage:NSLocalizedString(@"请输入正确的用户名",nil)];
         return;
     }
     // 判断密码
     if (!([self.passwordTf.text length]<=16 && [self.passwordTf.text length]>=1))
     {
-        [MBProgressHUD showErrorMessage:@"请输入正确的密码"];
+        [MBProgressHUD showErrorMessage:NSLocalizedString(@"请输入正确的密码",nil)];
         return;
     }
     if (self.companyTf.text.length < 1) {
-        [MBProgressHUD showErrorMessage:@"请输入企业ID"];
+        [MBProgressHUD showErrorMessage:NSLocalizedString(@"请输入企业ID",nil)];
         return;
     }
     
@@ -249,7 +250,7 @@
 
 -(void)showErrorLog:(NSString *)errorMsg{
 //    [MBProgressHUD showErrorMessage:errorMsg];
-    UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:@"提示" message:errorMsg delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+    UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:NSLocalizedString(@"提示",nil) message:errorMsg delegate:self cancelButtonTitle:NSLocalizedString(@"确定",nil) otherButtonTitles:nil, nil];
     alertView.tag = 122;
     [alertView show];
 }

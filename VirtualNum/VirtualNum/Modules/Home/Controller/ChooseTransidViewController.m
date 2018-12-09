@@ -25,7 +25,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.title = @"选择TransID";
+    self.title = NSLocalizedString(@"选择TransID",nil);
     // 设置导航控制器的代理为self
     //self.navigationController.delegate = self;
     //    self.navigationController.navigationBar.hidden = YES;
@@ -66,7 +66,7 @@
     int pageCount = ceil(self.totalCount / 10.0);
     if (self.curPage > pageCount) {
         [self endRefresh];
-        [MBProgressHUD showErrorMessage:@"这是最后一页了！"];
+        [MBProgressHUD showErrorMessage:NSLocalizedString(@"这是最后一页了！",nil)];
         return;
     }
     //    //开始刷新数据
@@ -94,7 +94,7 @@
     NSString *comPanyIDStr = [[NSUserDefaults standardUserDefaults] objectForKey:VN_COMPANYID];
     if (!comPanyIDStr) {
         
-        UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:nil message:@"获取信息失败，请重新登录" delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+        UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:nil message:NSLocalizedString(@"获取信息失败，请重新登录",nil) delegate:self cancelButtonTitle:nil otherButtonTitles:NSLocalizedString(@"确定",nil), nil];
         [alertView show];
         
         [userManager DelInfo];
@@ -113,7 +113,7 @@
     NSString *token = [[NSUserDefaults standardUserDefaults] objectForKey:VN_TOKEN];
     if (!token) {
         
-        UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:nil message:@"获取信息失败，请重新登录" delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+        UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:nil message:NSLocalizedString(@"获取信息失败，请重新登录",nil) delegate:self cancelButtonTitle:nil otherButtonTitles:NSLocalizedString(@"确定",nil), nil];
         [alertView show];
         
         [userManager DelInfo];
@@ -127,14 +127,14 @@
 
     DLog(@" 获取AXB.... URL>>>%@ \n parameters>>%@",baseUrl,parameters);
     //    NSDictionary *newParam = [SBAPIurl TextCodeBase64:parameters];
-    [MBProgressHUD showActivityMessageInView:@"请求中..."];
+    [MBProgressHUD showActivityMessageInView:NSLocalizedString(@"请求中...",nil)];
     [[AFNetAPIClient sharedJsonClient].setRequest(baseUrl).RequestType(Post).HTTPHeader(headerDic).Parameters(parameters) startRequestWithSuccess:^(NSURLSessionDataTask *task, id responseObject) {
         [MBProgressHUD hideHUD];
         
         [self endRefresh];
         NSString *result = [[NSString alloc] initWithData:responseObject encoding:NSUTF8StringEncoding];
         if([[AFNetAPIClient sharedJsonClient] parseJSONData:result] == nil){
-            [MBProgressHUD showErrorMessage:@"服务器繁忙，请稍后再试"];
+            [MBProgressHUD showErrorMessage:NSLocalizedString(@"服务器繁忙，请稍后再试",nil)];
             return;
         }
         
@@ -157,7 +157,7 @@
     } failure:^(NSURLSessionDataTask *task, NSError *error) {
         [self endRefresh];
         [MBProgressHUD hideHUD];
-        [MBProgressHUD showErrorMessage:@"连接网络超时，请稍后再试"];
+        [MBProgressHUD showErrorMessage:NSLocalizedString(@"连接网络超时，请稍后再试",nil)];
     }];
 }
 
@@ -202,11 +202,11 @@
     NSString *trans =dic[@"t"];
     
     if (mode.length == 0 || ![mode isEqualToString:@"dual"]) {
-        [MBProgressHUD showErrorMessage:@"请选择MODE为dual的数据！"];
+        [MBProgressHUD showErrorMessage:NSLocalizedString(@"请选择MODE为dual的数据！",nil)];
         return;
     }
     if (trans.length == 0) {
-        [MBProgressHUD showErrorMessage:@"请选择trans不为空的数据！"];
+        [MBProgressHUD showErrorMessage:NSLocalizedString(@"请选择trans不为空的数据!",nil)];
         return;
     }
      //[self sendDualCallWithOldDic:dic];
@@ -235,7 +235,7 @@
     NSString *token = [[NSUserDefaults standardUserDefaults] objectForKey:VN_TOKEN];
     if (!token) {
         
-        UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:nil message:@"获取信息失败，请重新登录" delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+        UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:nil message:NSLocalizedString(@"获取信息失败，请重新登录",nil) delegate:self cancelButtonTitle:nil otherButtonTitles:NSLocalizedString(@"确定",nil), nil];
         [alertView show];
         
         [userManager DelInfo];
@@ -254,13 +254,13 @@
                                  @"type": @"update"
                                  } ;
     DLog(@"绑定AXBparameters>>>%@",parameters);
-    [MBProgressHUD showActivityMessageInView:@"请求中..."];
+    [MBProgressHUD showActivityMessageInView:NSLocalizedString(@"请求中...",nil)];
     
     [[AFNetAPIClient sharedJsonClient].setRequest(baseUrl).RequestType(Put).HTTPHeader(headerDic).Parameters(parameters) startRequestWithSuccess:^(NSURLSessionDataTask *task, id responseObject) {
         [MBProgressHUD hideHUD];
         NSString *result = [[NSString alloc] initWithData:responseObject encoding:NSUTF8StringEncoding];
         if([[AFNetAPIClient sharedJsonClient] parseJSONData:result] == nil){
-            [MBProgressHUD showErrorMessage:@"服务器繁忙，请稍后再试"];
+            [MBProgressHUD showErrorMessage:NSLocalizedString(@"服务器繁忙，请稍后再试",nil)];
             return;
         }
         
@@ -278,7 +278,7 @@
         
     } failure:^(NSURLSessionDataTask *task, NSError *error) {
         [MBProgressHUD hideHUD];
-        [MBProgressHUD showErrorMessage:@"连接网络超时，请稍后再试"];
+        [MBProgressHUD showErrorMessage:NSLocalizedString(@"连接网络超时，请稍后再试",nil)];
     }];
     
 }
@@ -295,7 +295,7 @@
     NSString *token = [[NSUserDefaults standardUserDefaults] objectForKey:VN_TOKEN];
     if (!token) {
         
-        UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:nil message:@"获取信息失败，请重新登录" delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+        UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:nil message:NSLocalizedString(@"获取信息失败，请重新登录",nil) delegate:self cancelButtonTitle:nil otherButtonTitles:NSLocalizedString(@"确定",nil), nil];
         [alertView show];
         
         [userManager DelInfo];
@@ -313,13 +313,13 @@
                                  @"transid":strCompany
                                  } ;
     DLog(@"绑定AXBparameters>>>%@",parameters);
-    [MBProgressHUD showActivityMessageInView:@"请求中..."];
+    [MBProgressHUD showActivityMessageInView:NSLocalizedString(@"请求中...",nil)];
     
     [[AFNetAPIClient sharedJsonClient].setRequest(baseUrl).RequestType(Put).HTTPHeader(headerDic).Parameters(parameters) startRequestWithSuccess:^(NSURLSessionDataTask *task, id responseObject) {
         [MBProgressHUD hideHUD];
         NSString *result = [[NSString alloc] initWithData:responseObject encoding:NSUTF8StringEncoding];
         if([[AFNetAPIClient sharedJsonClient] parseJSONData:result] == nil){
-            [MBProgressHUD showErrorMessage:@"服务器繁忙，请稍后再试"];
+            [MBProgressHUD showErrorMessage:NSLocalizedString(@"服务器繁忙，请稍后再试",nil)];
             return;
         }
         
@@ -337,7 +337,7 @@
         
     } failure:^(NSURLSessionDataTask *task, NSError *error) {
         [MBProgressHUD hideHUD];
-        [MBProgressHUD showErrorMessage:@"连接网络超时，请稍后再试"];
+        [MBProgressHUD showErrorMessage:NSLocalizedString(@"连接网络超时，请稍后再试",nil)];
     }];
 }
 

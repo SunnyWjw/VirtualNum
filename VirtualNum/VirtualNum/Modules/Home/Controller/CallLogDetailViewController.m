@@ -28,7 +28,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    self.title = @"通话详情";
+    self.title = NSLocalizedString(@"通话详情",nil);
     _dataArray = [[NSArray alloc] init];
     [self creadTableView];
     self.dataArray = [[DataBase sharedDataBase] queryAllCallLog:_callLog.CallPhoneNum XNum:[NSString stringWithFormat:@"%@", _callLog.generatorPersonnel] TopNumber:@""];
@@ -127,13 +127,13 @@
             cell2.selectionStyle = UITableViewCellSelectionStyleNone;
             
             CallLog *detailCallLog = self.dataArray[indexPath.row];
-            cell2.leftTopLabel.text =[NSString stringWithFormat:@"呼出 %@",detailCallLog.generateTime];
+            cell2.leftTopLabel.text =[NSString stringWithFormat:@"%@ %@",NSLocalizedString(@"呼出",nil),detailCallLog.generateTime];
             NSString *strDurationTime = @"0";
             if (detailCallLog.durationTime.length > 0) {
                 strDurationTime = detailCallLog.durationTime;
             }
-            cell2.rightTopLabel.text = [NSString stringWithFormat:@"%@秒",strDurationTime];
-            NSString *mode = [detailCallLog.serviceType isEqual:@"0" ] ? @"租车模式-dual" : @"中介模式-single";
+            cell2.rightTopLabel.text = [NSString stringWithFormat:@"%@%@",strDurationTime,NSLocalizedString(@"秒",nil)];
+            NSString *mode = [detailCallLog.serviceType isEqual:@"0" ] ? NSLocalizedString(@"租车模式-dual",nil) : NSLocalizedString(@"中介模式-single",nil);
             cell2.leftBottomLabel.text = [NSString stringWithFormat:@"%@",mode];
             cell2.rightBottomLabel.text = [NSString stringWithFormat:@"%@",detailCallLog.randomNum];
             
@@ -161,9 +161,6 @@
                         
                         ChooseTransidViewController *ctVC = [[ChooseTransidViewController alloc] init];
                         [self.navigationController pushViewController:ctVC animated:NO];
-                        /*
-                        [callphone sendCallRequestToActivationTran];
-                         */
                     }else{
                         XNum = [NSString stringWithFormat:@"%@%@",VN_CALLPREFIX,XNum];
                         NSMutableString *str=[[NSMutableString alloc]initWithFormat:@"tel://%@",XNum];
@@ -191,7 +188,7 @@
     NSString *token = [[NSUserDefaults standardUserDefaults] objectForKey:VN_TOKEN];
     if (!token) {
         
-        UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:nil message:@"获取信息失败，请重新登录" delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+        UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:nil message:NSLocalizedString(@"获取信息失败，请重新登录",nil) delegate:self cancelButtonTitle:nil otherButtonTitles:NSLocalizedString(NSLocalizedString(@"确定",nil),nil), nil];
         [alertView show];
         
         [userManager DelInfo];
@@ -209,13 +206,13 @@
                                  @"transid":strTransid
                                  } ;
     DLog(@"绑定AXBparameters>>>%@",parameters);
-    [MBProgressHUD showActivityMessageInView:@"请求中..."];
+    [MBProgressHUD showActivityMessageInView:NSLocalizedString(@"请求中...",nil)];
     
     [[AFNetAPIClient sharedJsonClient].setRequest(baseUrl).RequestType(Put).HTTPHeader(headerDic).Parameters(parameters) startRequestWithSuccess:^(NSURLSessionDataTask *task, id responseObject) {
         [MBProgressHUD hideHUD];
         NSString *result = [[NSString alloc] initWithData:responseObject encoding:NSUTF8StringEncoding];
         if([[AFNetAPIClient sharedJsonClient] parseJSONData:result] == nil){
-            [MBProgressHUD showErrorMessage:@"服务器繁忙，请稍后再试"];
+            [MBProgressHUD showErrorMessage:NSLocalizedString(@"服务器繁忙，请稍后再试",nil)];
             return;
         }
         
@@ -233,7 +230,7 @@
         
     } failure:^(NSURLSessionDataTask *task, NSError *error) {
         [MBProgressHUD hideHUD];
-        [MBProgressHUD showErrorMessage:@"连接网络超时，请稍后再试"];
+        [MBProgressHUD showErrorMessage:NSLocalizedString(@"连接网络超时，请稍后再试",nil)];
     }];
 }
 

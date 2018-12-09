@@ -2,9 +2,96 @@
   Localizable.strings
   VirtualNum
 
-  Created by SunnyWu on 2017/7/7.
-  Copyright © 2017年 SunnyWu. All rights reserved.
+  Created by SunnyWu on 2018/12/7.
+  Copyright © 2018 SunnyWu. All rights reserved.
 */
+
 "Pull to refresh..." = "Pull to refresh...";
 "Release to refresh..." = "Release to refresh...";
 "Loading..." = "Loading...";
+"登  录" = "Log in";
+"登录" = "Login";
+"请输入用户名" = "Please enter user name";
+"请输入密码" = "Please enter your password";
+"请输入企业ID" = "Please enter the Company ID";
+"自动登录" = "Auto Login";
+"请输入正确的用户名" = "Username is incorrect";
+"请输入正确的密码" = "The password is incorrect";
+"登录中..." = "Loading...";
+"确定" = "OK";
+"加载中..." = "Loading...";
+
+"提示" = "Tips";
+"通话记录" = "Call records";
+"请在iPhone的“设置-隐私-通讯录”选项中，允许虚拟号访问您的通讯录" = "Please allow the virtual number to access your address book in the Settings - Privacy - Address Book option on the iPhone.";
+"知道了" = "OK";
+"请输入您的CompanyID" = "Please enter the Company ID";
+"暂无通话记录" = "No call history";
+"温馨提示" = "Tips";
+"您暂未选择号码，请选择号码进入绑定!" = "You have not selected a number, please select a number to bind!";
+"取消" = "Cancel";
+"号码" = "Number";
+
+"被叫号码" = "Called";
+"该功能暂未开放" = "This feature is not yet open";
+"收起键盘" = "Hidden  keyboard";
+"显示键盘" = "Show  keyboard";
+
+"选择X号码" = "Selected X Num";
+"这是最后一页了！" = "This is the last page.！";
+"获取信息失败，请重新登录" = "Failed to get information, please log in again";
+"服务器繁忙，请稍后再试" = "The server is busy, please try again later";
+"连接网络超时，请稍后再试" = "Connection network timed out, please try again later";
+
+"您确定绑定" = "You are sure to bind";
+"请输入需要绑定的手机号码" = "Please enter the mobile number you need to bind";
+"手机号不能为空" = "Phone number cannot be empty";
+"请输入正确的手机号" = "Phone number is incorrect";
+
+"绑定成功" = "Binding success";
+"通话详情" = "Call details";
+"呼出" = "Call out";
+"租车模式-dual" = "dual";
+"中介模式-single" = "single";
+"秒" = "S";
+"选择TransID" = "Selected TransID";
+"请选择MODE为dual的数据！" = "Please select the data of dual!";
+"请选择trans不为空的数据!" = "Please select data that is not empty of trans!";
+"该联系人没有添加联系电话，不能进行呼叫" = "The contact did not add a contact number and cannot make a call";
+"联系人" = "Contact";
+"没有电话号码" = "No phone number";
+"只有一个电话号码" = "Only one phone number";
+"有" = "have";
+
+"个电话号码" = "Phone number";
+"联系人详情" = "Contact details";
+"请先绑定手机号码" = "Please bind your mobile number.";
+"请先绑定X号码" = "Please bind the X number";
+"请输入companyid" = "Please enter the Company ID";
+"退出当前账号？" = "Exit current account？";
+"个人中心" = "Personal center";
+"绑定X号码" = "bind the X number";
+"解绑X" = "Untied X number";
+"服务模式" = "Service mode";
+"退出" = "log out";
+"个人资料" = "Personal information";
+"设置" = "setting";
+"权限" = "Permission";
+"企业ID" = "Company ID";
+"手机号码" = "phone number";
+"X号码" = "Xnumber";
+"租车模式" = "dual";
+"中介模式" = "single";
+"您确定要解绑" = "You are sure to untie";
+"爱讯达" = "Livecom";
+"解除绑定成功" = "untie success";
+"绑定手机号码" = "Please bind your mobile number.";
+"请输入手机号码" = "Please enter the mobile number you need to bind";
+"绑  定" = "Bind";
+"请输入手机号完成绑定" = "Please enter the mobile number you need to bind";
+"请输入正确的手机号" = "mobile number is incorrect";
+"返回" = "Back";
+"关闭" = "Closed";
+"粘贴" = "Paste";
+"语言设置" = "Language Settings";
+"跟随系统" = "Follow system";

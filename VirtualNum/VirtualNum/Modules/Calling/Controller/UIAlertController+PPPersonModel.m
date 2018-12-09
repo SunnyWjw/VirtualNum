@@ -22,17 +22,17 @@
     
     if (contactObject.mobileArray.count ==0)//没有phone
     {
-        title = [NSString stringWithFormat:@"%@没有电话号码",contactObject.name];
+        title = [NSString stringWithFormat:@"%@%@",contactObject.name,NSLocalizedString(@"没有电话号码",nil)];
     }
     
     else if(contactObject.mobileArray.count == 1)//只有一个phone
     {
-        title = [NSString stringWithFormat:@"%@只有一个电话号码:%@",contactObject.name,contactObject.mobileArray.firstObject];
+        title = [NSString stringWithFormat:@"%@%@:%@",contactObject.name,contactObject.mobileArray.firstObject,NSLocalizedString(@"只有一个电话号码",nil)];
     }
     
     else//多个phone
     {
-        title = [NSString stringWithFormat:@"%@有%@个电话号码",contactObject.name,@(contactObject.mobileArray.count)];
+        title = [NSString stringWithFormat:@"%@%@%@",contactObject.name,NSLocalizedString(@"有",nil),@(contactObject.mobileArray.count),NSLocalizedString(@"个电话号码",nil)];
         style = UIAlertControllerStyleActionSheet;
         
     }
@@ -45,7 +45,7 @@
     }
     
     else if (contactObject.mobileArray.count == 0){
-        [alertController addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+        [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"取消",nil) style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
             
         }]];
         
@@ -53,7 +53,7 @@
     
     else
     {
-        [alertController addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+        [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"取消",nil) style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
             
         }]];
         
@@ -79,9 +79,6 @@
                         
                         ChooseTransidViewController *ctVC = [[ChooseTransidViewController alloc] init];
                         [viewController.navigationController pushViewController:ctVC animated:NO];
-                         /*
-                         [callphone sendCallRequestToActivationTran];
-                          */
                     }else{
                         XNum = [NSString stringWithFormat:@"%@%@",VN_CALLPREFIX,XNum];
                         NSMutableString *str=[[NSMutableString alloc]initWithFormat:@"tel://%@",XNum];
@@ -96,7 +93,7 @@
         [alertController addAction:action];
     }
     
-    UIAlertAction * action = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+    UIAlertAction * action = [UIAlertAction actionWithTitle:NSLocalizedString(@"取消",nil) style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
         
         
     }];

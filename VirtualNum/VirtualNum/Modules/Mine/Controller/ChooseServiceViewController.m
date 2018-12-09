@@ -25,7 +25,7 @@ static NSUInteger selectInt;
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.title= @"服务模式";
+    self.title= NSLocalizedString(@"服务模式",nil);
     
     self.tableview = [[UITableView alloc]initWithFrame:self.view.bounds style:UITableViewStylePlain];
     self.tableview.delegate = self;
@@ -34,7 +34,7 @@ static NSUInteger selectInt;
     [self.view addSubview:self.tableview];
     [Common setExtraCellLineHidden:self.tableview];
     
-    self.dataArray = @[@"租车模式", @"中介模式"];
+    self.dataArray = @[NSLocalizedString(@"租车模式",nil), NSLocalizedString(@"中介模式",nil)];
     
     NSString *callSettingsType = [[NSUserDefaults standardUserDefaults] objectForKey:VN_SERVICE];
     for (int i = 0; i< self.dataArray.count; i++) {
@@ -96,7 +96,7 @@ static NSUInteger selectInt;
 
 	NSString *callType = [NSString stringWithFormat:@"%@",[self.dataArray objectAtIndex:indexPath.row]];
 	    cell.textNameLab.text = callType;
-	if([callType isEqualToString:@"中介模式"]){
+	if([callType isEqualToString:NSLocalizedString(@"中介模式",nil)]){
 		   cell.detailTextLab.text = @"single";
 	}else{
 		cell.detailTextLab.text = @"dual";

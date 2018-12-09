@@ -138,7 +138,7 @@
         
         self.navigationController.interactivePopGestureRecognizer.enabled = NO;
         
-        [self addNavigationItemWithTitles:@[@"返回",@"关闭"] isLeft:YES target:self action:@selector(leftBtnClick:) tags:@[@2000,@2001]];
+        [self addNavigationItemWithTitles:@[NSLocalizedString(@"返回",nil),NSLocalizedString(@"关闭",nil)] isLeft:YES target:self action:@selector(leftBtnClick:) tags:@[@2000,@2001]];
         
     }else{
         self.navigationController.interactivePopGestureRecognizer.enabled = YES;
@@ -148,7 +148,7 @@
         //现在先把iOS 9以下的不使用动态添加按钮 其实微信也是这样做的，即便返回到webview的第一页也保留了关闭按钮
         
         if (kiOS9Later) {
-            [self addNavigationItemWithTitles:@[@"返回"] isLeft:YES target:self action:@selector(leftBtnClick:) tags:@[@2001]];
+            [self addNavigationItemWithTitles:@[NSLocalizedString(@"返回",nil)] isLeft:YES target:self action:@selector(leftBtnClick:) tags:@[@2001]];
         }
     }
 }

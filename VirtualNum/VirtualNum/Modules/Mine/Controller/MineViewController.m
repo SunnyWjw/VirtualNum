@@ -10,6 +10,7 @@
 #import "ChooseNumViewController.h"
 #import "ChooseServiceViewController.h"
 #import "BindPhoneViewController.h"
+#import "SetLanguageViewController.h"
 
 @interface MineViewController ()<UITableViewDelegate,UITableViewDataSource,UIAlertViewDelegate>
 
@@ -24,10 +25,10 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.title=@"个人中心";
+    self.title=NSLocalizedString(@"个人中心",nil);
     [self creadTableView];
     
-    self.dataArray = @[@"绑定X号码", @"解绑X", @"服务模式"];//, @"去激活Trans"];
+    self.dataArray = @[NSLocalizedString(@"绑定X号码",nil),NSLocalizedString(@"解绑X",nil), NSLocalizedString(@"服务模式",nil),NSLocalizedString(@"语言设置",nil)];//, @"去激活Trans"];
     
 }
 
@@ -56,7 +57,7 @@
     self.SiginOutBtn.backgroundColor =[UIColor colorWithHexString:@"EF271A"];
     [self.SiginOutBtn setTintColor:[UIColor whiteColor]];
     self.SiginOutBtn.titleLabel.font = [UIFont systemFontOfSize:18.0];
-    [self.SiginOutBtn setTitle:@"退出" forState:UIControlStateNormal];
+    [self.SiginOutBtn setTitle:NSLocalizedString(@"退出",nil) forState:UIControlStateNormal];
     [self.SiginOutBtn addTarget:self action:@selector(sginOutButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
     [tablefootView addSubview:self.SiginOutBtn];
     
@@ -121,10 +122,10 @@
     [v addSubview:labelTitle];
     switch (section) {
         case 0:
-            labelTitle.text = @"个人资料";
+            labelTitle.text = NSLocalizedString(@"个人资料",nil);
             break;
         case 1:
-            labelTitle.text =@"设置";
+            labelTitle.text =NSLocalizedString(@"设置",nil);
             break;
         default:
             break;
@@ -150,7 +151,7 @@
             switch (indexPath.row) {
                 case 0:
                 {
-                    cell.textLabel.text =@"权限";
+                    cell.textLabel.text =NSLocalizedString(@"权限",nil);
                     NSString * companyNmaeStr = [[NSUserDefaults standardUserDefaults] objectForKey:permissions];
                     if (!companyNmaeStr) {
                         companyNmaeStr = @"--";
@@ -160,7 +161,7 @@
                     break;
                 case 1:
                 {
-                    cell.textLabel.text =@"企业ID";
+                    cell.textLabel.text =NSLocalizedString(@"企业ID",nil);
                     NSString * companyIDStr = [[NSUserDefaults standardUserDefaults] objectForKey:VN_COMPANYID];
                     if (!companyIDStr) {
                         companyIDStr = @"--";
@@ -170,7 +171,7 @@
                     break;
                 case 2:
                 {
-                    cell.textLabel.text = @"手机号码";
+                    cell.textLabel.text = NSLocalizedString(@"手机号码",nil);
                     NSString * phoneNumStr = [[NSUserDefaults standardUserDefaults] objectForKey:VN_PHONE];
                     if (!phoneNumStr) {
                         phoneNumStr = @"--";
@@ -180,7 +181,7 @@
                     break;
                 default:
                 {
-                    cell.textLabel.text =@"X号码";
+                    cell.textLabel.text =NSLocalizedString(@"X号码",nil);
                     NSString * xNumStr = [[NSUserDefaults standardUserDefaults] objectForKey:VN_X];
                     if (!xNumStr) {
                         xNumStr = @"--";
@@ -219,14 +220,14 @@
                     NSString *callSettingsType = [[NSUserDefaults standardUserDefaults] objectForKey:VN_SERVICE];
                     NSString *callType=@"";
                     if([callSettingsType isEqualToString:@"0"]){
-                        callType=@"租车模式";
+                        callType=NSLocalizedString(@"租车模式",nil);
                     }else{
-                        callType=@"中介模式";
+                        callType=NSLocalizedString(@"中介模式",nil);
                     }
                     cell2.detailTextLabel.text = callType;
                 }
                     break;
-                    
+					
                 default:
                     cell2.textLabel.text =[self.dataArray objectAtIndex:indexPath.row];
                     
@@ -269,16 +270,16 @@
                 {
                     NSString *xNumStr = [[NSUserDefaults standardUserDefaults] objectForKey:VN_X];
                     if (!xNumStr) {
-                        [MBProgressHUD showErrorMessage:@"请先绑定X号码"];
+                        [MBProgressHUD showErrorMessage:NSLocalizedString(@"请先绑定X号码",nil)];
                         return;
                     }
                     NSString *phoneNum = [[NSUserDefaults standardUserDefaults] objectForKey:VN_PHONE];
                     if (!phoneNum) {
-                        [MBProgressHUD showErrorMessage:@"请先绑定手机号码"];
+                        [MBProgressHUD showErrorMessage:NSLocalizedString(@"请先绑定手机号码",nil)];
                         return;
                     }
-                    NSString *msg = [NSString stringWithFormat:@"您确定要解绑 %@ ?",xNumStr];
-                    UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:nil message:msg delegate:self cancelButtonTitle:@"确定" otherButtonTitles:@"取消", nil];
+                    NSString *msg = [NSString stringWithFormat:@"%@ %@ ?",NSLocalizedString(@"您确定要解绑",nil),xNumStr];
+                    UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:nil message:msg delegate:self cancelButtonTitle:NSLocalizedString(@"确定",nil) otherButtonTitles:NSLocalizedString(@"取消",nil), nil];
                     alertView.tag=10086;
                     [alertView show];
                 }
@@ -292,13 +293,15 @@
                     break;
                 default:
                 {
-                    NSString *xNumStr = [[NSUserDefaults standardUserDefaults] objectForKey:VN_X];
-                    if (!xNumStr) {
-                        [MBProgressHUD showErrorMessage:@"请先绑定X号码"];
-                        return;
-                    }
-                    
-                    [self sendRequestDelToTrans];
+//                    NSString *xNumStr = [[NSUserDefaults standardUserDefaults] objectForKey:VN_X];
+//                    if (!xNumStr) {
+//                        [MBProgressHUD showErrorMessage:NSLocalizedString(@"请先绑定X号码",nil)];
+//                        return;
+//                    }
+//
+//                    [self sendRequestDelToTrans];
+					SetLanguageViewController *langVC = [[SetLanguageViewController alloc] init];
+					 [self.navigationController pushViewController:langVC animated:NO];
                 }
                     break;
             }
@@ -335,7 +338,7 @@
     NSString *token = [[NSUserDefaults standardUserDefaults] objectForKey:VN_TOKEN];
     if (!token) {
         
-        UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:nil message:@"获取信息失败，请重新登录" delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+        UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:nil message:NSLocalizedString(@"获取信息失败，请重新登录",nil) delegate:self cancelButtonTitle:nil otherButtonTitles:NSLocalizedString(@"确定",nil), nil];
         [alertView show];
         
         [userManager DelInfo];
@@ -352,15 +355,15 @@
                                  @"a": phoneNum,
                                  @"x": xNumStr,
                                  @"companyid": companyIDStr,
-                                 @"companyname": @"爱讯达"
+                                 @"companyname": NSLocalizedString(@"爱讯达",nil)
                                  } ;
     DLog(@"解绑AXparameters>>>%@",parameters);
-    [MBProgressHUD showActivityMessageInView:@"请求中..."];
+    [MBProgressHUD showActivityMessageInView:NSLocalizedString(@"请求中...",nil)];
     [[AFNetAPIClient sharedJsonClient].setRequest(baseUrl).RequestType(Delete).HTTPHeader(headerDic).Parameters(parameters) startRequestWithSuccess:^(NSURLSessionDataTask *task, id responseObject) {
         [MBProgressHUD hideHUD];
         NSString *result = [[NSString alloc] initWithData:responseObject encoding:NSUTF8StringEncoding];
         if([[AFNetAPIClient sharedJsonClient] parseJSONData:result] == nil){
-            [MBProgressHUD showErrorMessage:@"服务器繁忙，请稍后再试"];
+            [MBProgressHUD showErrorMessage:NSLocalizedString(@"服务器繁忙，请稍后再试",nil)];
             return;
         }
         
@@ -370,7 +373,7 @@
         if ([successstr isEqualToString:@"1"]) {
             if ([[tempJSON objectForKey:@"data"] isKindOfClass:[NSArray class]])
             {
-                [MBProgressHUD showErrorMessage:@"解除绑定成功"];
+                [MBProgressHUD showErrorMessage:NSLocalizedString(@"解除绑定成功",nil)];
                 [[NSUserDefaults standardUserDefaults] removeObjectForKey:VN_X];
                 [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"OldTrans"];
                 [self.personalTableView reloadData];
@@ -383,7 +386,7 @@
         
     } failure:^(NSURLSessionDataTask *task, NSError *error) {
         [MBProgressHUD hideHUD];
-        [MBProgressHUD showErrorMessage:@"连接网络超时，请稍后再试"];
+        [MBProgressHUD showErrorMessage:NSLocalizedString(@"连接网络超时，请稍后再试",nil)];
     }];
 }
 
@@ -396,7 +399,7 @@
     NSString *token = [[NSUserDefaults standardUserDefaults] objectForKey:VN_TOKEN];
     if (!token) {
         
-        UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:nil message:@"获取信息失败，请重新登录" delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+        UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:nil message:NSLocalizedString(@"获取信息失败，请重新登录",nil) delegate:self cancelButtonTitle:nil otherButtonTitles:NSLocalizedString(@"确定",nil), nil];
         [alertView show];
         
         [userManager DelInfo];
@@ -416,12 +419,12 @@
                                  @"transid": @"110120170726230335339"
                                  } ;
     DLog(@"解绑Trans>>>%@",parameters);
-    [MBProgressHUD showActivityMessageInView:@"请求中..."];
+    [MBProgressHUD showActivityMessageInView:NSLocalizedString(@"请求中...",nil)];
     [[AFNetAPIClient sharedJsonClient].setRequest(baseUrl).RequestType(Delete).HTTPHeader(headerDic).Parameters(parameters) startRequestWithSuccess:^(NSURLSessionDataTask *task, id responseObject) {
         [MBProgressHUD hideHUD];
         NSString *result = [[NSString alloc] initWithData:responseObject encoding:NSUTF8StringEncoding];
         if([[AFNetAPIClient sharedJsonClient] parseJSONData:result] == nil){
-            [MBProgressHUD showErrorMessage:@"服务器繁忙，请稍后再试"];
+            [MBProgressHUD showErrorMessage:NSLocalizedString(@"服务器繁忙，请稍后再试",nil)];
             return;
         }
         
@@ -431,7 +434,7 @@
         if ([successstr isEqualToString:@"1"]) {
             if ([[tempJSON objectForKey:@"data"] isKindOfClass:[NSArray class]])
             {
-                [MBProgressHUD showErrorMessage:@"解除绑定成功"];
+                [MBProgressHUD showErrorMessage:NSLocalizedString(@"解除绑定成功",nil)];
                 // [[NSUserDefaults standardUserDefaults]removeObjectForKey:VN_X];
                 [self.personalTableView reloadData];
             }
@@ -443,7 +446,7 @@
         
     } failure:^(NSURLSessionDataTask *task, NSError *error) {
         [MBProgressHUD hideHUD];
-        [MBProgressHUD showErrorMessage:@"连接网络超时，请稍后再试"];
+        [MBProgressHUD showErrorMessage:NSLocalizedString(@"连接网络超时，请稍后再试",nil)];
     }];
 }
 
@@ -474,7 +477,7 @@
 }
 
 - (void)sginOutButtonClicked:(id)sender {
-    UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:@"提示" message:@"退出当前账号？" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:@"取消", nil];
+    UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:NSLocalizedString(@"提示",nil) message:NSLocalizedString(@"退出当前账号？",nil) delegate:self cancelButtonTitle:NSLocalizedString(@"确定",nil) otherButtonTitles:NSLocalizedString(@"取消",nil), nil];
     alertView.tag = 122;
     [alertView show];
     

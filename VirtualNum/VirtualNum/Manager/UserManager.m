@@ -46,7 +46,7 @@ SINGLETON_FOR_CLASS(UserManager);
 
 #pragma mark ————— 手动登录到服务器 —————
 -(void)loginToServer:(NSDictionary *)params completion:(loginBlock)completion{
-    [MBProgressHUD showActivityMessageInView:@"登录中..."];
+    [MBProgressHUD showActivityMessageInView:NSLocalizedString(@"登录中...",nil)];
     
     NSString *baseUrl = NSStringFormat(@"%@%@",URL_main,URL_user_login);
     NSDictionary *dic =@{

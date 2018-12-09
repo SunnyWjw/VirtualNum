@@ -152,7 +152,7 @@
         label.font = kNumFont;
         [button addSubview:label];
         UILabel *label2 = [[UILabel alloc] initWithFrame:CGRectMake(frameW/2+8, 27, frameW/2-8, 10)];
-        label2.text = @"粘贴";
+        label2.text = NSLocalizedString(@"粘贴",nil);
         label2.textColor = [UIColor grayColor];
         label2.textAlignment = NSTextAlignmentLeft;
         label2.font = kDetailFont;

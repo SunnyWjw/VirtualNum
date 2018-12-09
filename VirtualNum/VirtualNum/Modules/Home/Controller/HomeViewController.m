@@ -60,7 +60,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    self.title=@"通话记录";
+    self.title = NSLocalizedString(@"通话记录",nil);
     self.tabBarController.delegate = self;
     
     //自动登录
@@ -98,7 +98,7 @@
     NSString *callSettingsType = [[NSUserDefaults standardUserDefaults] objectForKey:VN_SERVICE];
     if ([callSettingsType isEqualToString: @"0"]) {
         self.inputNumber.text = @"";
-        self.navigationItem.title = @"通话记录";
+        self.navigationItem.title = NSLocalizedString(@"通话记录",nil);
 //        [self HiddenORShow:YES];
         [self.tableView setHidden:NO];
         
@@ -162,10 +162,10 @@
         self.keys = nameKeys;
         [self ChangeContact:self.keys ContactDic:self.contactPeopleDict];
     } authorizationFailure:^{
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示"
-                                                        message:@"请在iPhone的“设置-隐私-通讯录”选项中，允许虚拟号访问您的通讯录"
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"提示",nil)
+                                                        message:NSLocalizedString(@"请在iPhone的“设置-隐私-通讯录”选项中，允许虚拟号访问您的通讯录",nil)
                                                        delegate:nil
-                                              cancelButtonTitle:@"知道了"
+                                              cancelButtonTitle:NSLocalizedString(@"知道了",nil)
                                               otherButtonTitles:nil];
         [alert show];
     }];
@@ -189,7 +189,7 @@
     //[_contentView addSubview:_popBtn];
     
     _idTF = [[UITextField alloc]initWithFrame:CGRectMake(10, 20, _contentView.frame.size.width-20, 40)];
-    _idTF.placeholder = @"请输入您的CompanyID";
+    _idTF.placeholder = NSLocalizedString(@"请输入您的CompanyID",nil);
     _idTF.delegate = self;
     _idTF.layer.borderColor =  BorderColor;
     _idTF.layer.borderWidth = 0.5;
@@ -204,7 +204,7 @@
     
     UIButton * sureBtn =  [UIButton buttonWithType:UIButtonTypeCustom];
     sureBtn.frame =CGRectMake(10, 90, 180, 40);
-    [sureBtn setTitle:@"确定" forState:UIControlStateNormal];
+    [sureBtn setTitle:NSLocalizedString(@"确定",nil) forState:UIControlStateNormal];
     sureBtn.backgroundColor= CNavBgColor;
     [sureBtn addTarget:self action:@selector(sureAndBack) forControlEvents:UIControlEventTouchUpInside];
     [_contentView addSubview:sureBtn];
@@ -244,7 +244,7 @@
         self.tableView.hidden = NO;
         _nodataview.hidden = NO;
         _nodataview.showLab.center = CGPointMake(kAppDelegate.window.frame.size.width/2, 150);
-        _nodataview.showLab.text = @"暂无通话记录";
+        _nodataview.showLab.text = NSLocalizedString(@"暂无通话记录",nil);
     }else{
         _nodataview.hidden = YES;
         self.tableView.hidden = NO;
@@ -273,7 +273,7 @@
     // 判断用户名
     if ([self.idTF.text length] == 0)
     {
-        _promptLab.text =@"请输入您的CompanyID";
+        _promptLab.text = NSLocalizedString(@"请输入您的CompanyID",nil);
         return;
     }
     [[NSUserDefaults standardUserDefaults] setObject:self.idTF.text forKey:VN_COMPANYID];
@@ -286,7 +286,7 @@
     if (axStr) {
         DLog(@"已经绑定号码");
     }else{
-        UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:@"温馨提示" message:@"您暂未选择号码，请选择号码进入绑定!" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
+        UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:NSLocalizedString(@"温馨提示",nil) message:NSLocalizedString(@"您暂未选择号码，请选择号码进入绑定!",nil) delegate:self cancelButtonTitle:NSLocalizedString(@"取消",nil) otherButtonTitles:NSLocalizedString(@"确定",nil), nil];
         alertView.tag=1001;
         [alertView show];
     }
@@ -316,9 +316,6 @@
             if ([model isEqualToString:@"dual"]) {
                 ChooseTransidViewController *ctVC = [[ChooseTransidViewController alloc] init];
                 [self.navigationController pushViewController:ctVC animated:NO];
-                /*
-                 [callphone sendCallRequestToActivationTran];
-                 */
             }else{
                 XNum = [NSString stringWithFormat:@"%@%@",VN_CALLPREFIX,XNum];
                 NSMutableString *str=[[NSMutableString alloc]initWithFormat:@"tel://%@",XNum];
@@ -346,8 +343,8 @@
         cell.selectionStyle = UITableViewCellSelectionStyleGray;
     }
     CallLog *callLog = self.dataArray[indexPath.row];
-    cell.calledNameLab.text = [NSString stringWithFormat:@"x号码: %@",callLog.XNum];
-    cell.callPhoneNumLab.text = [NSString stringWithFormat:@"被叫号码: %@ (%@)",callLog.CallPhoneNum,callLog.callCount];
+    cell.calledNameLab.text = [NSString stringWithFormat:@"x%@: %@",NSLocalizedString(@"号码",nil),callLog.XNum];
+    cell.callPhoneNumLab.text = [NSString stringWithFormat:@"%@: %@ (%@)",NSLocalizedString(@"被叫号码",nil),callLog.CallPhoneNum,callLog.callCount];
     cell.generateTimeLab.text = [NSString stringWithFormat:@"%@",callLog.randomNum];
     cell.xLab.text =[NSString stringWithFormat:@"%@",callLog.generateTime];
     
@@ -412,8 +409,62 @@
 	[self call];
 }
 -(void)GoSettingModule{
-	  [MBProgressHUD showErrorMessage:NSStringFormat(@"该功能暂未开放")];
+//	  [MBProgressHUD showErrorMessage:NSStringFormat(NSLocalizedString(@"该功能暂未开放",nil))];
+	[self test];
 }
+
+-(void)test{
+	NSString *xNumStr = [[NSUserDefaults standardUserDefaults] objectForKey:VN_X];
+	NSString *token = [[NSUserDefaults standardUserDefaults] objectForKey:VN_TOKEN];
+	NSString *oldTrans = @"110120181207170736885";//[[NSUserDefaults standardUserDefaults] objectForKey:VN_OLDTRANS];
+	
+	NSDictionary *headerDic = @{
+								@"token":token,
+								@"version":VN_APIVERSION
+								};
+	
+	NSString *baseUrl = NSStringFormat(@"%@%@",URL_main,URL_TRANSACTION);
+	NSDictionary *parameters = @{
+								 @"x": xNumStr,
+								 @"transid":oldTrans
+								 } ;
+	DLog(@"解绑Trans>>>%@",parameters);
+	[MBProgressHUD showActivityMessageInView:NSLocalizedString(@"请求中...",nil)];
+	[[AFNetAPIClient sharedJsonClient].setRequest(baseUrl).RequestType(Delete).HTTPHeader(headerDic).Parameters(parameters) startRequestWithSuccess:^(NSURLSessionDataTask *task, id responseObject) {
+		[MBProgressHUD hideHUD];
+		NSString *result = [[NSString alloc] initWithData:responseObject encoding:NSUTF8StringEncoding];
+		if([[AFNetAPIClient sharedJsonClient] parseJSONData:result] == nil){
+			[MBProgressHUD showErrorMessage:NSLocalizedString(@"服务器繁忙，请稍后再试",nil)];
+			return;
+		}
+		
+		NSDictionary* tempJSON = [[AFNetAPIClient sharedJsonClient] parseJSONData:result];
+		DLog(@"解绑Trans__tempJSON>>>%@",tempJSON);
+		NSString *successstr = [NSString stringWithFormat:@"%@", tempJSON[@"success"]];
+		if ([successstr isEqualToString:@"1"]) {
+			[MBProgressHUD showTopTipMessage:@"解绑Trans：%@成功" isWindow:YES];
+//			if ([[tempJSON objectForKey:@"data"] isKindOfClass:[NSArray class]])
+//			{
+//				[self RequestToActivationTran:transid];
+//			}else{
+//				[self RequestToActivationTran:transid];
+//			}
+		}else{
+			[MBProgressHUD showTopTipMessage:tempJSON[@"message"] isWindow:YES];
+//			[self RequestToActivationTran:transid];
+			//            [MBProgressHUD showErrorMessage:tempJSON[@"message"]];
+			//			return;
+		}
+	} progress:^(NSProgress *progress) {
+		
+	} failure:^(NSURLSessionDataTask *task, NSError *error) {
+		[MBProgressHUD hideHUD];
+		[MBProgressHUD showErrorMessage:NSLocalizedString(@"连接网络超时，请稍后再试",nil)];
+	}];
+	
+}
+
+
 
 /*
 #pragma mark 键盘输入和删除
@@ -489,8 +540,8 @@
 
 #pragma mark - 显示或收起键盘
 -(void)downKeyboard:(UIButton*)sender{
-    if ([sender.titleLabel.text isEqualToString:@"收起键盘"]) {
-        [downButton setImage:[UIImage imageNamed:@"tab_dial_ic_open"] withTitle:@"显示键盘" forState:UIControlStateNormal];
+    if ([sender.titleLabel.text isEqualToString:NSLocalizedString(@"收起键盘",nil)]) {
+        [downButton setImage:[UIImage imageNamed:@"tab_dial_ic_open"] withTitle:NSLocalizedString(@"显示键盘",nil) forState:UIControlStateNormal];
         [UIView animateWithDuration:0.3 animations:^{
             [keyboard mas_updateConstraints:^(MASConstraintMaker *make) {
                 make.top.equalTo(self.view).with.offset(kHEIGHT);
@@ -502,7 +553,7 @@
             self.keyboard.hidden = YES;
         }];
     }else{
-        [downButton setImage:[UIImage imageNamed:@"tab_dial_ic_close"] withTitle:@"收起键盘" forState:UIControlStateNormal];
+        [downButton setImage:[UIImage imageNamed:@"tab_dial_ic_close"] withTitle:NSLocalizedString(@"收起键盘",nil) forState:UIControlStateNormal];
         
         [UIView animateWithDuration:0.3 animations:^{
             [keyboard mas_updateConstraints:^(MASConstraintMaker *make) {
@@ -553,7 +604,7 @@
         if (self.keyboard.hidden) {
             UIImage* imageSelected = [UIImage imageNamed:@"tab_dial_ic_close"];
             callItem.selectedImage = [imageSelected imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-            callItem.title = @"收起键盘";
+            callItem.title = NSLocalizedString(@"收起键盘",nil);
             self.keyboard.hidden = NO;
             [UIView animateWithDuration:0.3 animations:^{
                 self.keyboard.frame = CGRectMake(0, kHEIGHT-SWNumericKeyboardHEIGHT-SafeAreaTabbarHeight, kWIDTH, SWNumericKeyboardHEIGHT);}];
@@ -562,7 +613,7 @@
             
             UIImage* imageSelected = [UIImage imageNamed:@"tab_dial_ic_open"];
             callItem.selectedImage = [imageSelected imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-            callItem.title = @"显示键盘";
+            callItem.title = NSLocalizedString(@"显示键盘",nil);
             
             [UIView animateWithDuration:0.3 animations:^{
                 self.keyboard.frame = CGRectMake(0, kHEIGHT, kWIDTH, SWNumericKeyboardHEIGHT);
@@ -572,7 +623,7 @@
         }
     }else{
         isKeyBoard = NO;
-        callItem.title = @"通话记录";
+        callItem.title = NSLocalizedString(@"通话记录",nil);
     }
 }
 
