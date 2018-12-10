@@ -10,10 +10,12 @@
 #import "ChooseNumCell.h"
 #import "CallPhone.h"
 
-@interface ChooseTransidViewController ()<UITableViewDataSource,UITableViewDelegate>
+@interface ChooseTransidViewController ()<UITableViewDataSource,UITableViewDelegate,SelectTransDelegate>
 
+@property (nonatomic,strong) CallPhone *callphone;
 @property (nonatomic,strong)UITableView *tableView;
 @property (nonatomic,strong)NSMutableArray *dataArray;
+
 
 @property (nonatomic,assign) int curPage;
 @property (nonatomic,assign) int totalCount;
@@ -45,6 +47,7 @@
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     [self.view addSubview:_tableView];
+		[Common setExtraCellLineHidden:self.tableView];
     
     __weak typeof(self) weakSelf = self;
     //默认block方法：设置下拉刷新
@@ -139,7 +142,6 @@
         }
         
         NSDictionary* tempJSON = [[AFNetAPIClient sharedJsonClient] parseJSONData:result];
-        DLog(@"tempJSON>>>%@",tempJSON);
         NSString *successstr = [NSString stringWithFormat:@"%@", tempJSON[@"success"]];
         if ([successstr isEqualToString:@"1"]) {
             if ([[tempJSON objectForKey:@"data"] isKindOfClass:[NSArray class]])
@@ -183,14 +185,15 @@
     cell = [tableView dequeueReusableCellWithIdentifier:cellID];
     if (cell == nil)
     {
-        cell = [[ChooseNumCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellID];
+        cell = [[ChooseNumCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellID isShowDel:YES];
         cell.selectionStyle = UITableViewCellSelectionStyleGray;
-        
     }
+	cell.selectTransDelegate = self;
     NSDictionary *dic = [self.dataArray objectAtIndex:indexPath.row];
-    cell.TopLab.text = [NSString stringWithFormat:@"B: %@,   MODE: %@",dic[@"b"],dic[@"mode"]];
-    cell.BottomLab.text = [NSString stringWithFormat:@"X: %@,   Trans: %@",dic[@"x"],dic[@"t"]];
-    
+    cell.TopLab.text = [NSString stringWithFormat:@"X:%@, Trans:%@",dic[@"x"],dic[@"t"]];
+    cell.BottomLab.text = [NSString stringWithFormat:@"B:%@, MODE:%@",dic[@"b"],dic[@"mode"]];
+	
+	
     return cell;
 }
 
@@ -210,12 +213,26 @@
         return;
     }
      //[self sendDualCallWithOldDic:dic];
-    
-    CallPhone *callphone = [[CallPhone alloc] init];
-    [callphone sendCallRequestToActivationTran:trans];
+	
+    [self.callphone sendCallRequestToActivationTran:trans];
 }
 
+#pragma mark - selectTransDelegate
+-(void)selectTransForAXB:(NSDictionary *)axbDic{
+	[self.callphone DelBindAXB:axbDic Respone:^(NSDictionary *tempJSON, NSString *model, NSString *XNum) {
+		NSString *successstr = [NSString stringWithFormat:@"%@", tempJSON[@"success"]];
+		if ([successstr isEqualToString:@"1"]) {
+			[MBProgressHUD showErrorMessage:@"删除成功"];
+			[self.dataArray removeAllObjects];
+			self.curPage = 1;
+			[self SendRequestWithPage:self.curPage];
+		}else{
+			[MBProgressHUD showErrorMessage:tempJSON[@"message"]];
+		}
+	}];
+}
 
+#pragma mark -
 -(void)sendDualCallWithOldDic:(NSDictionary *)oldDic{
     NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
     [numberFormatter setNumberStyle:NSNumberFormatterDecimalStyle];
@@ -265,7 +282,6 @@
         }
         
         NSDictionary* tempJSON = [[AFNetAPIClient sharedJsonClient] parseJSONData:result];
-        DLog(@"tempJSON>>>%@",tempJSON);
         NSString *successstr = [NSString stringWithFormat:@"%@", tempJSON[@"success"]];
         if ([successstr isEqualToString:@"1"]) {
             NSString * xNumStr = [NSString stringWithFormat:@"%@%@",VN_CALLPREFIX,oldDic[@"x"]];
@@ -283,64 +299,13 @@
     
 }
 
--(void)SendRequestToCall{
-    NSString *strX = [[NSUserDefaults standardUserDefaults] objectForKey:VN_X];
-    NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
-    [numberFormatter setNumberStyle:NSNumberFormatterDecimalStyle];
-    NSNumber *randomNum = [numberFormatter numberFromString:[TimeAndTimeStamps getNowDateTimeFoMillisecond]];
-    NSString *strCompany = [[NSUserDefaults standardUserDefaults] objectForKey:VN_COMPANYID];
-    
-    [[NSUserDefaults standardUserDefaults] setObject: [NSString stringWithFormat:@"%@%@",strCompany,randomNum] forKey:VN_TRANS];
-    
-    NSString *token = [[NSUserDefaults standardUserDefaults] objectForKey:VN_TOKEN];
-    if (!token) {
-        
-        UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:nil message:NSLocalizedString(@"获取信息失败，请重新登录",nil) delegate:self cancelButtonTitle:nil otherButtonTitles:NSLocalizedString(@"确定",nil), nil];
-        [alertView show];
-        
-        [userManager DelInfo];
-        KPostNotification(KNotificationLoginStateChange, @NO);
-        return;
-    }
-    NSDictionary *headerDic = @{
-                                @"token":token,
-                                @"version":VN_APIVERSION
-                                };
-    
-    NSString *baseUrl = NSStringFormat(@"%@%@",URL_main,URL_TRANSACTION);
-    NSDictionary *parameters = @{
-                                 @"x":strX,
-                                 @"transid":strCompany
-                                 } ;
-    DLog(@"绑定AXBparameters>>>%@",parameters);
-    [MBProgressHUD showActivityMessageInView:NSLocalizedString(@"请求中...",nil)];
-    
-    [[AFNetAPIClient sharedJsonClient].setRequest(baseUrl).RequestType(Put).HTTPHeader(headerDic).Parameters(parameters) startRequestWithSuccess:^(NSURLSessionDataTask *task, id responseObject) {
-        [MBProgressHUD hideHUD];
-        NSString *result = [[NSString alloc] initWithData:responseObject encoding:NSUTF8StringEncoding];
-        if([[AFNetAPIClient sharedJsonClient] parseJSONData:result] == nil){
-            [MBProgressHUD showErrorMessage:NSLocalizedString(@"服务器繁忙，请稍后再试",nil)];
-            return;
-        }
-        
-        NSDictionary* tempJSON = [[AFNetAPIClient sharedJsonClient] parseJSONData:result];
-        DLog(@"tempJSON>>>%@",tempJSON);
-        NSString *successstr = [NSString stringWithFormat:@"%@", tempJSON[@"success"]];
-        if ([successstr isEqualToString:@"1"]) {
-            NSString * xNumStr = [NSString stringWithFormat:@"%@%@",VN_CALLPREFIX,strX];
-            NSMutableString *str=[[NSMutableString alloc]initWithFormat:@"tel://%@",xNumStr];
-            [[UIApplication sharedApplication]openURL:[NSURL URLWithString:str]];
-        }else{
-            [MBProgressHUD showErrorMessage:tempJSON[@"message"]];
-        }
-    } progress:^(NSProgress *progress) {
-        
-    } failure:^(NSURLSessionDataTask *task, NSError *error) {
-        [MBProgressHUD hideHUD];
-        [MBProgressHUD showErrorMessage:NSLocalizedString(@"连接网络超时，请稍后再试",nil)];
-    }];
-}
 
+-(CallPhone *)callphone{
+	if (!_callphone) {
+		_callphone = [[CallPhone alloc] init];
+	}
+	return _callphone;
+}
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

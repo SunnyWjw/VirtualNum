@@ -141,9 +141,9 @@
             
         }];
     }else if (people.mobileArray.count == 1){
-//        [CallPhone sendCallRequest:people.mobileArray.firstObject ContactName:people.name ViewController:self];
+
         CallPhone *callphone = [[CallPhone alloc] init];
-        [callphone sendCallRequest:people.mobileArray.firstObject ContactName:people.name  Respone:^(NSDictionary *tempJSON, NSString *model, NSString *XNum) {
+        [callphone sendCallRequestForBindAXB:people.mobileArray.firstObject ContactName:people.name  Respone:^(NSDictionary *tempJSON, NSString *model, NSString *XNum) {
             NSString *successstr = [NSString stringWithFormat:@"%@", tempJSON[@"success"]];
             if ([successstr isEqualToString:@"1"]) {
                 if ([model isEqualToString:@"dual"]) {

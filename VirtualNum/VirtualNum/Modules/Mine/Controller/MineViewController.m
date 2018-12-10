@@ -368,14 +368,13 @@
         }
         
         NSDictionary* tempJSON = [[AFNetAPIClient sharedJsonClient] parseJSONData:result];
-        DLog(@"tempJSON>>>%@",tempJSON);
         NSString *successstr = [NSString stringWithFormat:@"%@", tempJSON[@"success"]];
         if ([successstr isEqualToString:@"1"]) {
             if ([[tempJSON objectForKey:@"data"] isKindOfClass:[NSArray class]])
             {
                 [MBProgressHUD showErrorMessage:NSLocalizedString(@"解除绑定成功",nil)];
                 [[NSUserDefaults standardUserDefaults] removeObjectForKey:VN_X];
-                [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"OldTrans"];
+                [[NSUserDefaults standardUserDefaults] removeObjectForKey:VN_OLDTRANS];
                 [self.personalTableView reloadData];
             }
             
@@ -429,7 +428,6 @@
         }
         
         NSDictionary* tempJSON = [[AFNetAPIClient sharedJsonClient] parseJSONData:result];
-        DLog(@"tempJSON>>>%@",tempJSON);
         NSString *successstr = [NSString stringWithFormat:@"%@", tempJSON[@"success"]];
         if ([successstr isEqualToString:@"1"]) {
             if ([[tempJSON objectForKey:@"data"] isKindOfClass:[NSArray class]])

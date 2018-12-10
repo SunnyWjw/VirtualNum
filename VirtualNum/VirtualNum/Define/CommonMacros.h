@@ -26,6 +26,8 @@
 
 //用户model缓存
 #define KUserModelCache @"KUserModelCache"
+//更新通话记录
+#define KUPDATECALLLOG @"KUpdateCallLog"
 
 
 
@@ -52,7 +54,7 @@
 #define VN_ContactName @"ContactName"           //呼叫联系人
 #define VN_TRANS    @"trans"    //随机数
 #define VN_CALLPREFIX   @"0"    //呼叫前缀，例：呼叫x为80246994时，实际呼叫02180246994
-#define VN_APIVERSION   @"1"    //Api版本号
+#define VN_APIVERSION   @"1.0.4"    //Api版本号
 #define VN_OLDTRANS      @"OldTrans"
 
 

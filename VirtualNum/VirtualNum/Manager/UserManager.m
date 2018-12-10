@@ -101,9 +101,8 @@ SINGLETON_FOR_CLASS(UserManager);
     NSDictionary* tempJSON = [[AFNetAPIClient sharedJsonClient] parseJSONData:result];
     NSString *successstr = [NSString stringWithFormat:@"%@", tempJSON[@"success"]];
     if ([successstr isEqualToString:@"1"]) {
-        [MBProgressHUD showErrorMessage:@"登录成功"];
+//        [MBProgressHUD showErrorMessage:@"登录成功"];
         [self SaveInfo:tempJSON];
-        DLog(@"登录成功tempJSON>>%@",tempJSON);
         if (completion) {
             completion(YES,nil);
         }
@@ -140,7 +139,6 @@ SINGLETON_FOR_CLASS(UserManager);
 
 #pragma mark ————— 保存/删除用户信息 —————
 -(void)SaveInfo:(NSDictionary *)userDic{
-    DLog(@"token>>>>>%@",userDic[@"data"][@"token"]);
     [[NSUserDefaults standardUserDefaults] setObject:userDic[@"data"][@"token"] forKey:VN_TOKEN];
     [[NSUserDefaults standardUserDefaults] synchronize];
 }

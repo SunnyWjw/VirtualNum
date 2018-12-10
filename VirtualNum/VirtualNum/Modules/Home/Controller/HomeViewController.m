@@ -47,6 +47,7 @@
 
 @property (nonatomic, copy) NSDictionary *contactPeopleDict;
 @property (nonatomic, copy) NSArray *keys;
+@property (nonatomic,strong) CallPhone *callphone;
 
 @end
 
@@ -79,6 +80,19 @@
             return ;
         }
     }];
+	
+	[[NSNotificationCenter defaultCenter] addObserver:self
+											 selector:@selector(updateTableViewData)
+												 name:KUPDATECALLLOG
+											   object:nil];
+}
+
+-(void)updateTableViewData{
+	DLog(@"接收到了通话结束的通知");
+	self.dataArray = [[DataBase sharedDataBase] getAllCallLog];
+	dispatch_async(dispatch_get_main_queue(), ^{
+		[self.tableView reloadData];
+	});
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -99,9 +113,7 @@
     if ([callSettingsType isEqualToString: @"0"]) {
         self.inputNumber.text = @"";
         self.navigationItem.title = NSLocalizedString(@"通话记录",nil);
-//        [self HiddenORShow:YES];
         [self.tableView setHidden:NO];
-        
     }
     keyboard.hidden = YES;
 }
@@ -114,15 +126,6 @@
 #pragma mark 初始化拔号键盘
 -(void)intKeyboard{
 	isKeyBoard = YES;
-//	self.inputNumber = [[UILabel alloc] init];
-//	self.inputNumber.frame = CGRectMake(50, 0, kWIDTH-100, 44);
-//	self.inputNumber.textAlignment = NSTextAlignmentCenter;
-//	self.inputNumber.textColor = [UIColor whiteColor];
-//	self.inputNumber.font = [UIFont systemFontOfSize:34.0f];
-//	self.inputNumber.adjustsFontSizeToFitWidth = YES;
-//	self.inputNumber.text = @"";
-//	[self.navigationController.navigationBar addSubview:self.inputNumber];
-	
 	self.keyboard = [[SWNumericKeyboard alloc] initWithFrame:CGRectMake(0, kHEIGHT-SWNumericKeyboardHEIGHT-SafeAreaTabbarHeight, kWIDTH, SWNumericKeyboardHEIGHT)];
 	self.keyboard.delegate = self;
 	[self.view addSubview:self.keyboard];
@@ -283,9 +286,7 @@
 
 -(void)judgeAX{
     NSString *axStr = [[NSUserDefaults standardUserDefaults] objectForKey:VN_X];
-    if (axStr) {
-        DLog(@"已经绑定号码");
-    }else{
+    if (!axStr){
         UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:NSLocalizedString(@"温馨提示",nil) message:NSLocalizedString(@"您暂未选择号码，请选择号码进入绑定!",nil) delegate:self cancelButtonTitle:NSLocalizedString(@"取消",nil) otherButtonTitles:NSLocalizedString(@"确定",nil), nil];
         alertView.tag=1001;
         [alertView show];
@@ -298,9 +299,7 @@
  */
 - (void) BindPhone {
     NSString *phoneStr = [[NSUserDefaults standardUserDefaults] objectForKey:VN_PHONE];
-    if (phoneStr) {
-        DLog(@"已经绑定号码");
-    }else{
+    if (!phoneStr) {
         BindPhoneViewController * BindVc = [[BindPhoneViewController alloc]init];
         [self.navigationController pushViewController:BindVc animated:NO];
     }
@@ -308,18 +307,15 @@
 
 #pragma mark 发起呼叫call
 - (void)call {
-    
-    CallPhone *callphone = [[CallPhone alloc] init];
-    [callphone sendCallRequest:self.inputNumber.text ContactName:@"" Respone:^(NSDictionary *tempJSON, NSString *model, NSString *XNum) {
+    [self.callphone sendCallRequestForBindAXB:self.inputNumber.text ContactName:@"" Respone:^(NSDictionary *tempJSON, NSString *model, NSString *XNum) {
         NSString *successstr = [NSString stringWithFormat:@"%@", tempJSON[@"success"]];
         if ([successstr isEqualToString:@"1"]) {
             if ([model isEqualToString:@"dual"]) {
                 ChooseTransidViewController *ctVC = [[ChooseTransidViewController alloc] init];
                 [self.navigationController pushViewController:ctVC animated:NO];
             }else{
-                XNum = [NSString stringWithFormat:@"%@%@",VN_CALLPREFIX,XNum];
-                NSMutableString *str=[[NSMutableString alloc]initWithFormat:@"tel://%@",XNum];
-                [[UIApplication sharedApplication]openURL:[NSURL URLWithString:str]];
+				  NSString *transID  = [[NSUserDefaults standardUserDefaults] objectForKey:VN_TRANS];
+				[self.callphone sendCallRequestToActivationTran:transID];
             }
         }else{
             [MBProgressHUD showErrorMessage:tempJSON[@"message"]];
@@ -409,134 +405,8 @@
 	[self call];
 }
 -(void)GoSettingModule{
-//	  [MBProgressHUD showErrorMessage:NSStringFormat(NSLocalizedString(@"该功能暂未开放",nil))];
-	[self test];
+	  [MBProgressHUD showErrorMessage:NSStringFormat(NSLocalizedString(@"该功能暂未开放",nil))];
 }
-
--(void)test{
-	NSString *xNumStr = [[NSUserDefaults standardUserDefaults] objectForKey:VN_X];
-	NSString *token = [[NSUserDefaults standardUserDefaults] objectForKey:VN_TOKEN];
-	NSString *oldTrans = @"110120181207170736885";//[[NSUserDefaults standardUserDefaults] objectForKey:VN_OLDTRANS];
-	
-	NSDictionary *headerDic = @{
-								@"token":token,
-								@"version":VN_APIVERSION
-								};
-	
-	NSString *baseUrl = NSStringFormat(@"%@%@",URL_main,URL_TRANSACTION);
-	NSDictionary *parameters = @{
-								 @"x": xNumStr,
-								 @"transid":oldTrans
-								 } ;
-	DLog(@"解绑Trans>>>%@",parameters);
-	[MBProgressHUD showActivityMessageInView:NSLocalizedString(@"请求中...",nil)];
-	[[AFNetAPIClient sharedJsonClient].setRequest(baseUrl).RequestType(Delete).HTTPHeader(headerDic).Parameters(parameters) startRequestWithSuccess:^(NSURLSessionDataTask *task, id responseObject) {
-		[MBProgressHUD hideHUD];
-		NSString *result = [[NSString alloc] initWithData:responseObject encoding:NSUTF8StringEncoding];
-		if([[AFNetAPIClient sharedJsonClient] parseJSONData:result] == nil){
-			[MBProgressHUD showErrorMessage:NSLocalizedString(@"服务器繁忙，请稍后再试",nil)];
-			return;
-		}
-		
-		NSDictionary* tempJSON = [[AFNetAPIClient sharedJsonClient] parseJSONData:result];
-		DLog(@"解绑Trans__tempJSON>>>%@",tempJSON);
-		NSString *successstr = [NSString stringWithFormat:@"%@", tempJSON[@"success"]];
-		if ([successstr isEqualToString:@"1"]) {
-			[MBProgressHUD showTopTipMessage:@"解绑Trans：%@成功" isWindow:YES];
-//			if ([[tempJSON objectForKey:@"data"] isKindOfClass:[NSArray class]])
-//			{
-//				[self RequestToActivationTran:transid];
-//			}else{
-//				[self RequestToActivationTran:transid];
-//			}
-		}else{
-			[MBProgressHUD showTopTipMessage:tempJSON[@"message"] isWindow:YES];
-//			[self RequestToActivationTran:transid];
-			//            [MBProgressHUD showErrorMessage:tempJSON[@"message"]];
-			//			return;
-		}
-	} progress:^(NSProgress *progress) {
-		
-	} failure:^(NSURLSessionDataTask *task, NSError *error) {
-		[MBProgressHUD hideHUD];
-		[MBProgressHUD showErrorMessage:NSLocalizedString(@"连接网络超时，请稍后再试",nil)];
-	}];
-	
-}
-
-
-
-/*
-#pragma mark 键盘输入和删除
-//后退键
--(void)numberKeyboardStirng:(NSString *)str {
-    
-    if ([str isEqualToString:@"1"]) {
-        if (inputNumber.text.length !=0) {
-            inputNumber.text = [inputNumber.text substringToIndex:inputNumber.text.length -1];
-            
-            if (inputNumber.text.length == 0) {
-                inputNumber.text = nil;
-                self.navigationItem.title = @"通话记录";
-                [self HiddenORShow:YES];
-                [self.tableView setHidden:NO];
-            }else {
-                [self HiddenORShow:NO];
-                //                [self.tableView setHidden:YES];
-            }
-        }
-    }
-    
-    if ([str isEqualToString:@"2"]) {
-        if (inputNumber.text.length != 0)
-        {
-            inputNumber.text = nil;
-            self.navigationItem.title = @"拨号";
-            [self HiddenORShow:YES];
-            [self.tableView setHidden:NO];
-        }else {
-            [self HiddenORShow:YES];
-            [self.tableView setHidden:NO];
-        }
-    }
-    
-    //    dispatch_async(dispatch_get_main_queue(), ^{
-    //        [self seaInputNumber:inputNumber
-    //               textDidChange:inputNumber.text];
-    //    });
-}
-
--(void)HiddenORShow:(BOOL)sh{
-    inputNumber.hidden = sh;
-    callButton.hidden = sh;
-    deleteButton.hidden = sh;
-    downButton.hidden = sh;
-    SeaResultTable.hidden = sh;
-}
-
-#pragma mark 键盘输入
-///输入数字
--(void)numberKeyboardInput:(NSString*)number {
-    //    NSLog(@"number=== %@",number);
-    self.navigationItem.leftBarButtonItem = nil;
-    self.navigationItem.hidesBackButton = YES;
-    if (inputNumber.text == nil && inputNumber.hidden) {
-        self.navigationItem.title = nil;
-        inputNumber.hidden = NO;
-        inputNumber.text = number;
-        [self createBelowView];
-    }else {
-        inputNumber.text = [inputNumber.text stringByAppendingString:number];
-    }
-    self.tableView.hidden = YES;
-    
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self seaInputNumber:inputNumber
-               textDidChange:inputNumber.text];
-        //[SeaResultTable reloadData];
-    });
-}
- */
 
 #pragma mark - 显示或收起键盘
 -(void)downKeyboard:(UIButton*)sender{
@@ -625,6 +495,14 @@
         isKeyBoard = NO;
         callItem.title = NSLocalizedString(@"通话记录",nil);
     }
+}
+
+
+-(CallPhone *)callphone{
+	if (!_callphone) {
+		_callphone = [[CallPhone alloc] init];
+	}
+	return _callphone;
 }
 
 - (void)didReceiveMemoryWarning {

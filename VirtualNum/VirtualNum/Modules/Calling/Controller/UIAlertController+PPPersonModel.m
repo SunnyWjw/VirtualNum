@@ -72,7 +72,7 @@
             
 //            [CallPhone sendCallRequest:action.title ContactName:name ViewController:self];
             CallPhone *callphone = [[CallPhone alloc] init];
-            [callphone sendCallRequest:action.title ContactName:name  Respone:^(NSDictionary *tempJSON, NSString *model, NSString *XNum) {
+            [callphone sendCallRequestForBindAXB:action.title ContactName:name  Respone:^(NSDictionary *tempJSON, NSString *model, NSString *XNum) {
                 NSString *successstr = [NSString stringWithFormat:@"%@", tempJSON[@"success"]];
                 if ([successstr isEqualToString:@"1"]) {
                     if ([model isEqualToString:@"dual"]) {

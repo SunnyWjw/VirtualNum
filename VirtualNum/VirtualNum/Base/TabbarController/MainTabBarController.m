@@ -61,11 +61,11 @@ PropertyNSMutableArray(VCS);//tabbar root VC
     CallingViewController *callVC = [[CallingViewController alloc]init];
     [self setupChildViewController:callVC title:NSLocalizedString(@"联系人",nil) imageName:@"addressbook" seleceImageName:@"addressbook_fill"];
     
-    MineViewController *mineVC = [[MineViewController alloc]init];
-    [self setupChildViewController:mineVC title:NSLocalizedString(@"个人中心",nil) imageName:@"center" seleceImageName:@"center_sel"];
-    
-//    SettingViewController *setvc = [[SettingViewController alloc]init];
-//    [self setupChildViewController:setvc title:@"设置" imageName:@"setting" seleceImageName:@"setting_sel"];
+    SettingViewController *setvc = [[SettingViewController alloc]init];
+    [self setupChildViewController:setvc title:NSLocalizedString(@"绑定记录",nil) imageName:@"setting" seleceImageName:@"setting_sel"];
+	
+	MineViewController *mineVC = [[MineViewController alloc]init];
+	[self setupChildViewController:mineVC title:NSLocalizedString(@"个人中心",nil) imageName:@"center" seleceImageName:@"center_sel"];
 	
      self.viewControllers = _VCS;
 }

@@ -7,15 +7,20 @@
 //
 
 #import "SettingViewController.h"
-#import "ChooseNumViewController.h"
-#import "UserManager.h"
+#import "ChooseNumCell.h"
+#import "CallPhone.h"
 
-@interface SettingViewController ()<UIAlertViewDelegate>
-@property (strong, nonatomic) UITextField *text;
-@property (strong,nonatomic)NSString *baseUrl;
-@property (strong,nonatomic)NSDictionary *parameters ;
-@property (strong,nonatomic)UITextView *textView;
-@property (strong,nonatomic)UITextView *textView2;
+
+@interface SettingViewController ()<UIAlertViewDelegate,UITableViewDataSource,UITableViewDelegate,SelectTransDelegate>
+
+@property (nonatomic,strong) CallPhone *callphone;
+@property (nonatomic,strong)UITableView *tableView;
+@property (nonatomic,strong)NSMutableArray *dataArray;
+
+
+@property (nonatomic,assign) int curPage;
+@property (nonatomic,assign) int totalCount;
+
 
 @end
 
@@ -24,253 +29,200 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.title=@"设置";
-  //[self createView];
-   // [self CreateExit];
+    self.title= NSLocalizedString(@"AXB绑定记录",nil);
+	
+	self.dataArray = [[NSMutableArray alloc]initWithCapacity:0];
+	
+	self.curPage = 1;
+	[self creadTableView];
+	
+	[self SendRequestWithPage:self.curPage];
+	
 }
 
--(void) CreateExit{
-    UIButton *exitBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [exitBtn setImage:[UIImage imageNamed:@"exit"] forState:UIControlStateNormal];
-    [exitBtn setTitle:@"请求测试" forState:UIControlStateNormal];
-    [exitBtn addTarget:self action:@selector(exitBtnClick) forControlEvents:UIControlEventTouchUpInside];
-    exitBtn.backgroundColor=[UIColor grayColor];
-    [self.view addSubview:exitBtn];
-    [exitBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.equalTo(self.view).with.offset(-64);
-        make.left.equalTo(self.view).with.offset(100);
-        make.right.equalTo(self.view).with.offset(-100);
-        make.height.mas_equalTo(40);
-    }];
+-(void)creadTableView{
+	self.tableView = [[UITableView alloc]init];
+	self.tableView.frame = self.view.bounds;
+	self.tableView.delegate = self;
+	self.tableView.dataSource = self;
+	[self.view addSubview:_tableView];
+	
+	__weak typeof(self) weakSelf = self;
+	//默认block方法：设置下拉刷新
+	self.tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingBlock:^{
+		[weakSelf stopPull];
+	}];
+	
+	//默认block方法：设置上拉加载更多
+	self.tableView.mj_footer = [MJRefreshAutoNormalFooter footerWithRefreshingBlock:^{
+		//Call this Block When enter the refresh status automatically
+		[weakSelf stopInfinite];
+	}];
+	[Common setExtraCellLineHidden:self.tableView];
 }
 
--(void)createView{
-    
-    self.text = [[UITextField alloc]initWithFrame:CGRectMake(50, 100, 250, 45)];
-    self.text.placeholder = @"请输入A号码";
-    self.text.backgroundColor = [UIColor grayColor];
-    [self.view addSubview:self.text];
-    
-    
-    UIButton *Btn1 = [UIButton buttonWithType:UIButtonTypeCustom];
-    Btn1.frame = CGRectMake(50, 160, 200, 45);
-    [Btn1 setTitle:@"获取AXB列表(3参数）" forState:UIControlStateNormal];
-    [Btn1 addTarget:self action:@selector(RequestOne) forControlEvents:UIControlEventTouchUpInside];
-    Btn1.backgroundColor=[UIColor grayColor];
-    [self.view addSubview:Btn1];
-    
-    UIButton *Btn2 = [UIButton buttonWithType:UIButtonTypeCustom];
-    Btn2.frame = CGRectMake(50, 210, 200, 45);
-    [Btn2 setTitle:@"获取AXB列表(2参数）" forState:UIControlStateNormal];
-    [Btn2 addTarget:self action:@selector(RequestTwo) forControlEvents:UIControlEventTouchUpInside];
-    Btn2.backgroundColor=[UIColor grayColor];
-    [self.view addSubview:Btn2];
-    
-    UIButton *Btn3 = [UIButton buttonWithType:UIButtonTypeCustom];
-     Btn3.frame = CGRectMake(50, 260, 200, 45);
-    [Btn3 setTitle:@"获取AXB列表(0参数）" forState:UIControlStateNormal];
-    [Btn3 addTarget:self action:@selector(RequestThree) forControlEvents:UIControlEventTouchUpInside];
-    Btn3.backgroundColor=[UIColor grayColor];
-    [self.view addSubview:Btn3];
-    
-    self.textView = [[UITextView alloc]initWithFrame:CGRectMake(10, 330, 400, 120)];
-    self.textView.textColor = [UIColor redColor];
-    self.textView.font = [UIFont systemFontOfSize:14.0];
-    self.textView.backgroundColor = [UIColor grayColor];
-    [self.view addSubview:self.textView];
-    
-    self.textView2= [[UITextView alloc]initWithFrame:CGRectMake(10, 460, 400, 150)];
-    self.textView2.textColor = [UIColor redColor];
-    self.textView2.font = [UIFont systemFontOfSize:14.0];
-    self.textView2.backgroundColor = [UIColor grayColor];
-    [self.view addSubview:self.textView2];
-    
-    
-   
-    
-}
-
-- (void)RequestOne
+#pragma mark -
+#pragma mark 上拉加载
+- (void)stopInfinite
 {
-    self.textView.text=@"";
-    self.textView2.text = @"";
-//    if (![self.text.text checkPhoneNumInput:self.text.text]) {
-//        [MBProgressHUD showErrorMessage:@"请输入正确的手机号"];
-//        return;
-//    }
-    if (self.text.text.length == 0) {
-        [MBProgressHUD showErrorMessage:@"请输入手机号"];
-        return;
-    }
-    self.baseUrl = NSStringFormat(@"%@%@",URL_main,URL_AXB);
-    self.parameters = @{
-                                 @"page": @"1",
-                                 @"pageSize": @"20",
-                                 @"a":self.text.text
-                                 } ;
-    self.textView.text = [NSString stringWithFormat:@"3参数，请求地址:%@\n参数:%@",self.baseUrl,self.parameters];
-    [self SendRequestToURL:self.baseUrl Parameters:self.parameters];
+	self.curPage = self.curPage+1;
+	int pageCount = ceil(self.totalCount / 10.0);
+	if (self.curPage > pageCount) {
+		[self endRefresh];
+		[MBProgressHUD showErrorMessage:NSLocalizedString(@"这是最后一页了！",nil)];
+		return;
+	}
+	//    //开始刷新数据
+	[self SendRequestWithPage:self.curPage];
 }
-- (void)RequestTwo
+
+#pragma mark 下拉刷新
+- (void)stopPull
 {
-    self.textView.text=@"";
-    self.textView2.text = @"";
-    self.baseUrl = NSStringFormat(@"%@%@",URL_main,URL_AXB);
-    self.parameters = @{
-                                 @"page": @"1",
-                                 @"pageSize": @"20",
-                                 } ;
-    self.textView.text = [NSString stringWithFormat:@"2参数请求地址:%@\n参数:%@",self.baseUrl,self.parameters];
-    [self SendRequestToURL:self.baseUrl Parameters:self.parameters];
+	self.curPage = 1;
+	[self.dataArray removeAllObjects];
+	[self.tableView reloadData];
+	[self SendRequestWithPage:self.curPage];
 }
-
-- (void)RequestThree
-{
-    self.textView.text=@"";
-    self.textView2.text = @"";
-    self.baseUrl = NSStringFormat(@"%@%@",URL_main,URL_AXB);
-    self.parameters = @{
-                                 } ;
-    self.textView.text = [NSString stringWithFormat:@"0参数请求地址:%@\n参数:%@",self.baseUrl,self.parameters];
-    [self SendRequestToURL:self.baseUrl Parameters:self.parameters];
-}
-
--(void)SendRequestToURL:(NSString *) url Parameters:(NSDictionary *)dic{
-    NSString *baseUrl = NSStringFormat(@"%@%@",URL_main,URL_AXB);
-   
-    NSString *token = [[NSUserDefaults standardUserDefaults] objectForKey:VN_TOKEN];
-    NSDictionary *headerDic = @{
-                                @"token":token,
-                                @"version":VN_APIVERSION
-                                };
- 
-    DLog(@" 获取AXB.... URL>>>%@ \n parameters>>%@",url,dic);
-    //    NSDictionary *newParam = [SBAPIurl TextCodeBase64:parameters];
-    [MBProgressHUD showActivityMessageInView:@"请求中..."];
-    [[AFNetAPIClient sharedJsonClient].setRequest(url).RequestType(Post).HTTPHeader(headerDic).Parameters(dic)startRequestWithSuccess:^(NSURLSessionDataTask *task, id responseObject) {
-        [MBProgressHUD hideHUD];
-        
-
-        NSString *result = [[NSString alloc] initWithData:responseObject encoding:NSUTF8StringEncoding];
-        if([[AFNetAPIClient sharedJsonClient] parseJSONData:result] == nil){
-            [MBProgressHUD showErrorMessage:@"服务器繁忙，请稍后再试"];
-            return;
-        }
-        
-        NSDictionary* tempJSON = [[AFNetAPIClient sharedJsonClient] parseJSONData:result];
-        DLog(@"tempJSON>>>%@",tempJSON);
-        self.textView2.text = [NSString stringWithFormat:@"返回信息:%@",tempJSON];
-        NSString *successstr = [NSString stringWithFormat:@"%@", tempJSON[@"success"]];
-        if ([successstr isEqualToString:@"1"]) {
-//            if ([[tempJSON objectForKey:@"data"] isKindOfClass:[NSArray class]])
-//            {
-//                [self.dataArray addObjectsFromArray:[tempJSON objectForKey:@"data"]];
-//            }
-//            self.totalCount = [[tempJSON[@"page"] objectForKey:@"total"] intValue];
-//            
-//            [self.tableView reloadData];
-            [MBProgressHUD showErrorMessage:@"请求成功"];
-            
-        }else{
-            [MBProgressHUD showErrorMessage:tempJSON[@"message"]];
-        }
-    } progress:^(NSProgress *progress) {
-        
-    } failure:^(NSURLSessionDataTask *task, NSError *error) {
-        [MBProgressHUD hideHUD];
-        [MBProgressHUD showErrorMessage:@"连接网络超时，请稍后再试"];
-    }];
-}
-
-
-#pragma mark 退出当前账号
-- (void)exitBtnClick
-{
-    [self sendRequest];
-    return;
-}
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    if (alertView.tag == 122)
-    {
-        if (buttonIndex == 0) {
-            [userManager DelInfo];
-            KPostNotification(KNotificationLoginStateChange, @NO)
-        }
-    }else if (alertView.tag ==123){
-        if (buttonIndex == 0) {
-            [self SendRequestToURL:self.baseUrl Parameters:self.parameters];
-        }
-    }
-}
-
-
--(void)sendRequest{
-    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    NSString *strX = [userDefaults objectForKey:VN_X];
-
-    NSString *token = [[NSUserDefaults standardUserDefaults] objectForKey:VN_TOKEN];
-    if (!token) {
-        
-        UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:nil message:@"获取信息失败，请重新登录" delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
-        [alertView show];
-        
-        [userManager DelInfo];
-        KPostNotification(KNotificationLoginStateChange, @NO);
-        return;
-    }
-    NSDictionary *headerDic = @{
-                                @"token":token,
-                                @"version":VN_APIVERSION
-                                };
-    
-    NSString *baseUrl = NSStringFormat(@"%@%@",URL_main,URL_TRANSACTION);
-    NSDictionary *parameters = @{
-                                 @"x":strX
-                                 } ;
-     DLog(@"baseUrl>>>%@",baseUrl);
-    DLog(@"查询transid>>>%@",parameters);
-    [MBProgressHUD showActivityMessageInView:@"请求中..."];
-    
-    [[AFNetAPIClient sharedJsonClient].setRequest(baseUrl).RequestType(Get).HTTPHeader(headerDic).Parameters(parameters) startRequestWithSuccess:^(NSURLSessionDataTask *task, id responseObject) {
-        [MBProgressHUD hideHUD];
-        NSString *result = [[NSString alloc] initWithData:responseObject encoding:NSUTF8StringEncoding];
-        if([[AFNetAPIClient sharedJsonClient] parseJSONData:result] == nil){
-            [MBProgressHUD showErrorMessage:@"服务器繁忙，请稍后再试"];
-            return;
-        }
-        
-        NSDictionary* tempJSON = [[AFNetAPIClient sharedJsonClient] parseJSONData:result];
-        DLog(@"tempJSON>>>%@",tempJSON);
-//        NSString *successstr = [NSString stringWithFormat:@"%@", tempJSON[@"success"]];
-//        if ([successstr isEqualToString:@"1"]) {
-//            NSString * xNumStr = [NSString stringWithFormat:@"%@%@",VN_CALLPREFIX,strX];
-//            NSMutableString *str=[[NSMutableString alloc]initWithFormat:@"tel://%@",xNumStr];
-//            [[UIApplication sharedApplication]openURL:[NSURL URLWithString:str]];
-//        }else{
-//            [MBProgressHUD showErrorMessage:tempJSON[@"message"]];
-//        }
-    } progress:^(NSProgress *progress) {
-        
-    } failure:^(NSURLSessionDataTask *task, NSError *error) {
-        DLog("error>>>%@",error);
-        [MBProgressHUD hideHUD];
-        [MBProgressHUD showErrorMessage:@"连接网络超时，请稍后再试"];
-    }];
-
-}
-
-
 /**
- 隐藏键盘
- 
- @param touches <#touches description#>
- @param event <#event description#>
+ *  停止刷新
  */
--(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
-    [self.text resignFirstResponder];
+-(void)endRefresh{
+	[self.tableView.mj_header endRefreshing];
+	[self.tableView.mj_footer endRefreshing];
 }
 
+
+-(void)SendRequestWithPage:(int)page{
+	NSString *comPanyIDStr = [[NSUserDefaults standardUserDefaults] objectForKey:VN_COMPANYID];
+	if (!comPanyIDStr) {
+		
+		UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:nil message:NSLocalizedString(@"获取信息失败，请重新登录",nil) delegate:self cancelButtonTitle:nil otherButtonTitles:NSLocalizedString(@"确定",nil), nil];
+		[alertView show];
+		
+		[userManager DelInfo];
+		KPostNotification(KNotificationLoginStateChange, @NO);
+		return;
+	}
+	
+	NSString *strPhone = [[NSUserDefaults standardUserDefaults] objectForKey:VN_PHONE];
+	
+	NSString *baseUrl = NSStringFormat(@"%@%@",URL_main,URL_AXB);
+	NSDictionary *parameters = @{
+								 @"page": [NSString stringWithFormat:@"%d",page],
+								 @"pageSize": @"10",//[NSString stringWithFormat:@"%d",10 * page],
+								 @"a":strPhone
+								 } ;
+	NSString *token = [[NSUserDefaults standardUserDefaults] objectForKey:VN_TOKEN];
+	if (!token) {
+		
+		UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:nil message:NSLocalizedString(@"获取信息失败，请重新登录",nil) delegate:self cancelButtonTitle:nil otherButtonTitles:NSLocalizedString(@"确定",nil), nil];
+		[alertView show];
+		
+		[userManager DelInfo];
+		KPostNotification(KNotificationLoginStateChange, @NO);
+		return;
+	}
+	NSDictionary *headerDic = @{
+								@"token":token,
+								@"version":VN_APIVERSION
+								};
+	
+	DLog(@" 获取AXB.... URL>>>%@ \n parameters>>%@",baseUrl,parameters);
+	//    NSDictionary *newParam = [SBAPIurl TextCodeBase64:parameters];
+	[MBProgressHUD showActivityMessageInView:NSLocalizedString(@"请求中...",nil)];
+	[[AFNetAPIClient sharedJsonClient].setRequest(baseUrl).RequestType(Post).HTTPHeader(headerDic).Parameters(parameters) startRequestWithSuccess:^(NSURLSessionDataTask *task, id responseObject) {
+		[MBProgressHUD hideHUD];
+		
+		[self endRefresh];
+		NSString *result = [[NSString alloc] initWithData:responseObject encoding:NSUTF8StringEncoding];
+		if([[AFNetAPIClient sharedJsonClient] parseJSONData:result] == nil){
+			[MBProgressHUD showErrorMessage:NSLocalizedString(@"服务器繁忙，请稍后再试",nil)];
+			return;
+		}
+		
+		NSDictionary* tempJSON = [[AFNetAPIClient sharedJsonClient] parseJSONData:result];
+		NSString *successstr = [NSString stringWithFormat:@"%@", tempJSON[@"success"]];
+		if ([successstr isEqualToString:@"1"]) {
+			if ([[tempJSON objectForKey:@"data"] isKindOfClass:[NSArray class]])
+			{
+				[self.dataArray addObjectsFromArray:[tempJSON objectForKey:@"data"]];
+			}
+			self.totalCount = [[tempJSON[@"page"] objectForKey:@"total"] intValue];
+			
+			[self.tableView reloadData];
+		}else{
+			[MBProgressHUD showErrorMessage:tempJSON[@"message"]];
+		}
+	} progress:^(NSProgress *progress) {
+		
+	} failure:^(NSURLSessionDataTask *task, NSError *error) {
+		[self endRefresh];
+		[MBProgressHUD hideHUD];
+		[MBProgressHUD showErrorMessage:NSLocalizedString(@"连接网络超时，请稍后再试",nil)];
+	}];
+}
+
+
+#pragma mark -
+#pragma mark UITableView dataSourse数据源
+-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+	return  [self.dataArray count];
+	
+}
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+	return 60;
+}
+
+-(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+	static NSString *cellID=@"cellId";
+	
+	ChooseNumCell *cell = nil;
+	
+	cell = [tableView dequeueReusableCellWithIdentifier:cellID];
+	if (cell == nil)
+	{
+		cell = [[ChooseNumCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellID isShowDel:YES];
+		cell.selectionStyle = UITableViewCellSelectionStyleGray;
+	}
+	cell.selectTransDelegate = self;
+	NSDictionary *dic = [self.dataArray objectAtIndex:indexPath.row];
+	cell.TopLab.text = [NSString stringWithFormat:@"X:%@, Trans:%@",dic[@"x"],dic[@"t"]];
+	cell.BottomLab.text = [NSString stringWithFormat:@"B:%@, MODE:%@",dic[@"b"],dic[@"mode"]];
+	
+	
+	return cell;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+	[tableView deselectRowAtIndexPath:indexPath animated:NO];
+}
+
+#pragma mark - selectTransDelegate
+-(void)selectTransForAXB:(NSDictionary *)axbDic{
+	[self.callphone DelBindAXB:axbDic Respone:^(NSDictionary *tempJSON, NSString *model, NSString *XNum) {
+		NSString *successstr = [NSString stringWithFormat:@"%@", tempJSON[@"success"]];
+		if ([successstr isEqualToString:@"1"]) {
+			[MBProgressHUD showErrorMessage:@"删除成功"];
+			[self.dataArray removeAllObjects];
+			self.curPage = 1;
+			[self SendRequestWithPage:self.curPage];
+		}else{
+			[MBProgressHUD showErrorMessage:tempJSON[@"message"]];
+		}
+	}];
+}
+
+-(CallPhone *)callphone{
+	if (!_callphone) {
+		_callphone = [[CallPhone alloc] init];
+	}
+	return _callphone;
+}
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

@@ -18,13 +18,27 @@ typedef void(^CallResponeBlcok) (NSDictionary * tempJSON,NSString * model,NSStri
 +(instancetype)allocWithZone:(struct _NSZone *)zone;//单例
 
 
-- (void) sendCallRequest:(NSString *)phoneNum ContactName:(NSString *)contactName
+- (void) sendCallRequestForBindAXB:(NSString *)phoneNum ContactName:(NSString *)contactName
                 Respone:( CallResponeBlcok )respone;
-
 
 /**
  激活Transecation进行呼叫
  */
 - (void) sendCallRequestToActivationTran:(NSString *)transid;
+
+/**
+ 解绑transID
+ */
+-(void)unBindTrans:(NSString *)oldTrans;
+
+/**
+ 激活transID
+
+ @param transidStr 
+ */
+-(void)RequestToActivationTran:(NSString *)transid;
+
+- (void) DelBindAXB:(NSDictionary *)dic Respone:( CallResponeBlcok )respone;
+
 
 @end

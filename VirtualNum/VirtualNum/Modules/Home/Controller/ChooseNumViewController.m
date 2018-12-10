@@ -58,6 +58,7 @@
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     [self.view addSubview:_tableView];
+	[Common setExtraCellLineHidden:self.tableView];
     
     __weak typeof(self) weakSelf = self;
     //默认block方法：设置下拉刷新
@@ -142,6 +143,7 @@
                                  @"a":strPhone
                                  } ;
     DLog(@"URL>>>%@ \n parameters>>%@",baseUrl,parameters);
+	DLog(@"%@",headerDic);
     //    NSDictionary *newParam = [SBAPIurl TextCodeBase64:parameters];
     [MBProgressHUD showActivityMessageInView:@""];
     [[AFNetAPIClient sharedJsonClient].setRequest(baseUrl).RequestType(Post).HTTPHeader(headerDic).Parameters(parameters) startRequestWithSuccess:^(NSURLSessionDataTask *task, id responseObject) {
@@ -155,7 +157,6 @@
         }
         
         NSDictionary* tempJSON = [[AFNetAPIClient sharedJsonClient] parseJSONData:result];
-        DLog(@"tempJSON>>>%@",tempJSON);
         NSString *successstr = [NSString stringWithFormat:@"%@", tempJSON[@"success"]];
         if ([successstr isEqualToString:@"1"]) {
             if ([[tempJSON objectForKey:@"data"] isKindOfClass:[NSArray class]])
@@ -199,14 +200,14 @@
     cell = [tableView dequeueReusableCellWithIdentifier:cellID];
     if (cell == nil)
     {
-        cell = [[ChooseNumCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellID];
+        cell = [[ChooseNumCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellID isShowDel:NO];
         cell.selectionStyle = UITableViewCellSelectionStyleGray;
         
     }
     NSDictionary *dic = [self.dataArray objectAtIndex:indexPath.row];
     cell.TopLab.text = dic[@"xs"];//dic[@"companyname"];
     cell.BottomLab.text = [NSString stringWithFormat:@"companyname: %@,companyid: %@",dic[@"companyname"],dic[@"companyid"]]; //dic[@"xs"];
-    
+	
     return cell;
 }
 
@@ -218,13 +219,6 @@
      UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:msgStr delegate:self cancelButtonTitle:NSLocalizedString(@"取消",nil) otherButtonTitles:NSLocalizedString(@"确定",nil),nil, nil];
     alert.tag = 10009;
     [alert show];
-    //NSString * xNumStr = [[NSUserDefaults standardUserDefaults] objectForKey:VN_X];
-//    if (!xNumStr) {
-//        [self showPopView:_dictionary];
-//    }else{
-//        [MBProgressHUD showErrorMessage:@"已绑定号码，不可修改"];
-//        return;
-//    }
 }
 
 -(void)showPopView:(NSDictionary *)dic{
@@ -262,10 +256,6 @@
             return;
         }
         
-//        if (![phoneField.text checkPhoneNumInput:phoneField.text]) {
-//            [MBProgressHUD showErrorMessage:NSLocalizedString(@"请输入正确的手机号",nil)];
-//            return;
-//        }
         [self sendBingRequest:phoneField.text OtherDic:self.dictionary];
 		return;
     }
@@ -317,7 +307,6 @@
         }
         
         NSDictionary* tempJSON = [[AFNetAPIClient sharedJsonClient] parseJSONData:result];
-        DLog(@"tempJSON>>>%@",tempJSON);
         NSString *successstr = [NSString stringWithFormat:@"%@", tempJSON[@"success"]];
         if ([successstr isEqualToString:@"1"]) {
             if ([[tempJSON objectForKey:@"data"] isKindOfClass:[NSArray class]])
@@ -351,6 +340,7 @@
 	alertView.tag = 122;
 	[alertView show];
 }
+
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

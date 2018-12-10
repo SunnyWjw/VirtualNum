@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12121" systemVersion="16G29" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -20,7 +19,7 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="手机  182-9613-1759-92" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" enabled="NO" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IWC-vA-QUG">
-                        <rect key="frame" x="13" y="16" width="187" height="28"/>
+                        <rect key="frame" x="21" y="19" width="186.5" height="28"/>
                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstAttribute="width" relation="lessThanOrEqual" constant="250" id="9Cx-4t-gQP"/>
@@ -31,29 +30,20 @@
                         <nil key="highlightedColor"/>
                     </label>
                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2IP-ZS-Hxz">
-                        <rect key="frame" x="287" y="17" width="25" height="25"/>
+                        <rect key="frame" x="279" y="20" width="25" height="20"/>
                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="25" id="ZpJ-aX-YQ3"/>
                         </constraints>
-                        <state key="normal" image="call_for_dial">
+                        <state key="normal" image="detail">
                             <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         </state>
                     </button>
-                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="is_registered" translatesAutoresizingMaskIntoConstraints="NO" id="BBb-3b-jzu">
-                        <rect key="frame" x="208" y="21" width="18" height="18"/>
-                        <constraints>
-                            <constraint firstAttribute="width" constant="18" id="DT7-eL-cLH"/>
-                            <constraint firstAttribute="height" constant="18" id="zaY-x4-lFB"/>
-                        </constraints>
-                    </imageView>
                 </subviews>
                 <constraints>
                     <constraint firstItem="2IP-ZS-Hxz" firstAttribute="top" secondItem="0QR-w6-e8R" secondAttribute="topMargin" constant="9" id="0Aa-FU-oEm"/>
                     <constraint firstAttribute="bottomMargin" secondItem="2IP-ZS-Hxz" secondAttribute="bottom" constant="9" id="5Eu-ML-QDD"/>
-                    <constraint firstItem="BBb-3b-jzu" firstAttribute="leading" secondItem="IWC-vA-QUG" secondAttribute="trailing" constant="8" id="5dQ-bG-MSX"/>
                     <constraint firstItem="IWC-vA-QUG" firstAttribute="leading" secondItem="0QR-w6-e8R" secondAttribute="leadingMargin" constant="5" id="E6C-iC-Cla"/>
-                    <constraint firstItem="BBb-3b-jzu" firstAttribute="top" secondItem="0QR-w6-e8R" secondAttribute="topMargin" constant="13" id="G7U-JY-wlC"/>
                     <constraint firstItem="2IP-ZS-Hxz" firstAttribute="trailing" secondItem="0QR-w6-e8R" secondAttribute="trailingMargin" id="dqm-Zj-RGZ"/>
                     <constraint firstItem="IWC-vA-QUG" firstAttribute="top" secondItem="0QR-w6-e8R" secondAttribute="topMargin" constant="8" id="hfc-XV-m1G"/>
                 </constraints>
@@ -61,14 +51,12 @@
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <connections>
                 <outlet property="callButton" destination="2IP-ZS-Hxz" id="iVC-6m-yDH"/>
-                <outlet property="isRegistered" destination="BBb-3b-jzu" id="72C-TW-gke"/>
                 <outlet property="leftLabel" destination="IWC-vA-QUG" id="khY-UY-4IS"/>
             </connections>
             <point key="canvasLocation" x="125" y="225"/>
         </tableViewCell>
     </objects>
     <resources>
-        <image name="call_for_dial" width="68" height="45"/>
-        <image name="is_registered" width="40" height="40"/>
+        <image name="detail" width="16" height="16"/>
     </resources>
 </document>

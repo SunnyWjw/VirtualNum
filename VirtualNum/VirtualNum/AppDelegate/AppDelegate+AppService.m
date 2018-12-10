@@ -10,6 +10,7 @@
 #import "LoginViewController.h"
 #import "CallLog.h"
 #import "DataBase.h"
+#import "CallPhone.h"
 
 @implementation AppDelegate (AppService)
 
@@ -35,16 +36,6 @@
     self.window.backgroundColor = KWhiteColor;
     [self.window makeKeyAndVisible];
     [[UIButton appearance] setExclusiveTouch:YES];
-//    [[UIButton appearance] setShowsTouchWhenHighlighted:YES];
- //   [UIActivityIndicatorView appearanceWhenContainedIn:[MBProgressHUD class], nil].color = KWhiteColor;
-
-//    //为避免自动登录成功刷新tabbar
-//    if (!self.mainTabBar || ![self.window.rootViewController isKindOfClass:[MainTabBarController class]]) {
-//        self.mainTabBar = [MainTabBarController new];
-//        self.window.rootViewController = self.mainTabBar;
-//    }
-    
-   
 }
 
 
@@ -66,7 +57,6 @@
 //        //自动登录
 //        [userManager autoLoginToServer:^(BOOL success, NSString *des) {
 //            if (success) {
-//                DLog(@"自动登录成功");
 //                //[MBProgressHUD showSuccessMessage:@"自动登录成功"];
 //                KPostNotification(KNotificationAutoLoginSuccess, @YES);
 //            }else{
@@ -87,17 +77,6 @@
     NSString * usernameStr = [[NSUserDefaults standardUserDefaults] objectForKey:VN_USERNAME];
     NSString * pwdStr = [[NSUserDefaults standardUserDefaults] objectForKey:VN_PASSWORD];
     NSString * checkBoxBool = [[NSUserDefaults standardUserDefaults] objectForKey:VN_AUTOLOGIN];
-//    if ([checkBoxBool isEqual: @"1"]) {
-//        if(usernameStr && pwdStr ){
-//            //自动登录
-//            return YES;
-//        }else{
-//            return NO;
-//        }
-//    }else{
-//        return NO;
-//    }
-	
 	NSString * companyIDStr = [[NSUserDefaults standardUserDefaults] objectForKey:VN_COMPANYID];
 	if (usernameStr.length > 0 && pwdStr.length > 0 && companyIDStr.length > 0) {
 		return YES;
@@ -231,9 +210,7 @@
     self.callCenter.callEventHandler = ^(CTCall* call) {
         
         if ([call.callState isEqualToString:CTCallStateDisconnected])
-            
         {
-            
              DLog(@"挂断了电话咯Call has been disconnected");
             NSDate *date = [NSDate date];
             NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
@@ -258,13 +235,17 @@
                 callLog.durationTime = [NSString stringWithFormat:@"%ld",(long)cmps.second];
                 callLog.randomNum = randomNum;
                 [[DataBase sharedDataBase] updateCallLog:callLog];
-            }else{
-                
             }
+			
+			//解绑transID
+			NSString *oldTrans =[[NSUserDefaults standardUserDefaults] objectForKey:VN_OLDTRANS];
+			CallPhone *callphone = [[CallPhone alloc] init];
+			[callphone unBindTrans:oldTrans];
+			//更新通话记录
+			[[NSNotificationCenter defaultCenter] postNotificationName:KUPDATECALLLOG object:nil userInfo:nil];
+
         }
-        
         else if ([call.callState isEqualToString:CTCallStateConnected])
-            
         {
             DLog(@"电话通了Call has just been connected");
             NSDate *date = [NSDate date];
@@ -275,17 +256,11 @@
             [[NSUserDefaults standardUserDefaults] setObject:dateString forKey:@"CallConnected"];
             
         }
-        
         else if([call.callState isEqualToString:CTCallStateIncoming])
-            
         {
-            
              DLog(@"来电话了Call is incoming");
-            
         }
-        
         else if ([call.callState isEqualToString:CTCallStateDialing])
-            
         {
             //呼叫前清空上一次的通话时长
             [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"CallConnected"];
@@ -300,7 +275,7 @@
             XNum = XNum.length > 0 ? XNum : 0;
 
             NSString *randomNum =[userDefaults objectForKey:VN_TRANS];
-            [[NSUserDefaults standardUserDefaults]setObject:randomNum forKey:@"OldTrans"];
+            [[NSUserDefaults standardUserDefaults]setObject:randomNum forKey:VN_OLDTRANS];
             
             NSString *serviceType = [userDefaults objectForKey:VN_SERVICE];
             serviceType = serviceType.length > 0 ? serviceType : @"";
@@ -317,16 +292,10 @@
             callLog.generatorPersonnel = create;
             
            [[DataBase sharedDataBase] addCallLog:callLog];
-            
-            
         }
-        
-        else  
-            
-        {  
-            
+        else
+        {
            DLog(@"嘛都没做Nothing is done");
-            
         }  
         
     };

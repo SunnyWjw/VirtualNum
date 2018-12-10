@@ -19,6 +19,7 @@
 
 @property (nonatomic,strong) NSArray * dataArray;
 @property (nonatomic,strong) UITableView *detailTable;
+@property (nonatomic,strong) CallPhone *callphone;
 
 @end
 
@@ -32,7 +33,20 @@
     _dataArray = [[NSArray alloc] init];
     [self creadTableView];
     self.dataArray = [[DataBase sharedDataBase] queryAllCallLog:_callLog.CallPhoneNum XNum:[NSString stringWithFormat:@"%@", _callLog.generatorPersonnel] TopNumber:@""];
+	[[NSNotificationCenter defaultCenter] addObserver:self
+											 selector:@selector(updateTableViewData)
+												 name:KUPDATECALLLOG
+											   object:nil];
 }
+
+-(void)updateTableViewData{
+	DLog(@"接收到了通话结束的通知");
+	self.dataArray = [[DataBase sharedDataBase] queryAllCallLog:_callLog.CallPhoneNum XNum:[NSString stringWithFormat:@"%@", _callLog.generatorPersonnel] TopNumber:@""];
+	dispatch_async(dispatch_get_main_queue(), ^{
+		[self.detailTable reloadData];
+	});
+}
+
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
@@ -53,7 +67,7 @@
     [Common setExtraCellLineHidden:self.detailTable];
 }
 
-#pragma mark -允许数据源告知必须加载到Table View中的表的Section数。
+#pragma mark - 允许数据源告知必须加载到Table View中的表的Section数。
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     return 2;
@@ -152,9 +166,8 @@
     
     if (indexPath.section == 0) {
         if (indexPath.row == 0) {
-        
-            CallPhone *callphone = [[CallPhone alloc] init];
-            [callphone sendCallRequest:_callLog.CallPhoneNum ContactName:_callLog.calledName Respone:^(NSDictionary *tempJSON, NSString *model, NSString *XNum) {
+			
+            [self.callphone sendCallRequestForBindAXB:_callLog.CallPhoneNum ContactName:_callLog.calledName Respone:^(NSDictionary *tempJSON, NSString *model, NSString *XNum) {
                 NSString *successstr = [NSString stringWithFormat:@"%@", tempJSON[@"success"]];
                 if ([successstr isEqualToString:@"1"]) {
                     if ([model isEqualToString:@"dual"]) {
@@ -162,10 +175,13 @@
                         ChooseTransidViewController *ctVC = [[ChooseTransidViewController alloc] init];
                         [self.navigationController pushViewController:ctVC animated:NO];
                     }else{
-                        XNum = [NSString stringWithFormat:@"%@%@",VN_CALLPREFIX,XNum];
-                        NSMutableString *str=[[NSMutableString alloc]initWithFormat:@"tel://%@",XNum];
-                        [[UIApplication sharedApplication]openURL:[NSURL URLWithString:str]];
-                    }
+						NSString *transID  = [[NSUserDefaults standardUserDefaults] objectForKey:VN_TRANS];
+						[self.callphone RequestToActivationTran:transID];
+						XNum = [NSString stringWithFormat:@"%@%@",VN_CALLPREFIX,XNum];
+//						NSMutableString *str=[[NSMutableString alloc]initWithFormat:@"tel:+86//%@",XNum];
+//						NSMutableString *str=[[NSMutableString alloc]initWithFormat:@"tel://%@",XNum];
+//						[[UIApplication sharedApplication]openURL:[NSURL URLWithString:str]];
+					}
                 }else{
                     [MBProgressHUD showErrorMessage:tempJSON[@"message"]];
                 }
@@ -175,65 +191,12 @@
 }
 
 
--(void)SendRequestToCall{
-    NSString *strX = [[NSUserDefaults standardUserDefaults] objectForKey:VN_X];
-    NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
-    [numberFormatter setNumberStyle:NSNumberFormatterDecimalStyle];
-    NSNumber *randomNum = [numberFormatter numberFromString:[TimeAndTimeStamps getNowDateTimeFoMillisecond]];
-    NSString *strCompany = [[NSUserDefaults standardUserDefaults] objectForKey:VN_COMPANYID];
-    
-    NSString * strTransid =[NSString stringWithFormat:@"%@%@",strCompany,randomNum] ;
-    [[NSUserDefaults standardUserDefaults] setObject:strTransid forKey:VN_TRANS];
-    
-    NSString *token = [[NSUserDefaults standardUserDefaults] objectForKey:VN_TOKEN];
-    if (!token) {
-        
-        UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:nil message:NSLocalizedString(@"获取信息失败，请重新登录",nil) delegate:self cancelButtonTitle:nil otherButtonTitles:NSLocalizedString(NSLocalizedString(@"确定",nil),nil), nil];
-        [alertView show];
-        
-        [userManager DelInfo];
-        KPostNotification(KNotificationLoginStateChange, @NO);
-        return;
-    }
-    NSDictionary *headerDic = @{
-                                @"token":token,
-                                @"version":VN_APIVERSION
-                                };
-    
-    NSString *baseUrl = NSStringFormat(@"%@%@",URL_main,URL_TRANSACTION);
-    NSDictionary *parameters = @{
-                                 @"x":strX,
-                                 @"transid":strTransid
-                                 } ;
-    DLog(@"绑定AXBparameters>>>%@",parameters);
-    [MBProgressHUD showActivityMessageInView:NSLocalizedString(@"请求中...",nil)];
-    
-    [[AFNetAPIClient sharedJsonClient].setRequest(baseUrl).RequestType(Put).HTTPHeader(headerDic).Parameters(parameters) startRequestWithSuccess:^(NSURLSessionDataTask *task, id responseObject) {
-        [MBProgressHUD hideHUD];
-        NSString *result = [[NSString alloc] initWithData:responseObject encoding:NSUTF8StringEncoding];
-        if([[AFNetAPIClient sharedJsonClient] parseJSONData:result] == nil){
-            [MBProgressHUD showErrorMessage:NSLocalizedString(@"服务器繁忙，请稍后再试",nil)];
-            return;
-        }
-        
-        NSDictionary* tempJSON = [[AFNetAPIClient sharedJsonClient] parseJSONData:result];
-        DLog(@"tempJSON>>>%@",tempJSON);
-        NSString *successstr = [NSString stringWithFormat:@"%@", tempJSON[@"success"]];
-        if ([successstr isEqualToString:@"1"]) {
-            NSString * xNumStr = [NSString stringWithFormat:@"%@%@",VN_CALLPREFIX,strX];
-            NSMutableString *str=[[NSMutableString alloc]initWithFormat:@"tel://%@",xNumStr];
-            [[UIApplication sharedApplication]openURL:[NSURL URLWithString:str]];
-        }else{
-            [MBProgressHUD showErrorMessage:tempJSON[@"message"]];
-        }
-    } progress:^(NSProgress *progress) {
-        
-    } failure:^(NSURLSessionDataTask *task, NSError *error) {
-        [MBProgressHUD hideHUD];
-        [MBProgressHUD showErrorMessage:NSLocalizedString(@"连接网络超时，请稍后再试",nil)];
-    }];
+-(CallPhone *)callphone{
+	if (!_callphone) {
+		_callphone = [[CallPhone alloc] init];
+	}
+	return _callphone;
 }
-
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
