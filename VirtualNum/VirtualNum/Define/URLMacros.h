@@ -31,17 +31,17 @@
 #if DevelopSever
 
 /**开发服务器*/
-#define URL_main @"http://103.198.18.35:8080"
+#define URL_main @"http://127.0.0.1"
 
 #elif TestSever
 
 /**测试服务器*/
-#define URL_main @"http://103.198.18.35:8080"
+#define URL_main @"http://127.0.0.1"
 
 #elif ProductSever
 
 /**生产服务器*/
-#define URL_main @"http://103.198.18.35:8080"
+#define URL_main @"http://127.0.0.1"
 #endif
 
 
